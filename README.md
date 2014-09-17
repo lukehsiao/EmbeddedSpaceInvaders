@@ -8,3 +8,6 @@
 Good version control.  We've organized it into two folders, hardware and software.  These are for source files only.
 
 Use path *C:\Lab* for all projects!!!
+
+### Versioning Guidelines ###
+We will use a vX.X.X versioning guideline.  We will call v1.0.0 the final version for lab 3, v2.0.0 the final for lab 4, etc.  Each final, stable lab version will increment the major version number. 
