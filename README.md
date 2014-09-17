@@ -15,5 +15,5 @@ We will use a vX.X.X versioning guideline.  We will call v1.0.0 the final versio
 We will try to follow the "Fork and Pull" model of revision control.
 
 ### Authors: ###
-Luke Hsiao | lukehsiao@byu.edu
+Luke Hsiao | lukehsiao@byu.edu  
 Jeff Ravert | jravert88@gmail.com 
