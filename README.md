@@ -11,3 +11,9 @@ Use path *C:\Lab* for all projects!!!
 
 ### Versioning Guidelines ###
 We will use a vX.X.X versioning guideline.  We will call v1.0.0 the final version for lab 3, v2.0.0 the final for lab 4, etc.  Each final, stable lab version will increment the major version number. 
+
+We will try to follow the "Fork and Pull" model of revision control.
+
+### Authors: ###
+Luke Hsiao | lukehsiao@byu.edu
+Jeff Ravert | jravert88@gmail.com 
