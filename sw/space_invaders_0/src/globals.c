@@ -42,9 +42,10 @@ u8 lives;	//starts w/ 3 and decrements each death
 /////////////////////////////////////
 void setTankPositionGlobal(unsigned short val) {
 	tankPosition.x = val;
+	tankPosition.y = 440;
 }
-unsigned short getTankPositionGlobal() {
-	return tankPosition.x;
+point_t getTankPositionGlobal() {
+	return tankPosition;
 }
 
 void setTankBulletPosition(point_t val) {
@@ -52,6 +53,13 @@ void setTankBulletPosition(point_t val) {
 }
 point_t getTankBulletPosition() {
 	return tankBulletPosition;
+}
+
+/**
+ * @ return 0xFF if it's not inside, 0 if it is
+ */
+u8 isInsideTank(point_t val) {
+	return 0xFF;
 }
 
 /////////////////////////////////////

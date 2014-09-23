@@ -19,10 +19,12 @@ typedef struct {u16 x; u16 y;} point_t;
 // Setup the Tank Globals
 /////////////////////////////////////
 void setTankPositionGlobal(unsigned short val);	// they can only modify x
-unsigned short getTankPositionGlobal();
+point_t getTankPositionGlobal();
 
 void setTankBulletPosition(point_t val);
 point_t getTankBulletPosition();
+
+u8 isInsideTank(point_t val);
 
 /////////////////////////////////////
 // Setup the Alien Globals
@@ -51,6 +53,7 @@ u8 getAlienBulletType_3();
 /////////////////////////////////////
 void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion);
 u8 getBunkerState(u8 bunkerNumber, u8 blockNumber);
+u8 isInsideBunker(point_t val);
 
 /////////////////////////////////////
 // Setup the Score/Lives Globals

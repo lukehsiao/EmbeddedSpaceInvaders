@@ -23,7 +23,8 @@
 #include "xio.h"
 #include "time.h"
 #include "unistd.h"
-#include "globals.h"
+#include "globals.h"		// Our globals.h file.
+#include "render.h"			// Our rendering file.
 
 #define DEBUG
 void print(char *str);
@@ -93,36 +94,8 @@ int main()
      // Now, let's get ready to start displaying some stuff on the screen.
      // The variables framePointer and framePointer1 are just pointers to the base address
      // of frame 0 and frame 1.
-     unsigned int * framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
-     unsigned int * framePointer1 = ((unsigned int *) FRAME_BUFFER_0_ADDR) + 640*480;
-     // Just paint some large red, green, blue, and white squares in different
-     // positions of the image for each frame in the buffer (framePointer0 and framePointer1).
-     int row=0, col=0;
-     for( row=0; row<480; row++) {
-    	 for(col=0; col<640; col++) {
-    	 if(row < 240) {
-    		 if(col<320) {
-    			 // upper left corner.
-    			 framePointer0[row*640 + col] = 0x00FF0000;  // frame 0 is red here.
-    			 framePointer1[row*640 + col] = 0x0000FF00;  // frame 1 is green here.
-    		 } else {
-    			 // upper right corner.
-    			 framePointer0[row*640 + col] = 0x000000FF;  // frame 0 is blue here.
-    			 framePointer1[row*640 + col] = 0x00FF0000;  // frame 1 is red here.
-    		 }
-    	 } else {
-    		 if(col<320) {
-    			 // lower left corner.
-    			 framePointer0[row*640 + col] = 0x0000FF00;  // frame 0 is green here.
-    			 framePointer1[row*640 + col] = 0x00FFFFFF;  // frame 1 is white here.
-    		 } else {
-    			 // lower right corner.
-    			 framePointer0[row*640 + col] = 0x00FFFFFF;  // frame 0 is white here.
-    			 framePointer1[row*640 + col] = 0x000000FF;  // frame 1 is blue here.
-    		 }
-    	 }
-       }
-     }
+     render();
+
      // This tells the HDMI controller the resolution of your display (there must be a better way to do this).
      XIo_Out32(XPAR_AXI_HDMI_0_BASEADDR, 640*480);
 
@@ -138,10 +111,11 @@ int main()
      }
      // Oscillate between frame 0 and frame 1.
      int sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
+     setTankPositionGlobal(200);
      while (1) {
     	 while (sillyTimer) sillyTimer--;    // Decrement the timer.
     	 sillyTimer = MAX_SILLY_TIMER;       // Reset the timer.
-         frameIndex = (frameIndex + 1) % 2;  // Alternate between frame 0 and frame 1.
+         render();  // Alternate between frame 0 and frame 1.
          if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
         	 xil_printf("vdma parking failed\n\r");
          }
