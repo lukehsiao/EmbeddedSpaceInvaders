@@ -24,10 +24,8 @@ point_t bunkerPosition_0;	// Top-left position of the bunker.
 point_t bunkerPosition_1;
 point_t bunkerPosition_2;
 point_t bunkerPosition_3;
-u32 bunkerState_0;			// We track the 5 states of each of the 10 blocks
-u32 bunkerState_1;			// using 3 bits of the u32.
-u32 bunkerState_2;
-u32 bunkerState_3;
+u32 bunkerState[4];			// We track the 5 states of each of the 10 blocks
+							// using 3 bits of the u32.
 
 // Tank Variables
 point_t tankPosition;
@@ -57,7 +55,7 @@ point_t getTankBulletPosition() {
 }
 
 /////////////////////////////////////
-// Setup the Alien Globals
+// Implement the Alien Globals
 /////////////////////////////////////
 void setAlienBlockPosition(point_t val) {
 	alienBlockPosition = val;
@@ -111,16 +109,63 @@ u8 getAlienBulletType_3() {
 }
 
 /////////////////////////////////////
-// Setup the Bunker Globals
+// Implement the Bunker Globals
 /////////////////////////////////////
-void setBunkerState_0(u8 erosion_state);
-u8 getBunkerState_0();
 
-void setBunkerState_1(u8 erosion_state);
-u8 getBunkerState_1();
+/**
+ * Sets the erosion state of the specified block.
+ * TODO: This may be a critical section!
+ *
+ * @param blockNumber the block within the bunker (0-9)
+ * @param bunkerNumber the number of the bunker (0-3)
+ * @return the erosion state of the block specified
+ */
+void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
+	u32 tempState = bunkerState[bunkerNumber];
+	tempState = 0x3FFFFFFF & tempState;
+	//clear old state by creating a ..1100011... mask and ANDing
+	u32 mask = 0xFFFFFFF8; //...1111 1000
+	u32 oneFill = 0x3FFFFFFF >> (30 - (blockNumber*3));
+	mask = (mask << (blockNumber*3)) | oneFill;
+	tempState = tempState & mask;
 
-void setBunkerState_2(u8 erosion_state);
-u8 getBunkerState_2();
+	//Set the new state
+	u32 newErosion = (u32)erosion; // this will pad the left with 0s
+	newErosion = newErosion << (blockNumber*3);
+	tempState = tempState | newErosion;
+	//xil_printf("\n\rTemp State is:\n\r%x", tempState);
+	bunkerState[bunkerNumber] = tempState;
+}
 
-void setBunkerState_3(u8 erosion_state);
-u8 getBunkerState_3();
+/**
+ * Masks the u32 bunker state variable to return the
+ * erosion state of the bunker block.
+ *
+ * @param blockNumber the block within the bunker (0-9)
+ * @param bunkerNumber the number of the bunker (0-3)
+ * @return the erosion state of the block specified
+ */
+u8 getBunkerState(u8 bunkerNumber, u8 blockNumber) {
+	u32 tempState = bunkerState[bunkerNumber];
+	//Shift and mask only the 3 bits representing the state of the block
+	u8 erosionState = (u8)(tempState >> (blockNumber*3));
+	erosionState = 0x07 & erosionState;  // mask out extraneous top bits
+	return erosionState;
+}
+
+/////////////////////////////////////
+// Implement the Score/Lives Globals
+/////////////////////////////////////
+void setScore(u32 newScore) {
+	score = newScore;
+}
+u32 getScore() {
+	return score;
+}
+
+void setLives(u8 newLives) {
+	lives = newLives;
+}
+u8 getLives() {
+	return lives;
+}

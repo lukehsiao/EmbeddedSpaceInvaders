@@ -13,7 +13,7 @@
 #define u16 unsigned short
 #define u32 unsigned int
 
-typedef struct {unsigned short x; unsigned short y;} point_t;
+typedef struct {u16 x; u16 y;} point_t;
 
 /////////////////////////////////////
 // Setup the Tank Globals
@@ -49,16 +49,16 @@ u8 getAlienBulletType_3();
 /////////////////////////////////////
 // Setup the Bunker Globals
 /////////////////////////////////////
-void setBunkerState_0(u8 erosion_state);
-u8 getBunkerState_0();
+void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion);
+u8 getBunkerState(u8 bunkerNumber, u8 blockNumber);
 
-void setBunkerState_1(u8 erosion_state);
-u8 getBunkerState_1();
+/////////////////////////////////////
+// Setup the Score/Lives Globals
+/////////////////////////////////////
+void setScore(u32 newScore);
+u32 getScore();
 
-void setBunkerState_2(u8 erosion_state);
-u8 getBunkerState_2();
-
-void setBunkerState_3(u8 erosion_state);
-u8 getBunkerState_3();
+void setLives(u8 newLives);
+u8 getLives();
 
 #endif
