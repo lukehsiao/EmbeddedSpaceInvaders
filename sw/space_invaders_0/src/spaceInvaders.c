@@ -23,6 +23,8 @@
 #include "xio.h"
 #include "time.h"
 #include "unistd.h"
+#include "globals.h"
+
 #define DEBUG
 void print(char *str);
 
