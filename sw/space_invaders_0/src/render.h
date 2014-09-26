@@ -8,7 +8,7 @@
 
 #ifndef RENDER_H_
 #define RENDER_H_
-
+#include "globals.h"		//to give access to the global variables
 
 void render();
 

@@ -7,7 +7,7 @@
 
 #define FRAME_BUFFER_ADDR 0xC0000000
 #include "render.h"
-#include "globals.h"		//to give access to the global variables
+
 
 /**
  * Draws the tank in it's current position
@@ -15,13 +15,25 @@
 void renderTank() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 
-	int width;
-	int height;
-	for (height = 0; height < 10; height++) {
-		for (width = 0; width < 32; width++) {
-			framePointer0[(getTankPositionGlobal().y+height)*640 + (getTankPositionGlobal().x+width)] = 0x0000FF00; //Green
+	int col;
+	int row;
+	for (row = 0; row < 16; row++) {
+		for (col = 0; col < 32; col++) {
+			framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = getTankPixel(row, col); //Green
 		}
 	}
+}
+
+void renderBunkers(u8 bunkerNumber){
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+
+		int col;
+		int row;
+		for (row = 0; row < 16; row++) {
+			for (col = 0; col < 32; col++) {
+				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = getTankPixel(row, col); //Green
+			}
+		}
 }
 
 void eraseTank() {

@@ -12,6 +12,7 @@
 #define u8 unsigned char
 #define u16 unsigned short
 #define u32 unsigned int
+#include "bitmaps.h"
 
 typedef struct {u16 x; u16 y;} point_t;
 

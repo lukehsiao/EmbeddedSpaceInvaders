@@ -29,7 +29,7 @@ u32 bunkerState[4];			// We track the 5 states of each of the 10 blocks
 
 // Tank Variables
 point_t tankPosition;
-point_t tankBulletPosition;
+point_t tankBulletPosition; // Tank bullet is 2*8 pixels tall
 
 // Score & Lives Variables
 u32 score;
@@ -136,11 +136,22 @@ void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 	u32 oneFill = 0x3FFFFFFF >> (30 - (blockNumber*3));
 	mask = (mask << (blockNumber*3)) | oneFill;
 	tempState = tempState & mask;
-
-	//Set the new state
-	u32 newErosion = (u32)erosion; // this will pad the left with 0s
-	newErosion = newErosion << (blockNumber*3);
-	tempState = tempState | newErosion;
+	u32 newErosion;
+	if (blockNumber < 9) {
+		//Set the new state
+		newErosion = (u32)erosion; // this will pad the left with 0s
+		newErosion = newErosion << (blockNumber*3);
+		tempState = tempState | newErosion;
+	}
+	else if (blockNumber == 9 || blockNumber == 10) {
+		return;
+	}
+	else if (blockNumber == 11) {
+		//Set the new state
+		newErosion = (u32)erosion; // this will pad the left with 0s
+		newErosion = newErosion << (27);
+		tempState = tempState | newErosion;
+	}
 	//xil_printf("\n\rTemp State is:\n\r%x", tempState);
 	bunkerState[bunkerNumber] = tempState;
 }
@@ -155,9 +166,19 @@ void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
  */
 u8 getBunkerState(u8 bunkerNumber, u8 blockNumber) {
 	u32 tempState = bunkerState[bunkerNumber];
-	//Shift and mask only the 3 bits representing the state of the block
-	u8 erosionState = (u8)(tempState >> (blockNumber*3));
-	erosionState = 0x07 & erosionState;  // mask out extraneous top bits
+	u8 erosionState;
+	if (blockNumber < 9) {
+		//Shift and mask only the 3 bits representing the state of the block
+		erosionState = (u8)(tempState >> (blockNumber*3));
+		erosionState = 0x07 & erosionState;  // mask out extraneous top bits
+	}
+	else if (blockNumber == 9 || blockNumber == 10) {
+		erosionState = 4;	// return a black block
+	}
+	else if (blockNumber == 11) {
+		erosionState = (u8)(tempState >> (27));
+		erosionState = 0x07 & erosionState;  // mask out extraneous top bits
+	}
 	return erosionState;
 }
 
