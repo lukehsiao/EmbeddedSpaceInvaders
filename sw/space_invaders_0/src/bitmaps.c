@@ -560,6 +560,39 @@ u32 getTankPixel(u32 row, u32 col) {
 
 u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	u32 temp;
+	u32 rowInBunker;
+	u32 colInBunker;
+
+	// Finding what row and col in the block we are
+	switch (bunkerNumber)
+	{
+	case 0:
+	{
+		rowInBunker = getBunkerState(bunkerNumber, blockNumber);
+	}
+		break;
+	case 1:
+
+		break;
+	case 2:
+
+		break;
+	case 3:
+
+		break;
+	default:
+		break;
+	}
+
+	if(blockNumber <= 3) {
+
+	}
+	else if(blockNumber <= 7) {
+
+	}
+	else if(blockNumber <= 11) {
+
+	}
 	temp = 0;
 	temp = (TANK[row]>>(31-col)) & 0x00000001;
 
@@ -586,7 +619,10 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	default:
 		temp = 1;
 		break;
+	}
 
+	if(blockNumber == 3){
+		temp = temp && 1;
 	}
 
 	if (temp != 0) {

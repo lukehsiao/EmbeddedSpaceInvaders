@@ -14,7 +14,7 @@
 #define u32 unsigned int
 #include "bitmaps.h"
 
-typedef struct {u16 x; u16 y;} point_t;
+typedef struct {u32 x; u32 y;} point_t;
 
 /////////////////////////////////////
 // Setup the Tank Globals

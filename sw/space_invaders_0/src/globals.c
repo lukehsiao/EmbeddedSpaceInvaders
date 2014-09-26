@@ -120,6 +120,68 @@ u8 getAlienBulletType_3() {
 // Implement the Bunker Globals
 /////////////////////////////////////
 
+
+/* Gets the bunker row for the specified bunker and block
+ *
+ * @param row
+ * @param col
+ * @param blockNumber the block within the bunker (0-9)
+ * @param bunkerNumber the number of the bunker (0-3)
+ *
+*/
+u32 getBunkerRow(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
+	u32 temp;
+	switch(bunkerNumber)
+	{
+	case 0:
+		temp = row - bunkerPosition_0.y;
+		break;
+	case 1:
+		temp = row - bunkerPosition_1.y;
+		break;
+	case 2:
+		temp = row - bunkerPosition_2.y;
+		break;
+	case 3:
+		temp = row - bunkerPosition_3.y;
+		break;
+	default:
+		//xil_printf("\n\r\tWrong BunkerNumber in getBunkerRow");
+		break;
+	}
+	return temp;
+}
+
+/* Gets the bunker col for the specified bunker and block
+ *
+ * @param row
+ * @param col
+ * @param blockNumber the block within the bunker (0-9)
+ * @param bunkerNumber the number of the bunker (0-3)
+ *
+*/
+u32 getBunkerCol(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
+	u32 temp;
+	switch(bunkerNumber)
+	{
+	case 0:
+		temp = col - bunkerPosition_0.x;
+		break;
+	case 1:
+		temp = col - bunkerPosition_1.x;
+		break;
+	case 2:
+		temp = col - bunkerPosition_2.x;
+		break;
+	case 3:
+		temp = col - bunkerPosition_3.x;
+		break;
+	default:
+		//xil_printf("\n\r\tWrong BunkerNumber in getBunkerCol\n\r");
+		break;
+	}
+	return temp;
+}
 /**
  * Sets the erosion state of the specified block.
  * TODO: This may be a critical section!
