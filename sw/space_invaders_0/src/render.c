@@ -32,25 +32,24 @@ void renderBunker(u8 bunkerNumber){
 	for (blockNum = 0; blockNum < 4; blockNum++) {
 		for (row = 0; row < 12; row++) {
 			for (col = 0; col < 12; col++) {
-				xil_printf("y:%d  x:%d\n\r",(getBunkerPosition(bunkerNumber).y + row), (getBunkerPosition(bunkerNumber).x+(blockNum*12)+col));
 				framePointer0[(getBunkerPosition(bunkerNumber).y + row)*640 + (getBunkerPosition(bunkerNumber).x+(blockNum*12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
 			}
 		}
 	}
-//	for (blockNum = 4; blockNum < 8; blockNum++) {
-//		for (row = 0; row < 12; row++) {
-//			for (col = 0; col < 12; col++) {
-//				framePointer0[(getBunkerPosition(bunkerNumber).y + 12 + row)*640 + (getBunkerPosition(bunkerNumber).x+(blockNum+12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
-//			}
-//		}
-//	}
-//	for (blockNum = 8; blockNum < 12; blockNum++) {
-//		for (row = 0; row < 12; row++) {
-//			for (col = 0; col < 12; col++) {
-//				framePointer0[(getBunkerPosition(bunkerNumber).y + 24 + row)*640 + (getBunkerPosition(bunkerNumber).x+(blockNum+12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
-//			}
-//		}
-//	}
+	for (blockNum = 4; blockNum < 8; blockNum++) {
+		for (row = 0; row < 12; row++) {
+			for (col = 0; col < 12; col++) {
+				framePointer0[(getBunkerPosition(bunkerNumber).y + 12 + row)*640 + (getBunkerPosition(bunkerNumber).x+((blockNum-4)*12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
+			}
+		}
+	}
+	for (blockNum = 8; blockNum < 12; blockNum++) {
+		for (row = 0; row < 12; row++) {
+			for (col = 0; col < 12; col++) {
+				framePointer0[(getBunkerPosition(bunkerNumber).y + 24 + row)*640 + (getBunkerPosition(bunkerNumber).x+((blockNum-8)*12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
+			}
+		}
+	}
 }
 
 void eraseTank() {
@@ -87,5 +86,8 @@ void render() {
 	blankScreen();
 	renderTank();
 	renderBunker(0);
+	renderBunker(1);
+	renderBunker(2);
+	renderBunker(3);
 }
 

@@ -17,6 +17,6 @@
 #define TANK_BULLET_HEIGHT 8
 
 u32 getTankPixel(u32 row, u32 col);
-u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber);
+u32 getBunkerBlock(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber);
 
 #endif

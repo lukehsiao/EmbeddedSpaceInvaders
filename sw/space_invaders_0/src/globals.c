@@ -118,17 +118,17 @@ void initBunkers() {
 	for (i = 0; i < 4; i++) {
 		bunkerState[i] = 0x00000000;
 	}
-	bunkerPosition_0.x = 80;
-	bunkerPosition_0.y = 400;
+	bunkerPosition_0.x = 104;
+	bunkerPosition_0.y = 380;
 
-	bunkerPosition_1.x = 180;
-	bunkerPosition_1.y = 400;
+	bunkerPosition_1.x = 232;
+	bunkerPosition_1.y = 380;
 
-	bunkerPosition_2.x = 280;
-	bunkerPosition_2.y = 400;
+	bunkerPosition_2.x = 360;
+	bunkerPosition_2.y = 380;
 
-	bunkerPosition_3.x = 380;
-	bunkerPosition_3.y = 400;
+	bunkerPosition_3.x = 488;
+	bunkerPosition_3.y = 380;
 }
 point_t getBunkerPosition(u8 bunkerNumber) {
 	point_t temp;

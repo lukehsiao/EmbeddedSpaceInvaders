@@ -579,7 +579,7 @@ u32 getTankPixel(u32 row, u32 col) {
 u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	u8 tempBlockErosion;
 	u32 tempResult;
-	u32 tempBase[BUNKER_SQUARE_HEIGHT], erosionMask[BUNKER_SQUARE_HEIGHT];
+	u32 tempBase, erosionMask;
 
 	tempBlockErosion = getBlockState(bunkerNumber, blockNumber);
 	switch (blockNumber) {
