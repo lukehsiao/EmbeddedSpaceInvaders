@@ -24,46 +24,68 @@ void renderTank() {
 	}
 }
 
-void renderBunkers(u8 bunkerNumber){
+void renderBunker(u8 bunkerNumber){
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
-
-		int col;
-		int row;
-		for (row = 0; row < 16; row++) {
-			for (col = 0; col < 32; col++) {
-				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = getTankPixel(row, col); //Green
+	int col;
+	int row;
+	int blockNum;
+	for (blockNum = 0; blockNum < 4; blockNum++) {
+		for (row = 0; row < 12; row++) {
+			for (col = 0; col < 12; col++) {
+				xil_printf("y:%d  x:%d\n\r",(getBunkerPosition(bunkerNumber).y + row), (getBunkerPosition(bunkerNumber).x+(blockNum*12)+col));
+				framePointer0[(getBunkerPosition(bunkerNumber).y + row)*640 + (getBunkerPosition(bunkerNumber).x+(blockNum*12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
 			}
 		}
+	}
+//	for (blockNum = 4; blockNum < 8; blockNum++) {
+//		for (row = 0; row < 12; row++) {
+//			for (col = 0; col < 12; col++) {
+//				framePointer0[(getBunkerPosition(bunkerNumber).y + 12 + row)*640 + (getBunkerPosition(bunkerNumber).x+(blockNum+12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
+//			}
+//		}
+//	}
+//	for (blockNum = 8; blockNum < 12; blockNum++) {
+//		for (row = 0; row < 12; row++) {
+//			for (col = 0; col < 12; col++) {
+//				framePointer0[(getBunkerPosition(bunkerNumber).y + 24 + row)*640 + (getBunkerPosition(bunkerNumber).x+(blockNum+12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
+//			}
+//		}
+//	}
 }
 
 void eraseTank() {
 
 }
 
-void render() {
+void blankScreen() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
-	int row=0, col=0;
-	for( row=0; row<480; row++) {
-		for(col=0; col<640; col++) {
-			if(row < 240) {
-				if(col<320) {
-					// upper left corner.
-					framePointer0[row*640 + col] = 0x00000000;  // frame 0 is red here.
+		int row=0, col=0;
+		for( row=0; row<480; row++) {
+			for(col=0; col<640; col++) {
+				if(row < 240) {
+					if(col<320) {
+						// upper left corner.
+						framePointer0[row*640 + col] = 0x00000000;  // frame 0 is red here.
+					} else {
+						// upper right corner.
+						framePointer0[row*640 + col] = 0x00000000;  // frame 0 is blue here.
+					}
 				} else {
-					// upper right corner.
-					framePointer0[row*640 + col] = 0x00000000;  // frame 0 is blue here.
-				}
-			} else {
-				if(col<320) {
-					// lower left corner.
-					framePointer0[row*640 + col] = 0x00000000;  // frame 0 is green here.
-				} else {
-					// lower right corner.
-					framePointer0[row*640 + col] = 0x00000000;  // frame 0 is white here.
+					if(col<320) {
+						// lower left corner.
+						framePointer0[row*640 + col] = 0x00000000;  // frame 0 is green here.
+					} else {
+						// lower right corner.
+						framePointer0[row*640 + col] = 0x00000000;  // frame 0 is white here.
+					}
 				}
 			}
 		}
-	}
+}
+
+void render() {
+	blankScreen();
 	renderTank();
+	renderBunker(0);
 }
 

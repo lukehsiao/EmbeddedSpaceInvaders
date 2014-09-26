@@ -98,12 +98,6 @@ void setAlienBulletPosition_2(point_t val, u8 bullet_type) {
 	alienBullet_2.position = val;
 	alienBullet_2.type = bullet_type;
 }
-point_t getAlienBulletPosition_2() {
-	return alienBullet_2.position;
-}
-u8 getAlienBulletType_2() {
-	return alienBullet_2.type;
-}
 
 void setAlienBulletPosition_3(point_t val, u8 bullet_type) {
 	alienBullet_3.position = val;
@@ -119,7 +113,40 @@ u8 getAlienBulletType_3() {
 /////////////////////////////////////
 // Implement the Bunker Globals
 /////////////////////////////////////
+void initBunkers() {
+	int i;
+	for (i = 0; i < 4; i++) {
+		bunkerState[i] = 0x00000000;
+	}
+	bunkerPosition_0.x = 80;
+	bunkerPosition_0.y = 400;
 
+	bunkerPosition_1.x = 180;
+	bunkerPosition_1.y = 400;
+
+	bunkerPosition_2.x = 280;
+	bunkerPosition_2.y = 400;
+
+	bunkerPosition_3.x = 380;
+	bunkerPosition_3.y = 400;
+}
+point_t getBunkerPosition(u8 bunkerNumber) {
+	point_t temp;
+	switch(bunkerNumber) {
+		case 0:
+			return bunkerPosition_0;
+		case 1:
+			return bunkerPosition_1;
+		case 2:
+			return bunkerPosition_2;
+		case 3:
+			return bunkerPosition_3;
+		default:
+			temp.x = 0;
+			temp.y = 0;
+			return temp;
+	}
+}
 
 /* Gets the bunker row for the specified bunker and block
  *
@@ -131,23 +158,22 @@ u8 getAlienBulletType_3() {
 */
 u32 getBunkerRow(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	u32 temp;
-	switch(bunkerNumber)
-	{
-	case 0:
-		temp = row - bunkerPosition_0.y;
-		break;
-	case 1:
-		temp = row - bunkerPosition_1.y;
-		break;
-	case 2:
-		temp = row - bunkerPosition_2.y;
-		break;
-	case 3:
-		temp = row - bunkerPosition_3.y;
-		break;
-	default:
-		//xil_printf("\n\r\tWrong BunkerNumber in getBunkerRow");
-		break;
+	switch(bunkerNumber) {
+		case 0:
+			temp = row - bunkerPosition_0.y;
+			break;
+		case 1:
+			temp = row - bunkerPosition_1.y;
+			break;
+		case 2:
+			temp = row - bunkerPosition_2.y;
+			break;
+		case 3:
+			temp = row - bunkerPosition_3.y;
+			break;
+		default:
+			//xil_printf("\n\r\tWrong BunkerNumber in getBunkerRow");
+			break;
 	}
 	return temp;
 }
@@ -162,23 +188,22 @@ u32 getBunkerRow(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 */
 u32 getBunkerCol(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	u32 temp;
-	switch(bunkerNumber)
-	{
-	case 0:
-		temp = col - bunkerPosition_0.x;
-		break;
-	case 1:
-		temp = col - bunkerPosition_1.x;
-		break;
-	case 2:
-		temp = col - bunkerPosition_2.x;
-		break;
-	case 3:
-		temp = col - bunkerPosition_3.x;
-		break;
-	default:
-		//xil_printf("\n\r\tWrong BunkerNumber in getBunkerCol\n\r");
-		break;
+	switch(bunkerNumber) {
+		case 0:
+			temp = col - bunkerPosition_0.x;
+			break;
+		case 1:
+			temp = col - bunkerPosition_1.x;
+			break;
+		case 2:
+			temp = col - bunkerPosition_2.x;
+			break;
+		case 3:
+			temp = col - bunkerPosition_3.x;
+			break;
+		default:
+			//xil_printf("\n\r\tWrong BunkerNumber in getBunkerCol\n\r");
+			break;
 	}
 	return temp;
 }
@@ -226,7 +251,7 @@ void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
  * @param bunkerNumber the number of the bunker (0-3)
  * @return the erosion state of the block specified
  */
-u8 getBunkerState(u8 bunkerNumber, u8 blockNumber) {
+u8 getBlockState(u8 bunkerNumber, u8 blockNumber) {
 	u32 tempState = bunkerState[bunkerNumber];
 	u8 erosionState;
 	if (blockNumber < 9) {
@@ -242,6 +267,10 @@ u8 getBunkerState(u8 bunkerNumber, u8 blockNumber) {
 		erosionState = 0x07 & erosionState;  // mask out extraneous top bits
 	}
 	return erosionState;
+}
+
+u32 getBunkerState(u8 bunkerNumber) {
+	return bunkerState[bunkerNumber];
 }
 
 /////////////////////////////////////

@@ -545,6 +545,14 @@ packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 
 //---------------------End Bit Map Definitions------------------------------
 
+/**
+ * This function returns the color of the pixel to draw assuming we're
+ * already looking inside the small tank array.
+ *
+ * @param row The row number of the pixel within the tank
+ * @param col The column number of the pixel within the tank
+ * @return the color value to draw at that pixel
+ */
 u32 getTankPixel(u32 row, u32 col) {
 	u32 temp;
 	temp = 0;
@@ -558,78 +566,206 @@ u32 getTankPixel(u32 row, u32 col) {
 	return temp;
 }
 
+/**
+ * This function returns the color of the pixel to draw assuming we're
+ * already looking inside the specified bunker.
+ *
+ * @param row The row number of the pixel within the given bunker
+ * @param col The column number of the pixel within the given bunker
+ * @param bunkerNumber	number of the bunker (0-3)
+ * @param blockNumber	number of the block(0-11)
+ * @return the color value to draw at that pixel
+ */
 u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
-	u32 temp;
-	u32 rowInBunker;
-	u32 colInBunker;
+	u8 tempBlockErosion;
+	u32 tempResult;
+	u32 tempBase[BUNKER_SQUARE_HEIGHT], erosionMask[BUNKER_SQUARE_HEIGHT];
 
-	// Finding what row and col in the block we are
-	switch (bunkerNumber)
-	{
-	case 0:
-	{
-		rowInBunker = getBunkerState(bunkerNumber, blockNumber);
+	tempBlockErosion = getBlockState(bunkerNumber, blockNumber);
+	switch (blockNumber) {
+		case 0:
+			tempBase = (BUNKER_TOP_LEFT[row] >> (31-col)) & 0x00000001;
+			switch (tempBlockErosion) {
+				case 0:
+					erosionMask = (BUNKER_ERODE_01_LEFT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 1:
+					erosionMask = (BUNKER_ERODE_01_LEFT[row] >> (20-col)) & 0x00000001;
+					break;
+				case 2:
+					erosionMask = (BUNKER_ERODE_23_LEFT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 3:
+					erosionMask = (BUNKER_ERODE_23_LEFT[row] >> (20-col)) & 0x00000001;
+					break;
+				default:
+					erosionMask = BLACK;
+			}
+			tempResult = tempBase & erosionMask;
+			break;
+		case 3:
+			tempBase = (BUNKER_TOP_RIGHT[row] >> (31-col)) & 0x00000001;
+			switch (tempBlockErosion) {
+				case 0:
+					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 1:
+					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+					break;
+				case 2:
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 3:
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+					break;
+				default:
+					erosionMask = BLACK;
+			}
+			tempResult = tempBase & erosionMask;
+			break;
+		case 5:
+			tempBase = (BUNKER_MIDDLE_LEFT[row] >> (31-col)) & 0x00000001;
+			switch (tempBlockErosion) {
+				case 0:
+					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 1:
+					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+					break;
+				case 2:
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 3:
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+					break;
+				default:
+					erosionMask = BLACK;
+			}
+			tempResult = tempBase & erosionMask;
+			break;
+		case 6:
+			tempBase = (BUNKER_MIDDLE_RIGHT[row] >> (31-col)) & 0x00000001;
+			switch (tempBlockErosion) {
+				case 0:
+					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 1:
+					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+					break;
+				case 2:
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 3:
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+					break;
+				default:
+					erosionMask = BLACK;
+			}
+			tempResult = tempBase & erosionMask;
+			break;
+		case 9:
+			return BLACK;	//blocks 9 and 10 are always black
+		case 10:
+			return BLACK;
+		default:
+			tempBase = 0x00000001;	//other blocks are all 1s
+			switch (tempBlockErosion) {
+				case 0:
+					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 1:
+					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+					break;
+				case 2:
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+					break;
+				case 3:
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+					break;
+				default:
+					erosionMask = BLACK;
+			}
+			tempResult = tempBase & erosionMask;
+			break;
 	}
-		break;
-	case 1:
-
-		break;
-	case 2:
-
-		break;
-	case 3:
-
-		break;
-	default:
-		break;
-	}
-
-	if(blockNumber <= 3) {
-
-	}
-	else if(blockNumber <= 7) {
-
-	}
-	else if(blockNumber <= 11) {
-
-	}
-	temp = 0;
-	temp = (TANK[row]>>(31-col)) & 0x00000001;
-
-	u8 erodeState = getBunkerState(bunkerNumber, blockNumber);
-
-	if(erodeState == 4) {
-		return BLACK;
-	}
-
-	switch (blockNumber)
-	{
-	case 0:
-		temp = (BUNKER_TOP_LEFT[row] >> (31-col)) & 0x00000001;
-		break;
-	case 3:
-		temp = (BUNKER_TOP_RIGHT[row] >> (31-col)) & 0x00000001;
-		break;
-	case 5:
-		temp = (BUNKER_MIDDLE_LEFT[row] >> (31-col)) & 0x00000001;
-		break;
-	case 6:
-		temp = (BUNKER_MIDDLE_RIGHT[row] >> (31-col)) & 0x00000001;
-		break;
-	default:
-		temp = 1;
-		break;
-	}
-
-	if(blockNumber == 3){
-		temp = temp && 1;
-	}
-
-	if (temp != 0) {
-		temp = GREEN;
+	if (tempResult != 0) {
+		tempResult = GREEN;
 	}
 	else {
-		temp = BLACK;
+		tempResult = BLACK;
 	}
-	return temp;
+
+	return tempResult;
 }
+
+//	u32 rowInBunker;
+//	u32 colInBunker;
+//
+//	// Finding what row and col in the block we are
+//	switch (bunkerNumber) {
+//		case 0:
+//		{
+//			rowInBunker = getBunkerState(bunkerNumber, blockNumber);
+//		}
+//			break;
+//		case 1:
+//
+//			break;
+//		case 2:
+//
+//			break;
+//		case 3:
+//
+//			break;
+//		default:
+//			break;
+//	}
+//
+//	if(blockNumber <= 3) {
+//
+//	}
+//	else if(blockNumber <= 7) {
+//
+//	}
+//	else if(blockNumber <= 11) {
+//
+//	}
+//
+//	temp = (TANK[row]>>(31-col)) & 0x00000001;
+//
+//	u8 erodeState = getBunkerState(bunkerNumber, blockNumber);
+//
+//	if(erodeState == 4) {
+//		return BLACK;
+//	}
+//
+//	switch (blockNumber) {
+//		case 0:
+//			temp = (BUNKER_TOP_LEFT[row] >> (31-col)) & 0x00000001;
+//			break;
+//		case 3:
+//			temp = (BUNKER_TOP_RIGHT[row] >> (31-col)) & 0x00000001;
+//			break;
+//		case 5:
+//			temp = (BUNKER_MIDDLE_LEFT[row] >> (31-col)) & 0x00000001;
+//			break;
+//		case 6:
+//			temp = (BUNKER_MIDDLE_RIGHT[row] >> (31-col)) & 0x00000001;
+//			break;
+//		default:
+//			temp = 1;
+//			break;
+//	}
+//
+//	if(blockNumber == 3){
+//		temp = temp && 1;
+//	}
+//
+//	if (temp != 0) {
+//		temp = GREEN;
+//	}
+//	else {
+//		temp = BLACK;
+//	}
+//	return temp;
+//}

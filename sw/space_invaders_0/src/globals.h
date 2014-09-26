@@ -52,8 +52,11 @@ u8 getAlienBulletType_3();
 /////////////////////////////////////
 // Setup the Bunker Globals
 /////////////////////////////////////
+void initBunkers();
 void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion);
-u8 getBunkerState(u8 bunkerNumber, u8 blockNumber);
+u8 getBlockState(u8 bunkerNumber, u8 blockNumber);
+u32 getBunkerState(u8 bunkerNumber);
+point_t getBunkerPosition(u8 bunkerNumber);
 u8 isInsideBunker(point_t val);
 
 /////////////////////////////////////
