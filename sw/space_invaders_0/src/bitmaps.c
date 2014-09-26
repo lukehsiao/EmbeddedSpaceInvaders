@@ -698,74 +698,57 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	return tempResult;
 }
 
-//	u32 rowInBunker;
-//	u32 colInBunker;
-//
-//	// Finding what row and col in the block we are
-//	switch (bunkerNumber) {
-//		case 0:
-//		{
-//			rowInBunker = getBunkerState(bunkerNumber, blockNumber);
-//		}
-//			break;
-//		case 1:
-//
-//			break;
-//		case 2:
-//
-//			break;
-//		case 3:
-//
-//			break;
-//		default:
-//			break;
-//	}
-//
-//	if(blockNumber <= 3) {
-//
-//	}
-//	else if(blockNumber <= 7) {
-//
-//	}
-//	else if(blockNumber <= 11) {
-//
-//	}
-//
-//	temp = (TANK[row]>>(31-col)) & 0x00000001;
-//
-//	u8 erodeState = getBunkerState(bunkerNumber, blockNumber);
-//
-//	if(erodeState == 4) {
-//		return BLACK;
-//	}
-//
-//	switch (blockNumber) {
-//		case 0:
-//			temp = (BUNKER_TOP_LEFT[row] >> (31-col)) & 0x00000001;
-//			break;
-//		case 3:
-//			temp = (BUNKER_TOP_RIGHT[row] >> (31-col)) & 0x00000001;
-//			break;
-//		case 5:
-//			temp = (BUNKER_MIDDLE_LEFT[row] >> (31-col)) & 0x00000001;
-//			break;
-//		case 6:
-//			temp = (BUNKER_MIDDLE_RIGHT[row] >> (31-col)) & 0x00000001;
-//			break;
-//		default:
-//			temp = 1;
-//			break;
-//	}
-//
-//	if(blockNumber == 3){
-//		temp = temp && 1;
-//	}
-//
-//	if (temp != 0) {
-//		temp = GREEN;
-//	}
-//	else {
-//		temp = BLACK;
-//	}
-//	return temp;
-//}
+/**
+ * This function returns the color of the pixel to draw assuming we're
+ * already looking inside the alien.
+ *
+ * @param row The row number of the pixel within the alien
+ * @param col The column number of the pixel within the alien
+ * @param alienPosition open or closed (0-1)
+ * @param alienType Which type of alien (0-2)
+ * @return the color value to draw at that pixel
+ */
+u32 getAlienPixel(u32 row, u32 col, u32 alienType, u32 alienPosition, u32 alienNumber) {
+	u32 tempColor;
+	u32 tempPixel;
+
+	if (getAlienStatus(alienNumber) == 0) {
+		return BLACK;
+	}
+
+	switch (alienType) {
+		case 0:
+			if (alienPosition == 1) {
+				tempPixel = (ALIEN1_IN[row] >> (31-col));
+			}
+			else {
+				tempPixel = (ALIEN1_OUT[row] >> (31-col));
+			}
+			break;
+		case 1:
+			if (alienPosition == 1) {
+				tempPixel = (ALIEN2_IN[row] >> (31-col));
+			}
+			else {
+				tempPixel = (ALIEN2_OUT[row] >> (31-col));
+			}
+			break;
+		default:
+			if (alienPosition == 1) {
+				tempPixel = (ALIEN3_IN[row] >> (31-col));
+			}
+			else {
+				tempPixel = (ALIEN3_OUT[row] >> (31-col));
+			}
+
+	}
+	if (tempPixel != 0) {
+		tempColor = WHITE;
+	}
+	else {
+		tempColor = BLACK;
+	}
+	return tempColor;
+}
+
+

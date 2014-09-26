@@ -32,6 +32,7 @@ u8 isInsideTank(point_t val);
 /////////////////////////////////////
 void setAlienBlockPosition(point_t val);
 point_t getAlienBlockPosition();
+u16 getAlienStatus(u32 alienNumber);
 
 void setAlienBulletPosition_0(point_t val, u8 bullet_type);
 point_t getAlienBulletPosition_0();

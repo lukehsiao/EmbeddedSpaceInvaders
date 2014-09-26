@@ -110,13 +110,33 @@ u8 getAlienBulletType_3() {
 	return alienBullet_3.type;
 }
 
+u16 getAlienStatus(u32 alienNumber) {
+	u16 temp;
+	if (alienNumber < 11) {
+		temp = (alienStatus[0] >> (15-alienNumber)) & 0x1;
+	}
+	else if (alienNumber < 22) {
+		temp = (alienStatus[1] >> (15-(alienNumber % 11))) & 0x1;
+	}
+	else if (alienNumber < 33) {
+		temp = (alienStatus[2] >> (15-(alienNumber % 11))) & 0x1;
+	}
+	else if (alienNumber < 44) {
+		temp = (alienStatus[3] >> (15-(alienNumber % 11))) & 0x1;
+	}
+	else {
+		temp = (alienStatus[4] >> (15-(alienNumber % 11))) & 0x1;
+	}
+	return temp;
+}
+
 /////////////////////////////////////
 // Implement the Bunker Globals
 /////////////////////////////////////
 void initBunkers() {
 	int i;
 	for (i = 0; i < 4; i++) {
-		bunkerState[i] = 0x00000000;
+		bunkerState[i] = 0x0000004F;
 	}
 	bunkerPosition_0.x = 104;
 	bunkerPosition_0.y = 380;

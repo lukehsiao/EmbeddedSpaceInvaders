@@ -52,7 +52,12 @@ void renderBunker(u8 bunkerNumber){
 	}
 }
 
-void eraseTank() {
+void renderAliens() {
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	int col;
+	int row;
+	int alienNumber;
+
 
 }
 
