@@ -12,6 +12,10 @@
 #define u8 unsigned char
 #define u16 unsigned short
 #define u32 unsigned int
+#define GREEN 0x0000FF00
+#define WHITE 0x00FFFFFF
+#define RED   0x00FF0000
+#define BLACK 0x00000000
 #include "bitmaps.h"
 
 //typedef unsigned long ulong;
@@ -44,6 +48,7 @@ void setAlienBulletPosition_0(point_t val, u8 bullet_type);
 point_t getAlienBulletPosition_0();
 u8 getAlienBulletType_0();
 u8 toggleAlienGuise();
+u8 getAlienGuise();
 
 void setAlienBulletPosition_1(point_t val, u8 bullet_type);
 point_t getAlienBulletPosition_1();
