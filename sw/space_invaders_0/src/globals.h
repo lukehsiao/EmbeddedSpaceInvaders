@@ -18,6 +18,8 @@
 
 typedef struct {u32 x; u32 y;} point_t;
 
+void initGlobals();
+
 /////////////////////////////////////
 // Setup the Tank Globals
 /////////////////////////////////////
@@ -32,13 +34,16 @@ u8 isInsideTank(point_t val);
 /////////////////////////////////////
 // Setup the Alien Globals
 /////////////////////////////////////
+#define X_SHIFT 20
+#define Y_SHIFT 6
 void setAlienBlockPosition(point_t val);
 point_t getAlienBlockPosition();
 u16 getAlienStatus(u32 alienNumber);
-
+void setAlienStatus(u32 alienNumber, u32 status);
 void setAlienBulletPosition_0(point_t val, u8 bullet_type);
 point_t getAlienBulletPosition_0();
 u8 getAlienBulletType_0();
+u8 toggleAlienGuise();
 
 void setAlienBulletPosition_1(point_t val, u8 bullet_type);
 point_t getAlienBulletPosition_1();

@@ -52,51 +52,95 @@ void renderBunker(u8 bunkerNumber){
 	}
 }
 
+void updateAlienLocation() {
+	static u8 direction = 1;	//1 = right, 0 = left
+	// Update Location each call
+	point_t tempAlien = getAlienBlockPosition();
+
+	if(direction == 1){
+		tempAlien.x = tempAlien.x + X_SHIFT;
+	}
+	else {
+		tempAlien.x = tempAlien.x - X_SHIFT;
+		if(tempAlien.x > 640) {
+			tempAlien.x = 0;
+		}
+	}
+	// Alien Block hit Right side
+	if(tempAlien.x >= (640-32*11) && direction == 1) {
+		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+		direction = 0;
+	} // Alien Block hit left side
+	else if(tempAlien.x <= 5 && direction == 0) {
+			tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+			direction = 1;
+	}
+
+
+	tempAlien.y = tempAlien.y + 0;
+	setAlienBlockPosition(tempAlien);
+}
+
+void unrenderAliens() {
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	int col;
+	int row;
+	point_t position;
+	position = getAlienBlockPosition();
+	for (row = 0; (16+10)*5; row++) {
+		for (col = 0; col < (11*32); col++) {
+			framePointer0[(position.y + row)*640 + (position.x+col)] = 0x0;
+		}
+	}
+}
+
+/**
+ *  Draws all the aliens.  Note that it will toggle the alien guise each time it is called
+ */
 void renderAliens() {
+	//unrenderAliens();
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
 	int row;
 	int alienNumber;
+	point_t position = getAlienBlockPosition();
+	u8 tempGuise = toggleAlienGuise();
 	for(alienNumber = 0; alienNumber < 11; alienNumber++) {
 		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32; col++) {
-				point_t position = getAlienBlockPosition();
-				framePointer0[(position.y + row)*640 + (position.x+col+(alienNumber*32))] = getAlienPixel(row, col, 0, 1, alienNumber);
+				framePointer0[(position.y + row)*640 + (position.x+col+(alienNumber*32))] = getAlienPixel(row, col, 0, tempGuise, alienNumber);
 			}
 		}
 	}
 	for(alienNumber = 11; alienNumber < 22; alienNumber++) {
 		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32; col++) {
-				point_t position = getAlienBlockPosition();
-				framePointer0[(position.y + row + ALIEN_HEIGHT + 10)*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 1, 0, alienNumber);
+				framePointer0[(position.y + row + ALIEN_HEIGHT + 10)*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 1, tempGuise, alienNumber);
 			}
 		}
 	}
 	for(alienNumber = 22; alienNumber < 33; alienNumber++) {
 		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32; col++) {
-				point_t position = getAlienBlockPosition();
-				framePointer0[(position.y + row + 2*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 1, 1, alienNumber);
+				framePointer0[(position.y + row + 2*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 1, tempGuise, alienNumber);
 			}
 		}
 	}
 	for(alienNumber = 33; alienNumber < 44; alienNumber++) {
 		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32; col++) {
-				point_t position = getAlienBlockPosition();
-				framePointer0[(position.y + row + 3*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 2, 0, alienNumber);
+				framePointer0[(position.y + row + 3*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 2, tempGuise, alienNumber);
 			}
 		}
 	}
 	for(alienNumber = 44; alienNumber < 55; alienNumber++) {
 		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32; col++) {
-				point_t position = getAlienBlockPosition();
-				framePointer0[(position.y + row + 4*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 2, 1, alienNumber);
+				framePointer0[(position.y + row + 4*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 2, tempGuise, alienNumber);
 			}
 		}
 	}
+	updateAlienLocation();
 }
 
 void blankScreen() {
@@ -126,17 +170,20 @@ void blankScreen() {
 }
 
 void render() {
-	blankScreen();
+	//blankScreen();
 	renderTank();
 	renderBunker(0);
 	renderBunker(1);
 	renderBunker(2);
 	renderBunker(3);
-
-	point_t temp;
-	temp.x = 40;
-	temp.y = 40;
-	setAlienBlockPosition(temp);
 	renderAliens();
+}
+
+void unrender() {
+	// Unrender tanks
+	unrenderAliens();
+	// unrender aliens
+
+	// unrender bullets
 }
 

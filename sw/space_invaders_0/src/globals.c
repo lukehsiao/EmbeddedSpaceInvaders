@@ -14,6 +14,7 @@ typedef struct {point_t position; u8 type;} alienBullet;
 // Alien Variables
 u16 alienStatus[5];		// one u16 tracks life/death of one row of aliens
 point_t alienBlockPosition;  // Top-left position of the alien block.
+u8 alienGuise;
 alienBullet alienBullet_0;
 alienBullet alienBullet_1;
 alienBullet alienBullet_2;
@@ -40,19 +41,18 @@ u8 lives;	//starts w/ 3 and decrements each death
 // Initializations
 /////////////////////////////////////
 void initGlobals(){
-
 	setTankPositionGlobal(200);
-
-
     initBunkers();
-
+    alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
 		alienStatus[i] = 0xFFFF;
 	}
-//	int dumb;
-//
-//	dumb++;
+
+	point_t temp;
+	temp.x = 150;
+	temp.y = 50;
+	setAlienBlockPosition(temp);
 }
 
 /////////////////////////////////////
@@ -89,6 +89,12 @@ void setAlienBlockPosition(point_t val) {
 }
 point_t getAlienBlockPosition() {
 	return alienBlockPosition;
+}
+
+u8 toggleAlienGuise() {
+	u8 temp = alienGuise;
+	alienGuise = (~alienGuise) & 0x1;
+	return temp;
 }
 
 void setAlienBulletPosition_0(point_t val, u8 bullet_type) {
