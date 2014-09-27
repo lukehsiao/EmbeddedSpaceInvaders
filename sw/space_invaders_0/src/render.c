@@ -114,8 +114,8 @@ void updateAlienPosition() {
 		setAlienDirection(0);
 	} // Alien Block hit left side
 	else if(tempAlien.x <= 5 && direction == 0) {
-			tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
-			setAlienDirection(1);
+		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+		setAlienDirection(1);
 	}
 	else {
 		if(direction == 1){
@@ -164,6 +164,42 @@ void renderAliens() {
 	}
 }
 
+void unrenderTankBullet() {
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	point_t position = getTankBulletPosition();
+	u32 row;
+	u32 col;
+	for (row = 0; row < 8; row++) {
+		for (col = 0; col < 2; col++) {
+			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+		}
+	}
+}
+
+void updateTankBulletPosition() {
+	unrenderTankBullet();
+	point_t position = getTankBulletPosition();
+	position.y = position.y - TANK_BULLET_SPEED;
+	if(position.y > 480) {
+		position.y = 480-10;
+		position.x = position.x + 10;
+	}
+	setTankBulletPosition(position);
+}
+
+void renderTankBullet() {
+	updateTankBulletPosition();
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	point_t position = getTankBulletPosition();
+	u32 row;
+	u32 col;
+	for (row = 0; row < 8; row++) {
+		for (col = 0; col < 2; col++) {
+			framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+		}
+	}
+}
+
 /**
  * Writes Black to the entire screen
  */
@@ -202,6 +238,8 @@ void render() {
 	renderBunker(2);
 	renderBunker(3);
 	renderAliens();
+
+	renderTankBullet();
 }
 
 /**

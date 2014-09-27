@@ -55,6 +55,10 @@ void initGlobals(){
 	temp.y = 50;
 	setAlienBlockPosition(temp);
 	direction = 1;
+
+	temp.x = 10;
+	temp.y = 400;
+	setTankBulletPosition(temp);
 }
 
 /////////////////////////////////////
