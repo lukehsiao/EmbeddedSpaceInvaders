@@ -227,6 +227,53 @@ void unrenderTank() {
 	}
 }
 
+void parseKey(u8 keyPressed) {
+	point_t temp;
+	switch (keyPressed) {
+		case '4':
+			unrender();
+			temp = getTankPositionGlobal();
+			temp.x - 4;
+			if (temp.x > (640-32)) {
+				temp.x = 0;
+			}
+			setTankPositionGlobal(temp.x);
+			render();
+			break;
+		case '6':
+			unrender();
+			temp = getTankPositionGlobal();
+			temp.x = 4;
+			if (temp.x > (640-32)) {
+				temp.x = (640-32);
+			}
+			setTankPositionGlobal(temp.x);
+			render();
+			break;
+		case '8':
+
+			break;
+		case '2':
+
+			break;
+		case '5':
+
+			break;
+		case '3':
+
+			break;
+		case '9':
+
+			break;
+		case '7':
+
+			break;
+		default:
+			//do nothing
+			break;
+	}
+}
+
 /**
  * Renders all of the objects on the screen
  */
