@@ -708,7 +708,6 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	else {
 		tempResult = BLACK;
 	}
-
 	return tempResult;
 }
 
@@ -752,54 +751,6 @@ const u32* getAlienArray(u32 alienNumber) {
 			return ALIEN3_OUT;
 		}
 	}
-
 }
-
-/**
- * This function returns the color of the pixel to draw assuming we're
- * already looking inside the alien.
- *
- * @param row The row number of the pixel within the alien
- * @param col The column number of the pixel within the alien
- * @param alienPosition open or closed (0-1)
- * @param alienType Which type of alien (0-2)
- * @return the color value to draw at that pixel
- */
-//u32 getAlienPixel(u32 row, u32 col, u32 alienType, u32 alienPosition, u32 alienNumber) {
-//	u32 tempColor;
-//	u32 tempRow;
-//
-//	if (getAlienStatus(alienNumber) == 0) {
-//		return BLACK;
-//	}
-//
-//	switch (alienType) {
-//		case 0:
-//			if (alienPosition == 1) {
-//				tempRow = (ALIEN1_IN[row]);
-//			}
-//			else {
-//				tempRow = (ALIEN1_OUT[row]);
-//			}
-//			break;
-//		case 1:
-//			if (alienPosition == 1) {
-//				tempRow = (ALIEN2_IN[row]);
-//			}
-//			else {
-//				tempRow = (ALIEN2_OUT[row]);
-//			}
-//			break;
-//		default:
-//			if (alienPosition == 1) {
-//				tempRow = (ALIEN3_IN[row]);
-//			}
-//			else {
-//				tempRow = (ALIEN3_OUT[row]);
-//			}
-//
-//	}
-//	return tempRow;
-//}
 
 
