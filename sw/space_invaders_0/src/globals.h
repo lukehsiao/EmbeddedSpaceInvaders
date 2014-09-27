@@ -16,6 +16,7 @@
 #define WHITE 0x00FFFFFF
 #define RED   0x00FF0000
 #define BLACK 0x00000000
+#define TANK_BULLET_SPEED 4
 #include "bitmaps.h"
 
 //typedef unsigned long ulong;
