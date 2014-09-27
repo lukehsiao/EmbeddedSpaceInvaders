@@ -109,12 +109,12 @@ void renderAliens() {
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
 		//algorithm to adjust x and y for drawing
 		position.x = position.x + 32;
-
 		if (alienNumber % 11 == 0) {	//if end of row is reached, increment
 			position.y = position.y + (ALIEN_HEIGHT + 10);
 			position.x = getAlienBlockPosition().x;
 		}
 
+		//Rendering each alien
 		arrayToRender = getAlienArray(alienNumber);
 		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32; col++) {
@@ -122,51 +122,7 @@ void renderAliens() {
 				framePointer0[(position.y + row)*640 + (position.x + col)] = pixelPresent? WHITE : BLACK;
 			}
 		}
-
-
 	}
-
-
-//	for(alienNumber = 0; alienNumber < 11; alienNumber++) {
-//		for (row = 0; row < ALIEN_HEIGHT; row++) {
-//			u32 tempRow = getAlienPixel(row, col, 0, tempGuise, alienNumber);
-//			for (col = 0; col < 32; col++) {
-//				framePointer0[(position.y + row)*640 + (position.x+col+(alienNumber*32))] = (tempRow >> (31-col) & 0x1)? WHITE : BLACK;
-//			}
-//		}
-//	}
-//	for(alienNumber = 11; alienNumber < 22; alienNumber++) {
-//		for (row = 0; row < ALIEN_HEIGHT; row++) {
-//			u32 tempRow = getAlienPixel(row, col, 1, tempGuise, alienNumber);
-//			for (col = 0; col < 32; col++) {
-//				framePointer0[(position.y + row + ALIEN_HEIGHT + 10)*640 + (position.x+col+((alienNumber%11)*32))] = (tempRow >> (31-col) & 0x1)? WHITE : BLACK;
-//			}
-//		}
-//	}
-//	for(alienNumber = 22; alienNumber < 33; alienNumber++) {
-//		for (row = 0; row < ALIEN_HEIGHT; row++) {
-//			u32 tempRow = getAlienPixel(row, col, 1, tempGuise, alienNumber);
-//			for (col = 0; col < 32; col++) {
-//				framePointer0[(position.y + row + 2*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = (tempRow >> (31-col) & 0x1)? WHITE : BLACK;
-//			}
-//		}
-//	}
-//	for(alienNumber = 33; alienNumber < 44; alienNumber++) {
-//		for (row = 0; row < ALIEN_HEIGHT; row++) {
-//			u32 tempRow = getAlienPixel(row, col, 2, tempGuise, alienNumber);
-//			for (col = 0; col < 32; col++) {
-//				framePointer0[(position.y + row + 3*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = (tempRow >> (31-col) & 0x1)? WHITE : BLACK;
-//			}
-//		}
-//	}
-//	for(alienNumber = 44; alienNumber < 55; alienNumber++) {
-//		for (row = 0; row < ALIEN_HEIGHT; row++) {
-//			u32 tempRow = getAlienPixel(row, col, 2, tempGuise, alienNumber);
-//			for (col = 0; col < 32; col++) {
-//				framePointer0[(position.y + row + 4*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = (tempRow >> (31-col) & 0x1)? WHITE : BLACK;
-//			}
-//		}
-//	}
 	//updateAlienLocation();
 }
 

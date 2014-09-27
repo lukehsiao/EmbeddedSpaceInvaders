@@ -712,11 +712,20 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	return tempResult;
 }
 
-
+/**
+ * This function calculates which alien array to return based on alien
+ * number.
+ *
+ * @param alienNumber the number of the alien to display
+ * @return a pointer to the 32x16 bit array of bitmap data.
+ */
 const u32* getAlienArray(u32 alienNumber) {
+	//If alien is dead, return black
 	if (getAlienStatus(alienNumber) == 0) {
 		return ALIEN_DEAD;
 	}
+
+	// Otherwise...
 	u8 tempGuise;
 	tempGuise = getAlienGuise();
 	if (alienNumber < 11) {
@@ -764,41 +773,41 @@ const u32* getAlienArray(u32 alienNumber) {
  * @param alienType Which type of alien (0-2)
  * @return the color value to draw at that pixel
  */
-u32 getAlienPixel(u32 row, u32 col, u32 alienType, u32 alienPosition, u32 alienNumber) {
-	u32 tempColor;
-	u32 tempRow;
-
-	if (getAlienStatus(alienNumber) == 0) {
-		return BLACK;
-	}
-
-	switch (alienType) {
-		case 0:
-			if (alienPosition == 1) {
-				tempRow = (ALIEN1_IN[row]);
-			}
-			else {
-				tempRow = (ALIEN1_OUT[row]);
-			}
-			break;
-		case 1:
-			if (alienPosition == 1) {
-				tempRow = (ALIEN2_IN[row]);
-			}
-			else {
-				tempRow = (ALIEN2_OUT[row]);
-			}
-			break;
-		default:
-			if (alienPosition == 1) {
-				tempRow = (ALIEN3_IN[row]);
-			}
-			else {
-				tempRow = (ALIEN3_OUT[row]);
-			}
-
-	}
-	return tempRow;
-}
+//u32 getAlienPixel(u32 row, u32 col, u32 alienType, u32 alienPosition, u32 alienNumber) {
+//	u32 tempColor;
+//	u32 tempRow;
+//
+//	if (getAlienStatus(alienNumber) == 0) {
+//		return BLACK;
+//	}
+//
+//	switch (alienType) {
+//		case 0:
+//			if (alienPosition == 1) {
+//				tempRow = (ALIEN1_IN[row]);
+//			}
+//			else {
+//				tempRow = (ALIEN1_OUT[row]);
+//			}
+//			break;
+//		case 1:
+//			if (alienPosition == 1) {
+//				tempRow = (ALIEN2_IN[row]);
+//			}
+//			else {
+//				tempRow = (ALIEN2_OUT[row]);
+//			}
+//			break;
+//		default:
+//			if (alienPosition == 1) {
+//				tempRow = (ALIEN3_IN[row]);
+//			}
+//			else {
+//				tempRow = (ALIEN3_OUT[row]);
+//			}
+//
+//	}
+//	return tempRow;
+//}
 
 

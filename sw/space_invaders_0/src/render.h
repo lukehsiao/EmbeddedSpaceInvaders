@@ -26,7 +26,6 @@ void render();
  * render(); *
  */
 void unrender();
-
 void blankScreen();
 
 #endif /* RENDER_H_ */
