@@ -97,6 +97,10 @@ u8 toggleAlienGuise() {
 	return temp;
 }
 
+u8 getAlienGuise() {
+	return alienGuise;
+}
+
 void setAlienBulletPosition_0(point_t val, u8 bullet_type) {
 	alienBullet_0.position = val;
 	alienBullet_0.type = bullet_type;

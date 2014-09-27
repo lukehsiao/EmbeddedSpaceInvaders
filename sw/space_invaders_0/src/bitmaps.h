@@ -1,6 +1,7 @@
 
 #ifndef bitmaps_h
 #define bitmaps_h
+#include "globals.h"
 
 #define u8 unsigned char
 #define u16 unsigned short
@@ -18,6 +19,6 @@
 
 u32 getTankPixel(u32 row, u32 col);
 u32 getBunkerBlock(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber);
-u32 getAlienPixel(u32 row, u32 col, u32 alienType, u32 alienPosition, u32 alienNumber);
+const u32* getAlienArray(u32 alienNumber);
 
 #endif

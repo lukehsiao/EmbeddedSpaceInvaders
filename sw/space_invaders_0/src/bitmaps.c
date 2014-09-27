@@ -5,14 +5,27 @@
  *      Author: superman
  */
 #include "bitmaps.h"
-#include "globals.h"
-
-#define GREEN 0x0000FF00
-#define WHITE 0x00FFFFFF
-#define RED   0x00FF0000
-#define BLACK 0x00000000
 
 //---------------------Bit Map Definitions----------------------------------
+const unsigned int ALIEN_DEAD[ALIEN_HEIGHT] =
+{
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+};
 const unsigned int ALIEN1_IN[ALIEN_HEIGHT] =
 {
 packWord32(0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -543,6 +556,7 @@ packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
 
 
+
 //---------------------End Bit Map Definitions------------------------------
 
 /**
@@ -699,6 +713,57 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 }
 
 /**
+ * This function calculates which alien array to return based on alien
+ * number.
+ *
+ * @param alienNumber the number of the alien to display
+ * @return a pointer to the 32x16 bit array of bitmap data.
+ */
+const u32* getAlienArray(u32 alienNumber) {
+	//If alien is dead, return black
+	if (getAlienStatus(alienNumber) == 0) {
+		return ALIEN_DEAD;
+	}
+
+	// Otherwise...
+	u8 tempGuise;
+	tempGuise = getAlienGuise();
+	if (alienNumber < 11) {
+		if (tempGuise == 0) {
+			return ALIEN1_IN;
+		}
+		else {
+			return ALIEN1_OUT;
+		}
+	}
+	else if (alienNumber < 33) {
+		if (tempGuise == 0) {
+			return ALIEN2_IN;
+		}
+		else {
+			return ALIEN2_OUT;
+		}
+	}
+	else if (alienNumber < 33) {
+		if (tempGuise == 0) {
+			return ALIEN2_IN;
+		}
+		else {
+			return ALIEN2_OUT;
+		}
+	}
+	else {
+		if (tempGuise == 0) {
+			return ALIEN3_IN;
+		}
+		else {
+			return ALIEN3_OUT;
+		}
+	}
+
+}
+
+/**
  * This function returns the color of the pixel to draw assuming we're
  * already looking inside the alien.
  *
@@ -708,48 +773,41 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
  * @param alienType Which type of alien (0-2)
  * @return the color value to draw at that pixel
  */
-u32 getAlienPixel(u32 row, u32 col, u32 alienType, u32 alienPosition, u32 alienNumber) {
-	u32 tempColor;
-	u32 tempPixel;
-
-	if (getAlienStatus(alienNumber) == 0) {
-		return BLACK;
-	}
-
-	switch (alienType) {
-		case 0:
-			if (alienPosition == 1) {
-				tempPixel = (ALIEN1_IN[row] >> (31-col));
-			}
-			else {
-				tempPixel = (ALIEN1_OUT[row] >> (31-col));
-			}
-			break;
-		case 1:
-			if (alienPosition == 1) {
-				tempPixel = (ALIEN2_IN[row] >> (31-col));
-			}
-			else {
-				tempPixel = (ALIEN2_OUT[row] >> (31-col));
-			}
-			break;
-		default:
-			if (alienPosition == 1) {
-				tempPixel = (ALIEN3_IN[row] >> (31-col));
-			}
-			else {
-				tempPixel = (ALIEN3_OUT[row] >> (31-col));
-			}
-
-	}
-	tempPixel = tempPixel & 0x1;
-	if (tempPixel != 0) {
-		tempColor = WHITE;
-	}
-	else {
-		tempColor = BLACK;
-	}
-	return tempColor;
-}
+//u32 getAlienPixel(u32 row, u32 col, u32 alienType, u32 alienPosition, u32 alienNumber) {
+//	u32 tempColor;
+//	u32 tempRow;
+//
+//	if (getAlienStatus(alienNumber) == 0) {
+//		return BLACK;
+//	}
+//
+//	switch (alienType) {
+//		case 0:
+//			if (alienPosition == 1) {
+//				tempRow = (ALIEN1_IN[row]);
+//			}
+//			else {
+//				tempRow = (ALIEN1_OUT[row]);
+//			}
+//			break;
+//		case 1:
+//			if (alienPosition == 1) {
+//				tempRow = (ALIEN2_IN[row]);
+//			}
+//			else {
+//				tempRow = (ALIEN2_OUT[row]);
+//			}
+//			break;
+//		default:
+//			if (alienPosition == 1) {
+//				tempRow = (ALIEN3_IN[row]);
+//			}
+//			else {
+//				tempRow = (ALIEN3_OUT[row]);
+//			}
+//
+//	}
+//	return tempRow;
+//}
 
 
