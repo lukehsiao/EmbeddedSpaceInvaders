@@ -200,8 +200,8 @@ void renderTankBullet() {
  */
 void blankScreen() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
-	int row=0, col=0;
-	for( row=0; row<480; row++) {
+	int row, col;
+	for(row=0; row<480; row++) {
 		for(col=0; col<640; col++) {
 			framePointer0[row*640 + col] = BLACK;  // frame 0 is red here.
 		}
