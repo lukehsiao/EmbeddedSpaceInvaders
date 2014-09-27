@@ -229,7 +229,9 @@ void unrenderTank() {
 
 void parseKey(u8 keyPressed, u32 timerSeed) {
 	point_t temp;
-	u32 random;
+	u8 random;
+	u8 blockNumber;
+	u8 erosionState;
 	switch (keyPressed) {
 		case '4':
 			unrender();
@@ -256,6 +258,7 @@ void parseKey(u8 keyPressed, u32 timerSeed) {
 			break;
 		case '2':
 			random = (timerSeed * 13 + 4) % 54;
+			setAlienStatus(random, 0); //kill the random alien
 			break;
 		case '5':
 
@@ -267,7 +270,13 @@ void parseKey(u8 keyPressed, u32 timerSeed) {
 
 			break;
 		case '7':
-
+			random = (timerSeed * 13 + 4) % 3;
+			for (blockNumber = 0; blockNumber < 11; blockNumber++) {
+				erosionState = getBlockState(random, blockNumber);
+				if (erosionState < 4) {
+					setBunkerState(random, blockNumber, erosionState+1);
+				}
+			}
 			break;
 		default:
 			//do nothing
