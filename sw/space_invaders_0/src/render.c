@@ -24,6 +24,11 @@ void renderTank() {
 	}
 }
 
+/**
+ * Draws all of the bunkers in their current erosion state
+ * This code is not optimized.
+ * @param bunkerNumber The number of the bunker to render (0-3)
+ */
 void renderBunker(u8 bunkerNumber){
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
@@ -172,6 +177,9 @@ void blankScreen() {
 	}
 }
 
+/**
+ * Writes BLACK to the box that the tank is currently in
+ */
 void unrenderTank() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int row, col;
@@ -183,6 +191,9 @@ void unrenderTank() {
 	}
 }
 
+/**
+ * Renders all of the objects on the screen
+ */
 void render() {
 	//blankScreen();
 	renderTank();
@@ -193,10 +204,12 @@ void render() {
 	renderAliens();
 }
 
+/**
+ * Unrenders the objects that may have moved due to inputs:
+ * Tank
+ */
 void unrender() {
-	// Unrender tanks
+	// Unrender tank
 	unrenderTank();
-
-	// unrender bullets
 }
 
