@@ -20,12 +20,12 @@
 #include "platform.h"
 #include "xparameters.h"
 #include "xaxivdma.h"
-#include "xuartlite.h"
 #include "xio.h"
 #include "time.h"
 #include "unistd.h"
 #include "globals.h"		// Our globals.h file.
 #include "render.h"			// Our rendering file.
+#include "xuartlite_l.h"
 
 #define DEBUG
 void print(char *str);
@@ -112,25 +112,18 @@ int main()
      if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
     	 xil_printf("vdma parking failed\n\r");
      }
-     // Oscillate between frame 0 and frame 1.
+
+     Xuint8 temp[1];
      int sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
      char inputKey;
-
-     //Setup UART for keyboard communication
-     XUartLite uartLite;
-     Xuint8 RecvBuffer[1];
-     XStatus status;
-     status = XUartLite_Initialize(&uartLite, XPAR_UARTLITE_0_DEVICE_ID);
-     u32 recievedCount;
      inputKey = 0;
      while (1) {
-//    	 while (sillyTimer) sillyTimer--;    // Decrement the timer.
-//    	 sillyTimer = MAX_SILLY_TIMER;       // Reset the timer.
-//       render();  // Alternate between frame 0 and frame 1.
-    	 //unsigned int XUartLite_Recv(XUartLite *InstancePtr, u8 *DataBufferPtr,unsigned int NumBytes);
-    	 recievedCount = XUartLite_Recv(&uartLite, RecvBuffer, 1);
-    	 xil_printf("%c\n\r", RecvBuffer[0]);
-
+    	 sillyTimer--;
+    	 if (sillyTimer == 0) {
+    		 sillyTimer = MAX_SILLY_TIMER;
+    	 }
+    	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_0_BASEADDR);
+    	 parseKey(inputKey, sillyTimer);
          if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
         	 xil_printf("vdma parking failed\n\r");
          }
