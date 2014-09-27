@@ -227,13 +227,14 @@ void unrenderTank() {
 	}
 }
 
-void parseKey(u8 keyPressed) {
+void parseKey(u8 keyPressed, u32 timerSeed) {
 	point_t temp;
+	u32 random;
 	switch (keyPressed) {
 		case '4':
 			unrender();
 			temp = getTankPositionGlobal();
-			temp.x - 4;
+			temp.x = temp.x - 4;
 			if (temp.x > (640-32)) {
 				temp.x = 0;
 			}
@@ -243,7 +244,7 @@ void parseKey(u8 keyPressed) {
 		case '6':
 			unrender();
 			temp = getTankPositionGlobal();
-			temp.x = 4;
+			temp.x = temp.x + 4;
 			if (temp.x > (640-32)) {
 				temp.x = (640-32);
 			}
@@ -251,10 +252,10 @@ void parseKey(u8 keyPressed) {
 			render();
 			break;
 		case '8':
-
+			renderAliens();
 			break;
 		case '2':
-
+			random = (timerSeed * 13 + 4) % 54;
 			break;
 		case '5':
 
