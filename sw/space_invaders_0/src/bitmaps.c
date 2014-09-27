@@ -744,14 +744,6 @@ const u32* getAlienArray(u32 alienNumber) {
 			return ALIEN2_OUT;
 		}
 	}
-	else if (alienNumber < 33) {
-		if (tempGuise == 0) {
-			return ALIEN2_IN;
-		}
-		else {
-			return ALIEN2_OUT;
-		}
-	}
 	else {
 		if (tempGuise == 0) {
 			return ALIEN3_IN;

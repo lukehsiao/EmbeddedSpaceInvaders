@@ -19,6 +19,7 @@ alienBullet alienBullet_0;
 alienBullet alienBullet_1;
 alienBullet alienBullet_2;
 alienBullet alienBullet_3;
+u8 direction;	//1 = right, 0 = left
 
 // Bunker Variables
 point_t bunkerPosition_0;	// Top-left position of the bunker.
@@ -50,9 +51,10 @@ void initGlobals(){
 	}
 
 	point_t temp;
-	temp.x = 150;
+	temp.x = 160;
 	temp.y = 50;
 	setAlienBlockPosition(temp);
+	direction = 1;
 }
 
 /////////////////////////////////////
@@ -190,6 +192,14 @@ u16 getAlienStatus(u32 alienNumber) {
 		temp = (alienStatus[4] >> (15-(alienNumber % 11))) & 0x1;
 	}
 	return temp;
+}
+
+u8 getAlienDirection() {
+	return direction;
+}
+
+void setAlienDirection(u8 tempDirection) {
+	direction = tempDirection;
 }
 
 /////////////////////////////////////

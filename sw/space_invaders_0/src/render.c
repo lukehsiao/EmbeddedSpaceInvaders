@@ -52,34 +52,7 @@ void renderBunker(u8 bunkerNumber){
 	}
 }
 
-void updateAlienLocation() {
-	static u8 direction = 1;	//1 = right, 0 = left
-	// Update Location each call
-	point_t tempAlien = getAlienBlockPosition();
 
-	if(direction == 1){
-		tempAlien.x = tempAlien.x + X_SHIFT;
-	}
-	else {
-		tempAlien.x = tempAlien.x - X_SHIFT;
-		if(tempAlien.x > 640) {
-			tempAlien.x = 0;
-		}
-	}
-	// Alien Block hit Right side
-	if(tempAlien.x >= (640-32*11) && direction == 1) {
-		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
-		direction = 0;
-	} // Alien Block hit left side
-	else if(tempAlien.x <= 5 && direction == 0) {
-			tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
-			direction = 1;
-	}
-
-
-	tempAlien.y = tempAlien.y + 0;
-	setAlienBlockPosition(tempAlien);
-}
 
 void unrenderAliens() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
@@ -87,18 +60,98 @@ void unrenderAliens() {
 	int row;
 	point_t position;
 	position = getAlienBlockPosition();
-	for (row = 0; (16+10)*5; row++) {
-		for (col = 0; col < (11*32); col++) {
-			framePointer0[(position.y + row)*640 + (position.x+col)] = 0x0;
+	static u8 direction;
+	direction = getAlienDirection();
+
+	if(direction == 1){
+		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
+			for (col = 0; col < X_SHIFT; col++) {
+				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+			}
 		}
 	}
+
+	if(position.x >= (640-32*11) && direction == 1) {
+		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
+			for (col = 0; col < 32*11; col++) {
+				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+			}
+		}
+	} // Alien Block hit left side
+	else if(position.x <= 5 && direction == 0) {
+		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
+			for (col = 0; col < 32*11; col++) {
+				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+			}
+		}
+	}
+	//If we dropped a row
+//	if (getAlienDirection() != direction) {
+//		direction = getAlienDirection();
+//		position.y = position.y - ALIEN_HEIGHT - 10;
+//		if (direction == 0) {
+//			position.x = position.x - 32;
+//		}
+//		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
+//			for (col = 0; col < 32*11+10; col++) {
+//				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+//			}
+//		}
+//	}
+
+//	// Moving Right
+//	if(direction == 1) {
+//		position.x = position.x - 32;
+//		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
+//			for (col = 0; col < 32; col++) {
+//				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+//			}
+//		}
+//	} // Moving Left
+//	else {
+//		position.x = position.x + 352;
+//		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
+//			for (col = 0; col < 32; col++) {
+//				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+//			}
+//		}
+//	}
+}
+
+void updateAlienLocation() {
+	unrenderAliens();
+	u8 direction = getAlienDirection();
+	// Update Location each call
+	point_t tempAlien = getAlienBlockPosition();
+
+	// Alien Block hit Right side
+	if(tempAlien.x >= (640-32*11) && direction == 1) {
+		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+		setAlienDirection(0);
+	} // Alien Block hit left side
+	else if(tempAlien.x <= 5 && direction == 0) {
+			tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+			setAlienDirection(1);
+	}
+	else {
+		if(direction == 1){
+			tempAlien.x = tempAlien.x + X_SHIFT;
+		}
+		else {
+			tempAlien.x = tempAlien.x - X_SHIFT;
+			if(tempAlien.x > 640) {
+				tempAlien.x = 0;
+			}
+		}
+	}
+	setAlienBlockPosition(tempAlien);
 }
 
 /**
  *  Draws all the aliens.  Note that it will toggle the alien guise each time it is called
  */
 void renderAliens() {
-	//unrenderAliens();
+	updateAlienLocation();
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
 	int row;
@@ -108,10 +161,12 @@ void renderAliens() {
 	const u32* arrayToRender;
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
 		//algorithm to adjust x and y for drawing
-		position.x = position.x + 32;
-		if (alienNumber % 11 == 0) {	//if end of row is reached, increment
-			position.y = position.y + (ALIEN_HEIGHT + 10);
-			position.x = getAlienBlockPosition().x;
+		if (alienNumber != 0) {
+			position.x = position.x + 32;
+			if (alienNumber % 11 == 0) {	//if end of row is reached, increment
+				position.y = position.y + (ALIEN_HEIGHT + 10);
+				position.x = getAlienBlockPosition().x;
+			}
 		}
 
 		//Rendering each alien
@@ -123,7 +178,6 @@ void renderAliens() {
 			}
 		}
 	}
-	//updateAlienLocation();
 }
 
 void blankScreen() {

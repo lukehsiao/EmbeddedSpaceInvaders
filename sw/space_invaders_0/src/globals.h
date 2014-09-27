@@ -38,7 +38,7 @@ u8 isInsideTank(point_t val);
 /////////////////////////////////////
 // Setup the Alien Globals
 /////////////////////////////////////
-#define X_SHIFT 20
+#define X_SHIFT 6
 #define Y_SHIFT 6
 void setAlienBlockPosition(point_t val);
 point_t getAlienBlockPosition();
