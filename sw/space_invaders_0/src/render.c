@@ -97,7 +97,7 @@ void unrenderAliens() {
  * Contains the algorithm to move the aliens left and right, as well as drop
  * rows when they hit the edge of the screen.
  */
-void updateAlienLocation() {
+void updateAlienPosition() {
 	unrenderAliens();
 	u8 direction = getAlienDirection();
 	// Update Location each call
@@ -130,7 +130,7 @@ void updateAlienLocation() {
  *  Draws all the aliens.  Note that it will toggle the alien guise each time it is called
  */
 void renderAliens() {
-	updateAlienLocation();
+	updateAlienPosition();
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
 	int row;
@@ -164,12 +164,23 @@ void renderAliens() {
  */
 void blankScreen() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
-		int row=0, col=0;
-		for( row=0; row<480; row++) {
-			for(col=0; col<640; col++) {
-				framePointer0[row*640 + col] = BLACK;  // frame 0 is red here.
-			}
+	int row, col;
+	for(row=0; row<480; row++) {
+		for(col=0; col<640; col++) {
+			framePointer0[row*640 + col] = BLACK;  // frame 0 is red here.
 		}
+	}
+}
+
+void unrenderTank() {
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	int row, col;
+	point_t position = getTankPositionGlobal();
+	for(row = 0; row < ALIEN_HEIGHT; row++) {
+		for(col=0; col<32; col++) {
+			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;  // frame 0 is red here.
+		}
+	}
 }
 
 void render() {
@@ -184,8 +195,7 @@ void render() {
 
 void unrender() {
 	// Unrender tanks
-	unrenderAliens();
-	// unrender aliens
+	unrenderTank();
 
 	// unrender bullets
 }
