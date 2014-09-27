@@ -53,7 +53,10 @@ void renderBunker(u8 bunkerNumber){
 }
 
 
-
+/**
+ * Deletes only the necessary pixels when the aliens are moving right or left.
+ * Then, blanks the entire block when the aliens drop a row.
+ */
 void unrenderAliens() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
@@ -90,6 +93,10 @@ void unrenderAliens() {
 	}
 }
 
+/**
+ * Contains the algorithm to move the aliens left and right, as well as drop
+ * rows when they hit the edge of the screen.
+ */
 void updateAlienLocation() {
 	unrenderAliens();
 	u8 direction = getAlienDirection();
@@ -152,28 +159,15 @@ void renderAliens() {
 	}
 }
 
+/**
+ * Writes Black to the entire screen
+ */
 void blankScreen() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 		int row=0, col=0;
 		for( row=0; row<480; row++) {
 			for(col=0; col<640; col++) {
-				if(row < 240) {
-					if(col<320) {
-						// upper left corner.
-						framePointer0[row*640 + col] = 0x00000000;  // frame 0 is red here.
-					} else {
-						// upper right corner.
-						framePointer0[row*640 + col] = 0x00000000;  // frame 0 is blue here.
-					}
-				} else {
-					if(col<320) {
-						// lower left corner.
-						framePointer0[row*640 + col] = 0x00000000;  // frame 0 is green here.
-					} else {
-						// lower right corner.
-						framePointer0[row*640 + col] = 0x00000000;  // frame 0 is white here.
-					}
-				}
+				framePointer0[row*640 + col] = BLACK;  // frame 0 is red here.
 			}
 		}
 }
