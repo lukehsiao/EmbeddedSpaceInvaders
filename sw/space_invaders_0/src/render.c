@@ -57,8 +57,46 @@ void renderAliens() {
 	int col;
 	int row;
 	int alienNumber;
-
-
+	for(alienNumber = 0; alienNumber < 11; alienNumber++) {
+		for (row = 0; row < ALIEN_HEIGHT; row++) {
+			for (col = 0; col < 32; col++) {
+				point_t position = getAlienBlockPosition();
+				framePointer0[(position.y + row)*640 + (position.x+col+(alienNumber*32))] = getAlienPixel(row, col, 0, 1, alienNumber);
+			}
+		}
+	}
+	for(alienNumber = 11; alienNumber < 22; alienNumber++) {
+		for (row = 0; row < ALIEN_HEIGHT; row++) {
+			for (col = 0; col < 32; col++) {
+				point_t position = getAlienBlockPosition();
+				framePointer0[(position.y + row + ALIEN_HEIGHT + 10)*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 1, 0, alienNumber);
+			}
+		}
+	}
+	for(alienNumber = 22; alienNumber < 33; alienNumber++) {
+		for (row = 0; row < ALIEN_HEIGHT; row++) {
+			for (col = 0; col < 32; col++) {
+				point_t position = getAlienBlockPosition();
+				framePointer0[(position.y + row + 2*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 1, 1, alienNumber);
+			}
+		}
+	}
+	for(alienNumber = 33; alienNumber < 44; alienNumber++) {
+		for (row = 0; row < ALIEN_HEIGHT; row++) {
+			for (col = 0; col < 32; col++) {
+				point_t position = getAlienBlockPosition();
+				framePointer0[(position.y + row + 3*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 2, 0, alienNumber);
+			}
+		}
+	}
+	for(alienNumber = 44; alienNumber < 55; alienNumber++) {
+		for (row = 0; row < ALIEN_HEIGHT; row++) {
+			for (col = 0; col < 32; col++) {
+				point_t position = getAlienBlockPosition();
+				framePointer0[(position.y + row + 4*(ALIEN_HEIGHT + 10))*640 + (position.x+col+((alienNumber%11)*32))] = getAlienPixel(row, col, 2, 1, alienNumber);
+			}
+		}
+	}
 }
 
 void blankScreen() {
@@ -94,5 +132,11 @@ void render() {
 	renderBunker(1);
 	renderBunker(2);
 	renderBunker(3);
+
+	point_t temp;
+	temp.x = 40;
+	temp.y = 40;
+	setAlienBlockPosition(temp);
+	renderAliens();
 }
 

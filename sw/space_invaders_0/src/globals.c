@@ -36,6 +36,24 @@ u32 score;
 u8 lives;	//starts w/ 3 and decrements each death
 //******************* End Variables of Space Invaders**********************
 
+/////////////////////////////////////
+// Initializations
+/////////////////////////////////////
+void initGlobals(){
+
+	setTankPositionGlobal(200);
+
+
+    initBunkers();
+
+	int i;
+	for(i = 0; i < 5; i++) {
+		alienStatus[i] = 0xFFFF;
+	}
+//	int dumb;
+//
+//	dumb++;
+}
 
 /////////////////////////////////////
 // Implement the Tank Globals
@@ -61,6 +79,7 @@ point_t getTankBulletPosition() {
 u8 isInsideTank(point_t val) {
 	return 0xFF;
 }
+
 
 /////////////////////////////////////
 // Implement the Alien Globals
@@ -108,6 +127,39 @@ point_t getAlienBulletPosition_3() {
 }
 u8 getAlienBulletType_3() {
 	return alienBullet_3.type;
+}
+
+void setAlienStatus(u32 alienNumber, u32 status) {
+	if (alienNumber < 11) {
+		// clearing the bit
+		u32 bitTemp = alienStatus[0] & ~(0x1 << (15 - alienNumber));
+		// Setting the bit
+		alienStatus[0] = bitTemp | (status << (15 - alienNumber));
+	}
+	else if (alienNumber < 22) {
+		// clearing the bit
+		u32 bitTemp = alienStatus[1] & ~(0x1 << (15 - (alienNumber % 11)));
+		// Setting the bit
+		alienStatus[1] = bitTemp | (status << (15 - (alienNumber % 11)));
+	}
+	else if (alienNumber < 33) {
+		// clearing the bit
+		u32 bitTemp = alienStatus[2] & ~(0x1 << (15 - (alienNumber % 11)));
+		// Setting the bit
+		alienStatus[2] = bitTemp | (status << (15 - (alienNumber % 11)));
+	}
+	else if (alienNumber < 44) {
+		// clearing the bit
+		u32 bitTemp = alienStatus[3] & ~(0x1 << (15 - (alienNumber % 11)));
+		// Setting the bit
+		alienStatus[3] = bitTemp | (status << (15 - (alienNumber % 11)));
+	}
+	else {
+		// clearing the bit
+		u32 bitTemp = alienStatus[4] & ~(0x1 << (15 - (alienNumber % 11)));
+		// Setting the bit
+		alienStatus[4] = bitTemp | (status << (15 - (alienNumber % 11)));
+	}
 }
 
 u16 getAlienStatus(u32 alienNumber) {

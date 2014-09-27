@@ -94,7 +94,6 @@ int main()
      // Now, let's get ready to start displaying some stuff on the screen.
      // The variables framePointer and framePointer1 are just pointers to the base address
      // of frame 0 and frame 1.
-     initBunkers();
      render();
 
      // This tells the HDMI controller the resolution of your display (there must be a better way to do this).
@@ -112,7 +111,7 @@ int main()
      }
      // Oscillate between frame 0 and frame 1.
      int sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
-     setTankPositionGlobal(200);
+     initGlobals();
      while (1) {
     	 while (sillyTimer) sillyTimer--;    // Decrement the timer.
     	 sillyTimer = MAX_SILLY_TIMER;       // Reset the timer.

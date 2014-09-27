@@ -14,6 +14,8 @@
 #define u32 unsigned int
 #include "bitmaps.h"
 
+//typedef unsigned long ulong;
+
 typedef struct {u32 x; u32 y;} point_t;
 
 /////////////////////////////////////
