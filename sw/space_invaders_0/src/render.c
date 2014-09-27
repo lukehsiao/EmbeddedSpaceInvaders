@@ -63,6 +63,7 @@ void unrenderAliens() {
 	static u8 direction;
 	direction = getAlienDirection();
 
+	//If moving right..
 	if(direction == 1){
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < X_SHIFT; col++) {
@@ -70,7 +71,9 @@ void unrenderAliens() {
 			}
 		}
 	}
+	// if X_SHIFT > 6, we'll need to add logic hear to clear the right side as well.
 
+	// If we hit the right edge
 	if(position.x >= (640-32*11) && direction == 1) {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
@@ -85,37 +88,6 @@ void unrenderAliens() {
 			}
 		}
 	}
-	//If we dropped a row
-//	if (getAlienDirection() != direction) {
-//		direction = getAlienDirection();
-//		position.y = position.y - ALIEN_HEIGHT - 10;
-//		if (direction == 0) {
-//			position.x = position.x - 32;
-//		}
-//		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
-//			for (col = 0; col < 32*11+10; col++) {
-//				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
-//			}
-//		}
-//	}
-
-//	// Moving Right
-//	if(direction == 1) {
-//		position.x = position.x - 32;
-//		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
-//			for (col = 0; col < 32; col++) {
-//				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
-//			}
-//		}
-//	} // Moving Left
-//	else {
-//		position.x = position.x + 352;
-//		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
-//			for (col = 0; col < 32; col++) {
-//				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
-//			}
-//		}
-//	}
 }
 
 void updateAlienLocation() {

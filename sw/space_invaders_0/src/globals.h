@@ -49,6 +49,8 @@ point_t getAlienBulletPosition_0();
 u8 getAlienBulletType_0();
 u8 toggleAlienGuise();
 u8 getAlienGuise();
+u8 getAlienDirection();
+void setAlienDirection(u8 tempDirection);
 
 void setAlienBulletPosition_1(point_t val, u8 bullet_type);
 point_t getAlienBulletPosition_1();
