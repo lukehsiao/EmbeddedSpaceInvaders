@@ -319,7 +319,7 @@ void parseKey(u8 keyPressed, u32 timerSeed) {
 				temp.x = 0;
 			}
 			setTankPositionGlobal(temp.x);
-			render();
+			renderTank();
 			break;
 		case '6':
 			unrender();
@@ -329,7 +329,7 @@ void parseKey(u8 keyPressed, u32 timerSeed) {
 				temp.x = (640-32);
 			}
 			setTankPositionGlobal(temp.x);
-			render();
+			renderTank();
 			break;
 		case '8':
 			renderAliens();
@@ -345,7 +345,7 @@ void parseKey(u8 keyPressed, u32 timerSeed) {
 
 			break;
 		case '9':
-
+			render();
 			break;
 		case '7':
 			random = (timerSeed * 13 + 4) % 3;

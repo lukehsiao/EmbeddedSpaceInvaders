@@ -15,7 +15,6 @@
  (b7  << 7 ) | (b6  << 6 ) | (b5  << 5 ) | (b4  << 4 ) | (b3  << 3 ) | (b2  << 2 ) | (b1  << 1 ) | (b0  << 0 ) )
 #define ALIEN_HEIGHT 16
 #define BUNKER_SQUARE_HEIGHT 12
-#define TANK_BULLET_HEIGHT 8
 
 u32 getTankPixel(u32 row, u32 col);
 u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber);
