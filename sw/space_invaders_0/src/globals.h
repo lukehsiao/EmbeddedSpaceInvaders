@@ -69,7 +69,7 @@ void setAlienBullet(alienBullet val, u8 bulletNum);
 // Setup the Bunker Globals
 /////////////////////////////////////
 void initBunkers();
-void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion);
+void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion);
 u8 getBlockState(u8 bunkerNumber, u8 blockNumber);
 u32 getBunkerState(u8 bunkerNumber);
 point_t getBunkerPosition(u8 bunkerNumber);

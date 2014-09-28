@@ -234,7 +234,7 @@ void setAlienDirection(u8 tempDirection) {
 void initBunkers() {
 	int i;
 	for (i = 0; i < 4; i++) {
-		bunkerState[i] = 0x0000004F;
+		bunkerState[i] = 0x00000000;
 	}
 	bunkerPosition_0.x = 104;
 	bunkerPosition_0.y = 380;
@@ -266,65 +266,6 @@ point_t getBunkerPosition(u8 bunkerNumber) {
 	}
 }
 
-/* Gets the bunker row for the specified bunker and block
- *
- * @param row
- * @param col
- * @param blockNumber the block within the bunker (0-9)
- * @param bunkerNumber the number of the bunker (0-3)
- *
-*/
-u32 getBunkerRow(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
-	u32 temp;
-	switch(bunkerNumber) {
-		case 0:
-			temp = row - bunkerPosition_0.y;
-			break;
-		case 1:
-			temp = row - bunkerPosition_1.y;
-			break;
-		case 2:
-			temp = row - bunkerPosition_2.y;
-			break;
-		case 3:
-			temp = row - bunkerPosition_3.y;
-			break;
-		default:
-			//xil_printf("\n\r\tWrong BunkerNumber in getBunkerRow");
-			break;
-	}
-	return temp;
-}
-
-/* Gets the bunker col for the specified bunker and block
- *
- * @param row
- * @param col
- * @param blockNumber the block within the bunker (0-9)
- * @param bunkerNumber the number of the bunker (0-3)
- *
-*/
-u32 getBunkerCol(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
-	u32 temp;
-	switch(bunkerNumber) {
-		case 0:
-			temp = col - bunkerPosition_0.x;
-			break;
-		case 1:
-			temp = col - bunkerPosition_1.x;
-			break;
-		case 2:
-			temp = col - bunkerPosition_2.x;
-			break;
-		case 3:
-			temp = col - bunkerPosition_3.x;
-			break;
-		default:
-			//xil_printf("\n\r\tWrong BunkerNumber in getBunkerCol\n\r");
-			break;
-	}
-	return temp;
-}
 /**
  * Sets the erosion state of the specified block.
  * TODO: This may be a critical section!
@@ -333,32 +274,44 @@ u32 getBunkerCol(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
  * @param bunkerNumber the number of the bunker (0-3)
  * @return the erosion state of the block specified
  */
-void setBunkerState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
+void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 	u32 tempState = bunkerState[bunkerNumber];
 	tempState = 0x3FFFFFFF & tempState;
-	//clear old state by creating a ..1100011... mask and ANDing
-	u32 mask = 0xFFFFFFF8; //...1111 1000
-	u32 oneFill = 0x3FFFFFFF >> (30 - (blockNumber*3));
-	mask = (mask << (blockNumber*3)) | oneFill;
-	tempState = tempState & mask;
+
 	u32 newErosion;
 	if (blockNumber < 9) {
+		//clear old state by creating a ..1100011... mask and ANDing
+		u32 mask = 0xFFFFFFF8; //...1111 1000
+		u32 oneFill = 0x3FFFFFFF >> (30 - (blockNumber*3));
+		mask = (mask << (blockNumber*3)) | oneFill;
+		tempState = tempState & mask;
+
 		//Set the new state
 		newErosion = (u32)erosion; // this will pad the left with 0s
 		newErosion = newErosion << (blockNumber*3);
 		tempState = tempState | newErosion;
+		bunkerState[bunkerNumber] = tempState;
 	}
-	else if (blockNumber == 9 || blockNumber == 10) {
+	else if (blockNumber < 11) {
 		return;
 	}
 	else if (blockNumber == 11) {
+		//clear old state by creating a ..1100011... mask and ANDing
+		u32 mask = 0xFFFFFFF8; //...1111 1000
+		u32 oneFill = 0x3FFFFFFF >> (30 - (27));
+		mask = (mask << (27)) | oneFill;
+		tempState = tempState & mask;
+
 		//Set the new state
-		newErosion = (u32)erosion; // this will pad the left with 0s
+		newErosion = (u32)erosion & 0x7; // this will pad the left with 0s
 		newErosion = newErosion << (27);
+		xil_printf("New Erosion: %x\n\r", newErosion);
+		xil_printf("tempState: %x\n\r", tempState);
 		tempState = tempState | newErosion;
+		bunkerState[bunkerNumber] = tempState;
 	}
 	//xil_printf("\n\rTemp State is:\n\r%x", tempState);
-	bunkerState[bunkerNumber] = tempState;
+
 }
 
 /**
@@ -377,7 +330,7 @@ u8 getBlockState(u8 bunkerNumber, u8 blockNumber) {
 		erosionState = (u8)(tempState >> (blockNumber*3));
 		erosionState = 0x07 & erosionState;  // mask out extraneous top bits
 	}
-	else if (blockNumber == 9 || blockNumber == 10) {
+	else if (blockNumber < 11) {
 		erosionState = 4;	// return a black block
 	}
 	else if (blockNumber == 11) {
