@@ -291,6 +291,80 @@ void blankScreen() {
 	}
 }
 
+/**
+ * Writes BLACK to the box that the tank is currently in
+ */
+void unrenderTank() {
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	int row, col;
+	point_t position = getTankPositionGlobal();
+	for(row = 0; row < ALIEN_HEIGHT; row++) {
+		for(col=0; col<32; col++) {
+			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;  // frame 0 is red here.
+		}
+	}
+}
+
+void parseKey(u8 keyPressed, u32 timerSeed) {
+	point_t temp;
+	u8 random;
+	u8 blockNumber;
+	u8 erosionState;
+	switch (keyPressed) {
+		case '4':
+			unrender();
+			temp = getTankPositionGlobal();
+			temp.x = temp.x - 4;
+			if (temp.x > (640-32)) {
+				temp.x = 0;
+			}
+			setTankPositionGlobal(temp.x);
+			render();
+			break;
+		case '6':
+			unrender();
+			temp = getTankPositionGlobal();
+			temp.x = temp.x + 4;
+			if (temp.x > (640-32)) {
+				temp.x = (640-32);
+			}
+			setTankPositionGlobal(temp.x);
+			render();
+			break;
+		case '8':
+			renderAliens();
+			break;
+		case '2':
+			random = (timerSeed * 13 + 4) % 54;
+			setAlienStatus(random, 0); //kill the random alien
+			break;
+		case '5':
+
+			break;
+		case '3':
+
+			break;
+		case '9':
+
+			break;
+		case '7':
+			random = (timerSeed * 13 + 4) % 3;
+			for (blockNumber = 0; blockNumber < 11; blockNumber++) {
+				erosionState = getBlockState(random, blockNumber);
+				if (erosionState < 4) {
+					setBunkerState(random, blockNumber, erosionState+1);
+				}
+			}
+			break;
+		default:
+			//do nothing
+			break;
+	}
+}
+
+/**
+ * Renders all of the objects on the screen
+ */
 void render() {
 	//blankScreen();
 	renderTank();

@@ -27,5 +27,6 @@ void render();
  */
 void unrender();
 void blankScreen();
+void parseKey(u8 keyPressed, u32 timerSeed);
 
 #endif /* RENDER_H_ */

@@ -20,18 +20,18 @@
 #include "platform.h"
 #include "xparameters.h"
 #include "xaxivdma.h"
-#include "xuartlite.h"
 #include "xio.h"
 #include "time.h"
 #include "unistd.h"
 #include "globals.h"		// Our globals.h file.
 #include "render.h"			// Our rendering file.
+#include "xuartlite_l.h"
 
 #define DEBUG
 void print(char *str);
 
 #define FRAME_BUFFER_0_ADDR 0xC0000000  // Starting location in DDR where we will store the images that we display.
-#define MAX_SILLY_TIMER 100000;
+#define MAX_SILLY_TIMER 500000;
 
 int main()
 {
@@ -102,40 +102,31 @@ int main()
 	// This tells the HDMI controller the resolution of your display (there must be a better way to do this).
 	XIo_Out32(XPAR_AXI_HDMI_0_BASEADDR, 640*480);
 
-	// Start the DMA for the read channel only.
-	if(XST_FAILURE == XAxiVdma_DmaStart(&videoDMAController, XAXIVDMA_READ)){
-		xil_printf("DMA START FAILED\r\n");
-	}
-	int frameIndex = 0;
-	// We have two frames, let's park on frame 0. Use frameIndex to index them.
-	// Note that you have to start the DMA process before parking on a frame.
-	if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
-		xil_printf("vdma parking failed\n\r");
-	}
-	// Oscillate between frame 0 and frame 1.
-	int sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
-	char inputKey;
-
-	//Setup UART for keyboard communication
-	XUartLite uartLite;
-//	Xuint8 RecvBuffer[1];
-	XStatus status;
-	status = XUartLite_Initialize(&uartLite, XPAR_UARTLITE_0_DEVICE_ID);
-//	u32 recievedCount;
-	inputKey = 0;
-	while (1) {
-		while (sillyTimer) sillyTimer--;    // Decrement the timer.
-		sillyTimer = MAX_SILLY_TIMER;       // Reset the timer.
-		render();  // Alternate between frame 0 and frame 1.
-		//unsigned int XUartLite_Recv(XUartLite *InstancePtr, u8 *DataBufferPtr,unsigned int NumBytes);
-//		recievedCount = XUartLite_Recv(&uartLite, RecvBuffer, 1);
-//		xil_printf("%c\n\r", RecvBuffer[0]);
-
-		if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
-			xil_printf("vdma parking failed\n\r");
-		}
-	}
-	cleanup_platform();
+     // Start the DMA for the read channel only.
+     if(XST_FAILURE == XAxiVdma_DmaStart(&videoDMAController, XAXIVDMA_READ)){
+    	 xil_printf("DMA START FAILED\r\n");
+     }
+     int frameIndex = 0;
+     // We have two frames, let's park on frame 0. Use frameIndex to index them.
+     // Note that you have to start the DMA process before parking on a frame.
+     if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
+    	 xil_printf("vdma parking failed\n\r");
+     }
+     int sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
+     char inputKey;
+     inputKey = 0;
+     while (1) {
+    	 sillyTimer--;
+    	 if (sillyTimer == 0) {
+    		 sillyTimer = MAX_SILLY_TIMER;
+    	 }
+    	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
+    	 parseKey(inputKey, sillyTimer);
+         if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
+        	 xil_printf("vdma parking failed\n\r");
+         }
+     }
+     cleanup_platform();
 
 	return 0;
 }
