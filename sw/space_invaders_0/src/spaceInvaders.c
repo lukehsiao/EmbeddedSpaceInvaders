@@ -109,6 +109,7 @@ int main()
      blankScreen();
      render();
      u8 inputKey;
+     u32 userInput;
      u32 sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
      while (1) {
 //    	 while (sillyTimer) sillyTimer--;    // Decrement the timer.
@@ -118,8 +119,25 @@ int main()
     	 if (sillyTimer == 0) {
     		 sillyTimer = MAX_SILLY_TIMER;
     	 }
-    	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_0_BASEADDR);
-    	 parseKey(inputKey, sillyTimer);
+    	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
+    	 if (inputKey == '2') {
+    		 userInput = 0;
+    		 xil_printf("\n\rEnter a two-digit number between 00-54 to kill: ");
+    		 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
+    		 userInput = (inputKey - 48) * 10;		//-48 to compensate for the ascii input
+    		 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
+    		 userInput = userInput + (inputKey - 48);
+    		 if (userInput > 54) {
+    			 xil_printf("\n\r!!! You entered a number that was too big!");
+    		 }
+    		 else {
+        		 xil_printf("\n\r    Killing alien #%d", userInput);
+        		 parseKey('2', sillyTimer, userInput);
+    		 }
+    	 }
+    	 else {
+			 parseKey(inputKey, sillyTimer, userInput);
+    	 }
     	 if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
         	 xil_printf("vdma parking failed\n\r");
          }

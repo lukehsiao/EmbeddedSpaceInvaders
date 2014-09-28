@@ -8,7 +8,6 @@
 #define FRAME_BUFFER_ADDR 0xC0000000
 #include "render.h"
 
-
 /**
  * Draws the tank in it's current position
  */
@@ -130,6 +129,25 @@ void updateAlienLocation() {
 }
 
 /**
+ * Writes a black box in the given Alien's location
+ */
+void killAlien(u32 alienNumber) {
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	point_t position = getAlienBlockPosition();
+	int col;
+	int row;
+	//Adjust X and Y location
+	position.y = position.y + (alienNumber/11)*(ALIEN_HEIGHT + 10);
+	position.x = position.x + (alienNumber%11)*32;
+
+	for (row = 0; row < ALIEN_HEIGHT; row++) {
+		for (col = 0; col < 32; col++) {
+			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+		}
+	}
+}
+
+/**
  *  Draws all the aliens.  Note that it will toggle the alien guise each time it is called
  */
 void renderAliens() {
@@ -239,7 +257,6 @@ void renderAlienBullet() {
 }
 
 
-
 void unrenderTankBullet() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	point_t position = getTankBulletPosition();
@@ -305,14 +322,14 @@ void unrenderTank() {
 	}
 }
 
-void parseKey(u8 keyPressed, u32 timerSeed) {
+void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 	point_t temp;
 	u8 random;
 	u8 blockNumber;
 	u8 erosionState;
 	switch (keyPressed) {
 		case '4':
-			unrender();
+			unrenderTank();
 			temp = getTankPositionGlobal();
 			temp.x = temp.x - 4;
 			if (temp.x > (640-32)) {
@@ -322,7 +339,7 @@ void parseKey(u8 keyPressed, u32 timerSeed) {
 			renderTank();
 			break;
 		case '6':
-			unrender();
+			unrenderTank();
 			temp = getTankPositionGlobal();
 			temp.x = temp.x + 4;
 			if (temp.x > (640-32)) {
@@ -335,8 +352,8 @@ void parseKey(u8 keyPressed, u32 timerSeed) {
 			renderAliens();
 			break;
 		case '2':
-			random = (timerSeed * 13 + 4) % 54;
-			setAlienStatus(random, 0); //kill the random alien
+			setAlienStatus(userInput, 0); //kill the random alien
+			killAlien(userInput);
 			break;
 		case '5':
 
@@ -379,7 +396,7 @@ void render() {
 
 void unrender() {
 	// Unrender tanks
-	unrenderAliens();
+	//unrenderAliens();
 	// unrender aliens
 
 	// unrender bullets
