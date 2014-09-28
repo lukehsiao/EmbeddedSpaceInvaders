@@ -105,16 +105,21 @@ int main()
      if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
     	 xil_printf("vdma parking failed\n\r");
      }
-
-     Xuint8 temp[1];
      initGlobals();
      blankScreen();
      render();
-     int sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
+     u8 inputKey;
+     u32 sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
      while (1) {
-    	 while (sillyTimer) sillyTimer--;    // Decrement the timer.
-    	 sillyTimer = MAX_SILLY_TIMER;       // Reset the timer.
-    	 render();
+//    	 while (sillyTimer) sillyTimer--;    // Decrement the timer.
+//    	 sillyTimer = MAX_SILLY_TIMER;       // Reset the timer.
+//    	 render();
+    	 sillyTimer--;
+    	 if (sillyTimer == 0) {
+    		 sillyTimer = MAX_SILLY_TIMER;
+    	 }
+    	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_0_BASEADDR);
+    	 parseKey(inputKey, sillyTimer);
     	 if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
         	 xil_printf("vdma parking failed\n\r");
          }
