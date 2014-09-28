@@ -16,12 +16,20 @@
 #define WHITE 0x00FFFFFF
 #define RED   0x00FF0000
 #define BLACK 0x00000000
-#define TANK_BULLET_SPEED 4
+#define X_SHIFT 6
+#define Y_SHIFT 6
+#define TANK_BULLET_SPEED 15
+#define ALIEN_BULLET_SPEED 10
+#define ALIEN_BULLET_WIDTH 6
+#define ALIEN_BULLET_HEIGHT 10
+#define TANK_BULLET_WIDTH 2
+#define TANK_BULLET_HEIGHT 10
 #include "bitmaps.h"
 
 //typedef unsigned long ulong;
 
 typedef struct {u32 x; u32 y;} point_t;
+typedef struct {point_t position; u8 type; u8 guise;} alienBullet;
 
 void initGlobals();
 
@@ -39,31 +47,23 @@ u8 isInsideTank(point_t val);
 /////////////////////////////////////
 // Setup the Alien Globals
 /////////////////////////////////////
-#define X_SHIFT 6
-#define Y_SHIFT 6
 void setAlienBlockPosition(point_t val);
 point_t getAlienBlockPosition();
 u16 getAlienStatus(u32 alienNumber);
 void setAlienStatus(u32 alienNumber, u32 status);
-void setAlienBulletPosition_0(point_t val, u8 bullet_type);
 point_t getAlienBulletPosition_0();
 u8 getAlienBulletType_0();
 u8 toggleAlienGuise();
 u8 getAlienGuise();
+u8 *getAlienBulletStatus();
 u8 getAlienDirection();
 void setAlienDirection(u8 tempDirection);
 
-void setAlienBulletPosition_1(point_t val, u8 bullet_type);
-point_t getAlienBulletPosition_1();
-u8 getAlienBulletType_1();
 
-void setAlienBulletPosition_2(point_t val, u8 bullet_type);
-point_t getAlienBulletPosition_2();
-u8 getAlienBulletType_2();
-
-void setAlienBulletPosition_3(point_t val, u8 bullet_type);
-point_t getAlienBulletPosition_3();
-u8 getAlienBulletType_3();
+const u32* getAlienBulletArray(u8 bulletNum);
+u8 *getAlienBulletStatus();
+alienBullet getAlienBullet(u8 bulletNum);
+void setAlienBullet(alienBullet val, u8 bulletNum);
 
 /////////////////////////////////////
 // Setup the Bunker Globals

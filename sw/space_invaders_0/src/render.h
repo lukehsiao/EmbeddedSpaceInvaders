@@ -14,6 +14,17 @@
  * Draws all the items based on their current global variable values
  */
 void render();
+
+/**
+ * We'll use this rather than having to save copys of old positions.
+ * This will erase all the pixels used by the aliens, bullets, tank,
+ * and spaceship.
+ *
+ * So that on keypresses:
+ * unrender();
+ * change globals
+ * render(); *
+ */
 void unrender();
 void blankScreen();
 

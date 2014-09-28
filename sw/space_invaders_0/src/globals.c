@@ -8,13 +8,14 @@
 
 #include "globals.h"
 
-typedef struct {point_t position; u8 type;} alienBullet;
+
 
 //******************* Variables of Space Invaders*************************
 // Alien Variables
 u16 alienStatus[5];		// one u16 tracks life/death of one row of aliens
 point_t alienBlockPosition;  // Top-left position of the alien block.
 u8 alienGuise;
+u8 alienBulletStatus[4]; // one u8 tracks if the Alien Bullet is present
 alienBullet alienBullet_0;
 alienBullet alienBullet_1;
 alienBullet alienBullet_2;
@@ -55,6 +56,20 @@ void initGlobals(){
 	temp.y = 50;
 	setAlienBlockPosition(temp);
 	direction = 1;
+
+	alienBullet bullet;
+	u8 *status = getAlienBulletStatus();
+	u8 j;
+	for(j= 0; j < 4; j++){
+		status[j] = 0x1; //Setting all bullets to alive
+		bullet = getAlienBullet(j);
+		temp.x = 20 + 150*j;
+		temp.y = 200 + 50*j;
+		bullet.position = temp;
+		bullet.type = j%2;
+		setAlienBullet(bullet, j);
+	}
+
 
 	temp.x = 10;
 	temp.y = 400;
@@ -107,43 +122,50 @@ u8 getAlienGuise() {
 	return alienGuise;
 }
 
-void setAlienBulletPosition_0(point_t val, u8 bullet_type) {
-	alienBullet_0.position = val;
-	alienBullet_0.type = bullet_type;
-}
-point_t getAlienBulletPosition_0() {
-	return alienBullet_0.position;
-}
-u8 getAlienBulletType_0() {
-	return alienBullet_0.type;
+u8 *getAlienBulletStatus(){
+	return alienBulletStatus;
 }
 
-void setAlienBulletPosition_1(point_t val, u8 bullet_type) {
-	alienBullet_1.position = val;
-	alienBullet_1.type = bullet_type;
-}
-point_t getAlienBulletPosition_1() {
-	return alienBullet_1.position;
-}
-u8 getAlienBulletType_1() {
-	return alienBullet_1.type;
+alienBullet getAlienBullet(u8 bulletNum) {
+	alienBullet bullet;
+	switch (bulletNum)
+	{
+	case 0:
+		bullet = alienBullet_0;
+		break;
+	case 1:
+		bullet = alienBullet_1;
+		break;
+	case 2:
+		bullet = alienBullet_2;
+		break;
+	default:
+		bullet = alienBullet_3;
+		break;
+	}
+	return bullet;
 }
 
-void setAlienBulletPosition_2(point_t val, u8 bullet_type) {
-	alienBullet_2.position = val;
-	alienBullet_2.type = bullet_type;
+void setAlienBullet(alienBullet val, u8 bulletNum) {
+	alienBullet bullet;
+	bullet = getAlienBullet(bulletNum);
+	switch (bulletNum)
+	{
+	case 0:
+		alienBullet_0 = val;
+		break;
+	case 1:
+		alienBullet_1 = val;
+		break;
+	case 2:
+		alienBullet_2 = val;
+	break;
+	default:
+		alienBullet_3 = val;
+	break;
+	}
 }
 
-void setAlienBulletPosition_3(point_t val, u8 bullet_type) {
-	alienBullet_3.position = val;
-	alienBullet_3.type = bullet_type;
-}
-point_t getAlienBulletPosition_3() {
-	return alienBullet_3.position;
-}
-u8 getAlienBulletType_3() {
-	return alienBullet_3.type;
-}
 
 void setAlienStatus(u32 alienNumber, u32 status) {
 	if (alienNumber < 11) {

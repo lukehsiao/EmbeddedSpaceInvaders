@@ -24,11 +24,6 @@ void renderTank() {
 	}
 }
 
-/**
- * Draws all of the bunkers in their current erosion state
- * This code is not optimized.
- * @param bunkerNumber The number of the bunker to render (0-3)
- */
 void renderBunker(u8 bunkerNumber){
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
@@ -102,7 +97,7 @@ void unrenderAliens() {
  * Contains the algorithm to move the aliens left and right, as well as drop
  * rows when they hit the edge of the screen.
  */
-void updateAlienPosition() {
+void updateAlienLocation() {
 	unrenderAliens();
 	u8 direction = getAlienDirection();
 	// Update Location each call
@@ -128,6 +123,9 @@ void updateAlienPosition() {
 			}
 		}
 	}
+	if(tempAlien.y > 480/3*2+16*4) {
+		tempAlien.y = 50;
+	}
 	setAlienBlockPosition(tempAlien);
 }
 
@@ -135,7 +133,7 @@ void updateAlienPosition() {
  *  Draws all the aliens.  Note that it will toggle the alien guise each time it is called
  */
 void renderAliens() {
-	updateAlienPosition();
+	updateAlienLocation();
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
 	int row;
@@ -164,13 +162,91 @@ void renderAliens() {
 	}
 }
 
+void unrenderAlienBullet() {
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	alienBullet bullet;
+	u8 *status = getAlienBulletStatus();
+	u8 bulletNum;
+	if(status[0] || status[1] || status[2] || status[3]){
+		for(bulletNum = 0; bulletNum < 4; bulletNum++) {
+			if(status[bulletNum] == 1){
+				bullet = getAlienBullet(bulletNum);
+				point_t position = bullet.position;
+				u32 row;
+				u32 col;
+				for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
+					for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
+				}
+			}
+		}
+	}
+}
+
+void updateAlienBulletPosition() {
+	unrenderAlienBullet();
+	alienBullet bullet;
+	u8 *status = getAlienBulletStatus();
+	u8 bulletNum;
+	if(status[0] || status[1] || status[2] || status[3]){
+		for(bulletNum = 0; bulletNum < 4; bulletNum++) {
+			if(status[bulletNum] == 1){
+				bullet = getAlienBullet(bulletNum);
+				point_t position = bullet.position;
+				position.y = position.y + ALIEN_BULLET_SPEED;
+				if(position.y > 480){
+					position.y = 0;
+				}
+				bullet.position = position;
+				bullet.guise = bullet.guise++;
+				if(bullet.guise > 2){
+					bullet.guise = 0;
+				}
+				setAlienBullet(bullet,bulletNum);
+			}
+		}
+	}
+}
+
+void renderAlienBullet() {
+	updateAlienBulletPosition();
+	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+	alienBullet bullet;
+	u8 *status = getAlienBulletStatus();
+	u8 bulletNum;
+	const u32* arrayToRender;
+	if(status[0] || status[1] || status[2] || status[3]){
+		for(bulletNum = 0; bulletNum < 4; bulletNum++) {
+			if(status[bulletNum] == 1){
+				bullet = getAlienBullet(bulletNum);
+				point_t position = bullet.position;
+				u32 row;
+				u32 col;
+				u32 bulletGuise;
+				arrayToRender = getAlienBulletArray(bullet.type);
+				for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
+					for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
+						bulletGuise = bullet.guise;
+						u32 tempCol = col + bullet.guise*ALIEN_BULLET_WIDTH;
+						u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
+						framePointer0[(position.y + row)*640 + (position.x + col)] = pixelPresent? WHITE : BLACK;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
 void unrenderTankBullet() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	point_t position = getTankBulletPosition();
 	u32 row;
 	u32 col;
-	for (row = 0; row < 8; row++) {
-		for (col = 0; col < 2; col++) {
+	for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
+		for (col = 0; col < TANK_BULLET_WIDTH; col++) {
 			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
 		}
 	}
@@ -183,6 +259,8 @@ void updateTankBulletPosition() {
 	if(position.y > 480) {
 		position.y = 480-10;
 		position.x = position.x + 10;
+		if(position.x > 640)
+			position.x = 10;
 	}
 	setTankBulletPosition(position);
 }
@@ -193,8 +271,8 @@ void renderTankBullet() {
 	point_t position = getTankBulletPosition();
 	u32 row;
 	u32 col;
-	for (row = 0; row < 8; row++) {
-		for (col = 0; col < 2; col++) {
+	for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
+		for (col = 0; col < TANK_BULLET_WIDTH; col++) {
 			framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
 		}
 	}
@@ -205,78 +283,14 @@ void renderTankBullet() {
  */
 void blankScreen() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
-	int row, col;
-	for(row=0; row<480; row++) {
+	int row=0, col=0;
+	for( row=0; row<480; row++) {
 		for(col=0; col<640; col++) {
 			framePointer0[row*640 + col] = BLACK;  // frame 0 is red here.
 		}
 	}
 }
 
-/**
- * Writes BLACK to the box that the tank is currently in
- */
-void unrenderTank() {
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
-	int row, col;
-	point_t position = getTankPositionGlobal();
-	for(row = 0; row < ALIEN_HEIGHT; row++) {
-		for(col=0; col<32; col++) {
-			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;  // frame 0 is red here.
-		}
-	}
-}
-
-void parseKey(u8 keyPressed) {
-	point_t temp;
-	switch (keyPressed) {
-		case '4':
-			unrender();
-			temp = getTankPositionGlobal();
-			temp.x - 4;
-			if (temp.x > (640-32)) {
-				temp.x = 0;
-			}
-			setTankPositionGlobal(temp.x);
-			render();
-			break;
-		case '6':
-			unrender();
-			temp = getTankPositionGlobal();
-			temp.x = 4;
-			if (temp.x > (640-32)) {
-				temp.x = (640-32);
-			}
-			setTankPositionGlobal(temp.x);
-			render();
-			break;
-		case '8':
-
-			break;
-		case '2':
-
-			break;
-		case '5':
-
-			break;
-		case '3':
-
-			break;
-		case '9':
-
-			break;
-		case '7':
-
-			break;
-		default:
-			//do nothing
-			break;
-	}
-}
-
-/**
- * Renders all of the objects on the screen
- */
 void render() {
 	//blankScreen();
 	renderTank();
@@ -285,16 +299,15 @@ void render() {
 	renderBunker(2);
 	renderBunker(3);
 	renderAliens();
-
 	renderTankBullet();
+	renderAlienBullet();
 }
 
-/**
- * Unrenders the objects that may have moved due to inputs:
- * Tank
- */
 void unrender() {
-	// Unrender tank
-	unrenderTank();
+	// Unrender tanks
+	unrenderAliens();
+	// unrender aliens
+
+	// unrender bullets
 }
 
