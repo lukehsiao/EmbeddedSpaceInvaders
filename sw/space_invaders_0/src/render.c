@@ -362,7 +362,8 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 
 			break;
 		case '9':
-			render();
+			renderTankBullet();
+			renderAlienBullet();
 			break;
 		case '7':
 			random = (timerSeed * 13 + 4) % 3;
