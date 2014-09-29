@@ -358,10 +358,13 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			killAlien(userInput);
 			break;
 		case '5':
-
+			//fire bullet
+			renderTankBullet();
 			break;
 		case '3':
-
+			//fire random alien missile
+			random = ((timerSeed * 13) / 3) % 11; //pseudo random number between 0-10
+			renderAlienBullet();
 			break;
 		case '9':
 			renderTankBullet();

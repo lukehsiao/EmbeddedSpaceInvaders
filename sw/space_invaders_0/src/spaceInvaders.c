@@ -116,9 +116,6 @@ int main()
 //    	 sillyTimer = MAX_SILLY_TIMER;       // Reset the timer.
 //    	 render();
     	 sillyTimer--;
-    	 if (sillyTimer == 0) {
-    		 sillyTimer = MAX_SILLY_TIMER;
-    	 }
     	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
     	 if (inputKey == '2') {
     		 userInput = 0;
