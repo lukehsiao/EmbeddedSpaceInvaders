@@ -275,11 +275,12 @@ void updateTankBulletPosition() {
 	unrenderTankBullet();
 	point_t position = getTankBulletPosition();
 	position.y = position.y - TANK_BULLET_SPEED;
-	if(position.y > 480) {
-		position.y = 480-10;
-		position.x = position.x + 10;
-		if(position.x > 640)
-			position.x = 10;
+	if(position.y > 490) {
+		position.y = 88888; //indicates it is disabled and off the screen.
+//		position.y = 480-10;
+//		position.x = position.x + 10;
+//		if(position.x > 640)
+//			position.x = 10;
 	}
 	setTankBulletPosition(position);
 }
@@ -329,6 +330,8 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 	u8 random;
 	u8 blockNumber;
 	u8 erosionState;
+	point_t tankBullet;
+	point_t tankPosition;
 	switch (keyPressed) {
 		case '4':
 			unrenderTank();
@@ -359,7 +362,15 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			break;
 		case '5':
 			//fire bullet
+			tankBullet = getTankBulletPosition();
+			tankPosition = getTankPositionGlobal();
+			if (tankBullet.y > 490) {	//if it's not on the screen
+				tankBullet.y = tankPosition.y;
+				tankBullet.x = tankPosition.x + 15;	//center on turret
+				setTankBulletPosition(tankBullet);
+			}
 			renderTankBullet();
+			renderTank();	//to compensate for automatic single shift.
 			break;
 		case '3':
 			//fire random alien missile

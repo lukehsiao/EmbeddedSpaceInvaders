@@ -15,7 +15,7 @@
 u16 alienStatus[5];		// one u16 tracks life/death of one row of aliens
 point_t alienBlockPosition;  // Top-left position of the alien block.
 u8 alienGuise;
-u8 alienBulletStatus[4]; // one u8 tracks if the Alien Bullet is present
+u8 alienBulletStatus; // one u8 tracks if the Alien Bullet is present
 alienBullet alienBullet_0;
 alienBullet alienBullet_1;
 alienBullet alienBullet_2;

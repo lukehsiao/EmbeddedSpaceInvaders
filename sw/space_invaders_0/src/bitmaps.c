@@ -763,17 +763,16 @@ const u32* getAlienArray(u32 alienNumber) {
  * @return a pointer to the 32x10 bit array of bitmap data.
  */
 const u32* getAlienBulletArray(u8 bulletNum) {
-	switch (bulletNum)
-	{
-	case 0:
-		return BULLET1;
+	switch (bulletNum) {
+		case 0:
+			return BULLET1;
+				break;
+		case 1:
+			return BULLET2;
+				break;
+		default:
+			return BULLET1;
 			break;
-	case 1:
-		return BULLET2;
-			break;
-	default:
-		return BULLET1;
-		break;
 	}
 }
 
