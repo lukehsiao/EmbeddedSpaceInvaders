@@ -185,19 +185,15 @@ void renderAliens() {
 void unrenderAlienBullet() {
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	alienBullet bullet;
-	u8 *status = getAlienBulletStatus();
 	u8 bulletNum;
-	if(status[0] || status[1] || status[2] || status[3]){
-		for(bulletNum = 0; bulletNum < 4; bulletNum++) {
-			if(status[bulletNum] == 1){
-				bullet = getAlienBullet(bulletNum);
-				point_t position = bullet.position;
-				u32 row;
-				u32 col;
-				for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
-					for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
-					}
+	u32 row, col;
+
+	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
+		bullet = getAlienBullet(bulletNum);
+		if (bullet.position.y < 480) { //if it's not off the screen
+			for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
+				for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
+					framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
 				}
 			}
 		}
@@ -207,24 +203,17 @@ void unrenderAlienBullet() {
 void updateAlienBulletPosition() {
 	unrenderAlienBullet();
 	alienBullet bullet;
-	u8 *status = getAlienBulletStatus();
 	u8 bulletNum;
-	if(status[0] || status[1] || status[2] || status[3]){
-		for(bulletNum = 0; bulletNum < 4; bulletNum++) {
-			if(status[bulletNum] == 1){
-				bullet = getAlienBullet(bulletNum);
-				point_t position = bullet.position;
-				position.y = position.y + ALIEN_BULLET_SPEED;
-				if(position.y > 480){
-					position.y = 0;
-				}
-				bullet.position = position;
-				bullet.guise = bullet.guise++;
-				if(bullet.guise > 2){
-					bullet.guise = 0;
-				}
-				setAlienBullet(bullet,bulletNum);
+
+	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
+		bullet = getAlienBullet(bulletNum);
+		if (bullet.position.y < 480) { //if it's not off the screen
+			bullet.guise = bullet.guise++;
+			if (bullet.guise > 2) {
+				bullet.guise = 0;
 			}
+			bullet.position.y = bullet.position.y + ALIEN_BULLET_SPEED;
+			setAlienBullet(bullet, bulletNum);
 		}
 	}
 }
@@ -233,25 +222,20 @@ void renderAlienBullet() {
 	updateAlienBulletPosition();
 	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	alienBullet bullet;
-	u8 *status = getAlienBulletStatus();
 	u8 bulletNum;
+	u32 row, col, bulletGuise;
 	const u32* arrayToRender;
-	if(status[0] || status[1] || status[2] || status[3]){
-		for(bulletNum = 0; bulletNum < 4; bulletNum++) {
-			if(status[bulletNum] == 1){
-				bullet = getAlienBullet(bulletNum);
-				point_t position = bullet.position;
-				u32 row;
-				u32 col;
-				u32 bulletGuise;
-				arrayToRender = getAlienBulletArray(bullet.type);
-				for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
-					for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
-						bulletGuise = bullet.guise;
-						u32 tempCol = col + bullet.guise*ALIEN_BULLET_WIDTH;
-						u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
-						framePointer0[(position.y + row)*640 + (position.x + col)] = pixelPresent? WHITE : BLACK;
-					}
+
+	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
+		bullet = getAlienBullet(bulletNum);
+		arrayToRender = getAlienBulletArray(bullet.type);
+		if (bullet.position.y < 480) { //if it's not off the screen
+			for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
+				for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
+					bulletGuise = bullet.guise;
+					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
+					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
+					framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = pixelPresent? WHITE : BLACK;;
 				}
 			}
 		}

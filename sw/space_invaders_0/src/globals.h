@@ -55,13 +55,11 @@ point_t getAlienBulletPosition_0();
 u8 getAlienBulletType_0();
 u8 toggleAlienGuise();
 u8 getAlienGuise();
-u8 *getAlienBulletStatus();
 u8 getAlienDirection();
 void setAlienDirection(u8 tempDirection);
 
 
 const u32* getAlienBulletArray(u8 bulletNum);
-u8 *getAlienBulletStatus();
 alienBullet getAlienBullet(u8 bulletNum);
 void setAlienBullet(alienBullet val, u8 bulletNum);
 

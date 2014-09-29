@@ -28,5 +28,7 @@ void render();
 void unrender();
 void blankScreen();
 void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput);
+void fireTankBullet();
+void fireAlienBullet();
 
 #endif /* RENDER_H_ */

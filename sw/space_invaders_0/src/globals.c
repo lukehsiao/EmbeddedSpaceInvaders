@@ -15,7 +15,6 @@
 u16 alienStatus[5];		// one u16 tracks life/death of one row of aliens
 point_t alienBlockPosition;  // Top-left position of the alien block.
 u8 alienGuise;
-u8 alienBulletStatus; // one u8 tracks if the Alien Bullet is present
 alienBullet alienBullet_0;
 alienBullet alienBullet_1;
 alienBullet alienBullet_2;
@@ -58,10 +57,8 @@ void initGlobals(){
 	direction = 1;
 
 	alienBullet bullet;
-	u8 *status = getAlienBulletStatus();
 	u8 j;
 	for(j= 0; j < 4; j++){
-		status[j] = 0x1; //Setting all bullets to alive
 		bullet = getAlienBullet(j);
 		temp.x = 20 + 150*j;
 		temp.y = 200 + 50*j;
@@ -70,10 +67,6 @@ void initGlobals(){
 		setAlienBullet(bullet, j);
 	}
 
-
-	temp.x = 10;
-	temp.y = 400;
-	setTankBulletPosition(temp);
 }
 
 /////////////////////////////////////
@@ -120,10 +113,6 @@ u8 toggleAlienGuise() {
 
 u8 getAlienGuise() {
 	return alienGuise;
-}
-
-u8 *getAlienBulletStatus(){
-	return alienBulletStatus;
 }
 
 alienBullet getAlienBullet(u8 bulletNum) {
@@ -305,8 +294,6 @@ void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 		//Set the new state
 		newErosion = (u32)erosion & 0x7; // this will pad the left with 0s
 		newErosion = newErosion << (27);
-		xil_printf("New Erosion: %x\n\r", newErosion);
-		xil_printf("tempState: %x\n\r", tempState);
 		tempState = tempState | newErosion;
 		bunkerState[bunkerNumber] = tempState;
 	}
