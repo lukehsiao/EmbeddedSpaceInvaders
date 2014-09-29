@@ -135,6 +135,19 @@ int main()
         		 parseKey('2', sillyTimer, userInput);
     		 }
     	 }
+    	 else if (inputKey == '7') {
+    		 userInput = 0;
+    		 xil_printf("\n\rEnter a bunker number between 0-3 to hit: ");
+    		 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
+    		 userInput = (inputKey - 48);
+    		 if (userInput > 3) {
+    			 xil_printf("\n\r!!! You entered a number that was too big!");
+    		 }
+    		 else {
+        		 xil_printf("\n\r    Hitting bunker #%d", userInput);
+        		 parseKey('7', sillyTimer, userInput);
+    		 }
+    	 }
     	 else {
 			 parseKey(inputKey, sillyTimer, userInput);
     	 }

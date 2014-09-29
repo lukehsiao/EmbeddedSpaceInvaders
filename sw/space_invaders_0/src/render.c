@@ -366,15 +366,14 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			renderAlienBullet();
 			break;
 		case '7':
-			random = ((timerSeed % 20) * 13) % 3;
 			for (blockNumber = 0; blockNumber < 12; blockNumber++) {
-				erosionState = getBlockState(random, blockNumber);
+				erosionState = getBlockState(userInput, blockNumber);
 				if (erosionState < 4) {
-					setBlockState(random, blockNumber, erosionState+1);
+					setBlockState(userInput, blockNumber, erosionState+1);
 					break;
 				}
 			}
-			renderBunker(random);
+			renderBunker(userInput);
 			break;
 		default:
 			//do nothing
