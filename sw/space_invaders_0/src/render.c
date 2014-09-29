@@ -173,8 +173,10 @@ void renderAliens() {
 		arrayToRender = getAlienArray(alienNumber);
 		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32; col++) {
+				//if (getAlienStatus(alienNumber) == 1) {//if the alien is alive, otherwise do nothing.
 				u8 pixelPresent = (arrayToRender[row] >> (31-col)) & 0x1;
 				framePointer0[(position.y + row)*640 + (position.x + col)] = pixelPresent? WHITE : BLACK;
+				//}
 			}
 		}
 	}

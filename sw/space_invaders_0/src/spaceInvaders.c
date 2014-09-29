@@ -122,7 +122,7 @@ int main()
     	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
     	 if (inputKey == '2') {
     		 userInput = 0;
-    		 xil_printf("\n\rEnter a two-digit number between 00-54 to kill: ");
+    		 xil_printf("\n\rEnter a two-digit alien number between 00-54 to kill: ");
     		 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
     		 userInput = (inputKey - 48) * 10;		//-48 to compensate for the ascii input
     		 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
