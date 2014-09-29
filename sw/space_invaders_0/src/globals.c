@@ -305,8 +305,6 @@ void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 		//Set the new state
 		newErosion = (u32)erosion & 0x7; // this will pad the left with 0s
 		newErosion = newErosion << (27);
-		xil_printf("New Erosion: %x\n\r", newErosion);
-		xil_printf("tempState: %x\n\r", tempState);
 		tempState = tempState | newErosion;
 		bunkerState[bunkerNumber] = tempState;
 	}
