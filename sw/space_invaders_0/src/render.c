@@ -283,6 +283,24 @@ void renderTankBullet() {
 }
 
 /**
+ * Fires the tank bullet from the tank's current position.
+ */
+void fireTankBullet() {
+	//fire bullet
+	point_t tankBullet;
+	point_t tankPosition;
+	tankBullet = getTankBulletPosition();
+	tankPosition = getTankPositionGlobal();
+	if (tankBullet.y > 490) {	//if it's not on the screen
+		tankBullet.y = tankPosition.y;
+		tankBullet.x = tankPosition.x + 15;	//center on turret
+		setTankBulletPosition(tankBullet);
+	}
+	renderTankBullet();
+	renderTank();	//to compensate for automatic single shift.
+}
+
+/**
  * Writes Black to the entire screen
  */
 void blankScreen() {
@@ -346,15 +364,7 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			break;
 		case '5':
 			//fire bullet
-			tankBullet = getTankBulletPosition();
-			tankPosition = getTankPositionGlobal();
-			if (tankBullet.y > 490) {	//if it's not on the screen
-				tankBullet.y = tankPosition.y;
-				tankBullet.x = tankPosition.x + 15;	//center on turret
-				setTankBulletPosition(tankBullet);
-			}
-			renderTankBullet();
-			renderTank();	//to compensate for automatic single shift.
+			fireTankBullet();
 			break;
 		case '3':
 			//fire random alien missile
