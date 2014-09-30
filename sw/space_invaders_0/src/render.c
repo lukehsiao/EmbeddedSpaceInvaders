@@ -248,9 +248,11 @@ void unrenderTankBullet() {
 	point_t position = getTankBulletPosition();
 	u32 row;
 	u32 col;
-	for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
-		for (col = 0; col < TANK_BULLET_WIDTH; col++) {
-			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+	if (position.y < 480) {
+		for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
+			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
+				framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+			}
 		}
 	}
 }
@@ -260,8 +262,8 @@ void updateTankBulletPosition() {
 	point_t position = getTankBulletPosition();
 	if (position.y < 480) {
 		position.y = position.y - TANK_BULLET_SPEED;
+		setTankBulletPosition(position);
 	}
-	setTankBulletPosition(position);
 }
 
 void renderTankBullet() {
@@ -270,9 +272,11 @@ void renderTankBullet() {
 	point_t position = getTankBulletPosition();
 	u32 row;
 	u32 col;
-	for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
-		for (col = 0; col < TANK_BULLET_WIDTH; col++) {
-			framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+	if (position.y < 480) {
+		for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
+			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
+				framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+			}
 		}
 	}
 }
