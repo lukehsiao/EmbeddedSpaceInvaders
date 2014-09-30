@@ -333,7 +333,6 @@ void fireAlienBullet(u32 randomCol) {
 		if (bullet.position.y >= 480) {	//if a bullet is available
 			//find random bottom row alien and fire from his location
 			alienNumber = findFiringAlien(randomCol);
-			xil_printf("Firing alien is: %d\n\r", alienNumber);
 			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 8; //8 to center bullet
 			position.y = getAlienBlockPosition().y + (alienNumber/11)*(ALIEN_HEIGHT+10) + ALIEN_BULLET_HEIGHT + 3; //3 buffer
 			bullet.position = position;
