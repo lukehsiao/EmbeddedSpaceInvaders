@@ -293,27 +293,26 @@ void fireTankBullet() {
 
 u32 findFiringAlien(u32 randomCol) {
 	u32 alienNumber;
-	u16* alienStatus;
-	alienStatus = getAlienStatusArray();
-
 	//Check up the column first
 	int row, col;
 	col = randomCol;
 	for (row = 4; row >= 0; row--) {
-		if ((alienStatus[row] >> (15-col)) == 1) {//if the alien at the bottom is alive
-			alienNumber = 11*row + col;
+		alienNumber = 11*row + col;
+		if (getAlienStatus(alienNumber) == 1) {
 			return alienNumber;
 		}
 	}
 
 	//If no alien is alive in that row
-	int flag = 1;
-	while (flag == 1) {
-		col = (getAlienBlockPosition().x * 13 / 7) % 11;	//generate another pseudorandom number
+	while (1) {
+		col++;	//check next column
+		if (col > 10) {
+			col = 0;
+		}
 		for (row = 4; row >= 0; row--) {
-			if ((alienStatus[row] >> (15-col)) == 1) {//if the alien at the bottom is alive
-				alienNumber = 11*row + col;
-				flag = 0;
+			alienNumber = 11*row + col;
+			if (getAlienStatus(alienNumber) == 1) {
+				return alienNumber;
 			}
 		}
 	}
@@ -331,16 +330,17 @@ void fireAlienBullet(u32 randomCol) {
 
 	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
 		bullet = getAlienBullet(bulletNum);
-		if (bullet.position.y < 480) {	//if a bullet is available
+		if (bullet.position.y >= 480) {	//if a bullet is available
 			//find random bottom row alien and fire from his location
 			alienNumber = findFiringAlien(randomCol);
-
-			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 12; //12 to center bullet
-			position.y = getAlienBlockPosition().y + (alienNumber/11) + ALIEN_HEIGHT;
+			xil_printf("Firing alien is: %d\n\r", alienNumber);
+			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 8; //8 to center bullet
+			position.y = getAlienBlockPosition().y + (alienNumber/11)*(ALIEN_HEIGHT+10) + ALIEN_BULLET_HEIGHT + 3; //3 buffer
 			bullet.position = position;
 			bullet.type = (randomCol % 2) & 0x1;
 			bullet.guise = 0;
 			setAlienBullet(bullet, bulletNum);
+			renderAlienBullet();
 			return;
 		}
 	}
@@ -411,7 +411,7 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 		case '3':
 			//fire random alien missile
 			random = ((timerSeed * 13) / 3) % 11; //pseudo random number between 0-10
-			renderAlienBullet(random);
+			fireAlienBullet(random);
 			break;
 		case '9':
 			renderTankBullet();

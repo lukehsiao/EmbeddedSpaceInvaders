@@ -47,7 +47,7 @@ void initGlobals(){
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0xFFFF;
+		alienStatus[i] = 0x003F;
 	}
 
 	point_t temp;
@@ -191,10 +191,6 @@ void setAlienStatus(u32 alienNumber, u32 status) {
 		// Setting the bit
 		alienStatus[4] = bitTemp | (status << (15 - (alienNumber % 11)));
 	}
-}
-
-u16* getAlienStatusArray() {
-	return alienStatus;
 }
 
 u16 getAlienStatus(u32 alienNumber) {
