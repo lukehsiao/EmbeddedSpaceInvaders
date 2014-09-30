@@ -67,6 +67,10 @@ void initGlobals(){
 		setAlienBullet(bullet, j);
 	}
 
+	temp.y = 8888;
+	temp.x = 20;
+	setTankBulletPosition(temp);
+
 }
 
 /////////////////////////////////////

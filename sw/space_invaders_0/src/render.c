@@ -258,9 +258,8 @@ void unrenderTankBullet() {
 void updateTankBulletPosition() {
 	unrenderTankBullet();
 	point_t position = getTankBulletPosition();
-	position.y = position.y - TANK_BULLET_SPEED;
-	if(position.y > 490) {
-		position.y = 88888; //indicates it is disabled and off the screen.
+	if (position.y < 480) {
+		position.y = position.y - TANK_BULLET_SPEED;
 	}
 	setTankBulletPosition(position);
 }
@@ -311,8 +310,6 @@ void fireAlienBullet() {
 		}
 	}
 }
-
-
 
 /**
  * Writes Black to the entire screen
@@ -422,7 +419,6 @@ void unrender() {
 	// Unrender tanks
 	//unrenderAliens();
 	// unrender aliens
-
 	// unrender bullets
 }
 
