@@ -57,7 +57,6 @@ u8 toggleAlienGuise();
 u8 getAlienGuise();
 u8 getAlienDirection();
 void setAlienDirection(u8 tempDirection);
-u16* getAlienStatusArray();
 
 const u32* getAlienBulletArray(u8 bulletNum);
 alienBullet getAlienBullet(u8 bulletNum);
