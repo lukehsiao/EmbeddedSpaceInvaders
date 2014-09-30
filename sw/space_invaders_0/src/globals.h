@@ -9,6 +9,8 @@
 
 #ifndef globals_h
 #define globals_h
+#define FRAME_BUFFER_0_ADDR 0xC1000000  // Starting location in DDR where we will store the images that we display.
+
 #define u8 unsigned char
 #define u16 unsigned short
 #define u32 unsigned int

@@ -5,10 +5,9 @@
  * @date 23 Sept 2014
  */
 
-#define FRAME_BUFFER_ADDR 0xC0000000
 #include "render.h"
 
-u32* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
 
 /**
  * Draws the tank in it's current position
@@ -155,6 +154,7 @@ void renderAliens() {
 	point_t position = getAlienBlockPosition();
 	toggleAlienGuise();
 	const u32* arrayToRender;
+
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
 		//algorithm to adjust x and y for drawing
 		if (alienNumber != 0) {
