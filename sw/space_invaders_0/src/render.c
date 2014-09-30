@@ -8,12 +8,12 @@
 #define FRAME_BUFFER_ADDR 0xC0000000
 #include "render.h"
 
+u32* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
+
 /**
  * Draws the tank in it's current position
  */
 void renderTank() {
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
-
 	int col;
 	int row;
 	for (row = 0; row < 16; row++) {
@@ -24,7 +24,6 @@ void renderTank() {
 }
 
 void renderBunker(u8 bunkerNumber){
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
 	int row;
 	int blockNum;
@@ -57,7 +56,6 @@ void renderBunker(u8 bunkerNumber){
  * Then, blanks the entire block when the aliens drop a row.
  */
 void unrenderAliens() {
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
 	int row;
 	point_t position;
@@ -132,7 +130,6 @@ void updateAlienLocation() {
  * Writes a black box in the given Alien's location
  */
 void killAlien(u32 alienNumber) {
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	point_t position = getAlienBlockPosition();
 	int col;
 	int row;
@@ -152,7 +149,6 @@ void killAlien(u32 alienNumber) {
  */
 void renderAliens() {
 	updateAlienLocation();
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int col;
 	int row;
 	int alienNumber;
@@ -183,7 +179,6 @@ void renderAliens() {
 }
 
 void unrenderAlienBullet() {
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	alienBullet bullet;
 	u8 bulletNum;
 	u32 row, col;
@@ -220,7 +215,6 @@ void updateAlienBulletPosition() {
 
 void renderAlienBullet() {
 	updateAlienBulletPosition();
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	alienBullet bullet;
 	u8 bulletNum;
 	u32 row, col, bulletGuise;
@@ -244,7 +238,6 @@ void renderAlienBullet() {
 
 
 void unrenderTankBullet() {
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	point_t position = getTankBulletPosition();
 	u32 row;
 	u32 col;
@@ -268,7 +261,6 @@ void updateTankBulletPosition() {
 
 void renderTankBullet() {
 	updateTankBulletPosition();
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	point_t position = getTankBulletPosition();
 	u32 row;
 	u32 col;
@@ -319,7 +311,6 @@ void fireAlienBullet() {
  * Writes Black to the entire screen
  */
 void blankScreen() {
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int row=0, col=0;
 	for( row=0; row<480; row++) {
 		for(col=0; col<640; col++) {
@@ -332,7 +323,6 @@ void blankScreen() {
  * Writes BLACK to the box that the tank is currently in
  */
 void unrenderTank() {
-	unsigned int* framePointer0 = (unsigned int *) FRAME_BUFFER_ADDR;
 	int row, col;
 	point_t position = getTankPositionGlobal();
 	for(row = 0; row < ALIEN_HEIGHT; row++) {

@@ -21,7 +21,7 @@
 #include "xparameters.h"
 #include "xaxivdma.h"
 #include "xio.h"
-#include "time.h"
+//#include "time.h"	//is this needed?
 #include "unistd.h"
 #include "render.h"			// Our rendering file.
 #include "xuartlite_l.h"
@@ -82,7 +82,6 @@ int main()
     // is where you will write your video data. The vdma IP/driver then streams it to the HDMI
     // IP.
      myFrameBuffer.FrameStoreStartAddr[0] = FRAME_BUFFER_0_ADDR;
-     myFrameBuffer.FrameStoreStartAddr[1] = FRAME_BUFFER_0_ADDR + 4*640*480;
 
      if(XST_FAILURE == XAxiVdma_DmaSetBufferAddr(&videoDMAController, XAXIVDMA_READ,
     		               myFrameBuffer.FrameStoreStartAddr)) {
