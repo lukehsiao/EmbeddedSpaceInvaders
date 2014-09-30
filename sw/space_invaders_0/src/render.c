@@ -261,10 +261,6 @@ void updateTankBulletPosition() {
 	position.y = position.y - TANK_BULLET_SPEED;
 	if(position.y > 490) {
 		position.y = 88888; //indicates it is disabled and off the screen.
-//		position.y = 480-10;
-//		position.x = position.x + 10;
-//		if(position.x > 640)
-//			position.x = 10;
 	}
 	setTankBulletPosition(position);
 }
@@ -301,6 +297,24 @@ void fireTankBullet() {
 }
 
 /**
+ * Fires an alien bullet if available from a random bottom row alien
+ */
+void fireAlienBullet() {
+	alienBullet bullet;
+	u8 bulletNum;
+	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
+		bullet = getAlienBullet(bulletNum);
+		if (bullet.position.y < 480) {	//if a bullet is available
+			//find random bottom row alien and fire from his location
+
+			return;
+		}
+	}
+}
+
+
+
+/**
  * Writes Black to the entire screen
  */
 void blankScreen() {
@@ -332,8 +346,6 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 	u8 random;
 	u8 blockNumber;
 	u8 erosionState;
-	point_t tankBullet;
-	point_t tankPosition;
 	switch (keyPressed) {
 		case '4':
 			unrenderTank();
