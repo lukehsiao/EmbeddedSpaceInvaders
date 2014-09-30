@@ -47,7 +47,7 @@ void initGlobals(){
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0x003F;
+		alienStatus[i] = 0x013F;
 	}
 
 	point_t temp;
