@@ -193,6 +193,10 @@ void setAlienStatus(u32 alienNumber, u32 status) {
 	}
 }
 
+u16* getAlienStatusArray() {
+	return alienStatus;
+}
+
 u16 getAlienStatus(u32 alienNumber) {
 	u16 temp;
 	if (alienNumber < 11) {
