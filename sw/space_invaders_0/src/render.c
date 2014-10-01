@@ -73,14 +73,14 @@ void unrenderAliens() {
 	// if X_SHIFT > 6, we'll need to add logic hear to clear the right side as well.
 
 	// If we hit the right edge
-	if(position.x >= (640-32*11) && direction == 1) {
+	if(position.x + (32*11) >= getRightPad() && direction == 1) {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
 				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
 			}
 		}
 	} // Alien Block hit left side
-	else if(position.x <= 5 && direction == 0) {
+	else if(position.x + getLeftPad() <= 5 && direction == 0) {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
 				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
@@ -99,12 +99,13 @@ void updateAlienLocation() {
 	// Update Location each call
 	point_t tempAlien = getAlienBlockPosition();
 
-	// Alien Block hit Right side
-	if(tempAlien.x >= (640-(32*11) + getRightPad()) && direction == 1) {
+	//Right edge hit
+	if (tempAlien.x + (32*11) >= getRightPad() && direction == 1) {
 		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
 		setAlienDirection(0);
-	} // Alien Block hit left side
-	else if((tempAlien.x + getLeftPad()) <= 5 && direction == 0) {
+	}
+	//left edge hit
+	else if (tempAlien.x + getLeftPad() <= 5 && direction == 0) {
 		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
 		setAlienDirection(1);
 	}
@@ -114,11 +115,29 @@ void updateAlienLocation() {
 		}
 		else {
 			tempAlien.x = tempAlien.x - X_SHIFT;
-			if(tempAlien.x > 640) {
-				tempAlien.x = 0;
-			}
 		}
 	}
+
+//	// Alien Block hit Right side
+//	if(tempAlien.x >= (640-(32*11) + getRightPad()) && direction == 1) {
+//		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+//		setAlienDirection(0);
+//	} // Alien Block hit left side
+//	else if((tempAlien.x + getLeftPad()) <= 5 && direction == 0) {
+//		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+//		setAlienDirection(1);
+//	}
+//	else {
+//		if(direction == 1){
+//			tempAlien.x = tempAlien.x + X_SHIFT;
+//		}
+//		else {
+//			tempAlien.x = tempAlien.x - X_SHIFT;
+//			if(tempAlien.x > 640) {
+//				tempAlien.x = 0;
+//			}
+//		}
+//	}
 	//What does this stuff do?
 //	if(tempAlien.y > 480/3*2+16*4) {
 //		tempAlien.y = 50;
