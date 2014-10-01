@@ -100,11 +100,11 @@ void updateAlienLocation() {
 	point_t tempAlien = getAlienBlockPosition();
 
 	// Alien Block hit Right side
-	if(tempAlien.x >= (640-32*11) && direction == 1) {
+	if(tempAlien.x >= (640-(32*11) + getRightPad()) && direction == 1) {
 		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
 		setAlienDirection(0);
 	} // Alien Block hit left side
-	else if(tempAlien.x <= 5 && direction == 0) {
+	else if((tempAlien.x + getLeftPad()) <= 5 && direction == 0) {
 		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
 		setAlienDirection(1);
 	}
@@ -119,9 +119,10 @@ void updateAlienLocation() {
 			}
 		}
 	}
-	if(tempAlien.y > 480/3*2+16*4) {
-		tempAlien.y = 50;
-	}
+	//What does this stuff do?
+//	if(tempAlien.y > 480/3*2+16*4) {
+//		tempAlien.y = 50;
+//	}
 	setAlienBlockPosition(tempAlien);
 }
 

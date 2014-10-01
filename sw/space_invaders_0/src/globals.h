@@ -64,6 +64,11 @@ const u32* getAlienBulletArray(u8 bulletNum);
 alienBullet getAlienBullet(u8 bulletNum);
 void setAlienBullet(alienBullet val, u8 bulletNum);
 
+u16 getRightPad();
+u16 getLeftPad();
+void setRightPad(u16 new);
+void setLeftPad(u16 new);
+
 /////////////////////////////////////
 // Setup the Bunker Globals
 /////////////////////////////////////

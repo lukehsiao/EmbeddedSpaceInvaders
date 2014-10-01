@@ -20,6 +20,8 @@ alienBullet alienBullet_1;
 alienBullet alienBullet_2;
 alienBullet alienBullet_3;
 u8 direction;	//1 = right, 0 = left
+u16 rightPad;	//to allow for edge to edge rendering
+u16 leftPad;
 
 // Bunker Variables
 point_t bunkerPosition_0;	// Top-left position of the bunker.
@@ -117,6 +119,22 @@ u8 toggleAlienGuise() {
 
 u8 getAlienGuise() {
 	return alienGuise;
+}
+
+u16 getRightPad() {
+	return rightPad;
+}
+
+void setRightPad(u16 new) {
+	rightPad = new;
+}
+
+u16 getLeftPad() {
+	return leftPad;
+}
+
+void setLeftPad(u16 new) {
+	leftPad = new;
 }
 
 alienBullet getAlienBullet(u8 bulletNum) {
