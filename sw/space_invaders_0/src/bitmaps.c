@@ -1,9 +1,13 @@
-/*
- * bitmaps.c
+/**
+ * This contains the actual bitmaps for all graphics rendered in 
+ * Space Invaders.  This is also where all functions requesting
+ * bitmap data are held.
  *
- *  Created on: Sep 25, 2014
- *      Author: superman
+ * @author Luke Hsiao
+ * @author Jeff Ravert
+ * @date 23 Sept 2014
  */
+ 
 #include "bitmaps.h"
 
 //---------------------Bit Map Definitions----------------------------------
@@ -371,6 +375,7 @@ packWord32(0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int LIVES1[ALIEN_HEIGHT] =
 {
 packWord32(1,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1),
@@ -384,6 +389,7 @@ packWord32(1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,1,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1),
 packWord32(1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1),
 };
+
 const unsigned int LIVES2[ALIEN_HEIGHT] =
 {
 packWord32(1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -397,6 +403,7 @@ packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int SCORE1[ALIEN_HEIGHT] =
 {
 packWord32(0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1),
@@ -410,6 +417,7 @@ packWord32(0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1),
 packWord32(1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1),
 };
+
 const unsigned int SCORE2[ALIEN_HEIGHT] =
 {
 packWord32(0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),
@@ -423,6 +431,7 @@ packWord32(1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),
 packWord32(0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),
 };
+
 const unsigned int BUNKER_ERODE_01_LEFT[BUNKER_SQUARE_HEIGHT] =
 {
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0),
@@ -438,6 +447,7 @@ packWord32(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int BUNKER_ERODE_23_LEFT[BUNKER_SQUARE_HEIGHT] =
 {
 packWord32(0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -469,6 +479,7 @@ packWord32(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int BUNKER_ERODE_23_RIGHT[BUNKER_SQUARE_HEIGHT] =
 {
 packWord32(1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -484,6 +495,7 @@ packWord32(0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0),
 packWord32(1,1,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int TANK_BULLET[TANK_BULLET_HEIGHT] =
 {
 packWord32(1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -494,6 +506,7 @@ packWord32(1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int BUNKER_TOP_LEFT[BUNKER_SQUARE_HEIGHT] =
 {
 packWord32(0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -509,6 +522,7 @@ packWord32(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int BUNKER_MIDDLE_LEFT[BUNKER_SQUARE_HEIGHT] =
 {
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -524,6 +538,7 @@ packWord32(1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int BUNKER_TOP_RIGHT[BUNKER_SQUARE_HEIGHT] =
 {
 packWord32(1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -539,6 +554,7 @@ packWord32(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
+
 const unsigned int BUNKER_MIDDLE_RIGHT[BUNKER_SQUARE_HEIGHT] =
 {
 packWord32(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -554,9 +570,6 @@ packWord32(0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
-
-
-
 //---------------------End Bit Map Definitions------------------------------
 
 /**
@@ -582,7 +595,8 @@ u32 getTankPixel(u32 row, u32 col) {
 
 /**
  * This function returns the color of the pixel to draw assuming we're
- * already looking inside the specified bunker.
+ * already looking inside the specified bunker. Note that this is note
+ * very efficient, and may be optimized in the future.
  *
  * @param row The row number of the pixel within the given bunker
  * @param col The column number of the pixel within the given bunker
@@ -775,52 +789,3 @@ const u32* getAlienBulletArray(u8 bulletNum) {
 			break;
 	}
 }
-
-/**
- * This function returns the color of the pixel to draw assuming we're
- * already looking inside the alien.
- *
- * @param row The row number of the pixel within the alien
- * @param col The column number of the pixel within the alien
- * @param alienPosition open or closed (0-1)
- * @param alienType Which type of alien (0-2)
- * @return the color value to draw at that pixel
- */
-//u32 getAlienPixel(u32 row, u32 col, u32 alienType, u32 alienPosition, u32 alienNumber) {
-//	u32 tempColor;
-//	u32 tempRow;
-//
-//	if (getAlienStatus(alienNumber) == 0) {
-//		return BLACK;
-//	}
-//
-//	switch (alienType) {
-//		case 0:
-//			if (alienPosition == 1) {
-//				tempRow = (ALIEN1_IN[row]);
-//			}
-//			else {
-//				tempRow = (ALIEN1_OUT[row]);
-//			}
-//			break;
-//		case 1:
-//			if (alienPosition == 1) {
-//				tempRow = (ALIEN2_IN[row]);
-//			}
-//			else {
-//				tempRow = (ALIEN2_OUT[row]);
-//			}
-//			break;
-//		default:
-//			if (alienPosition == 1) {
-//				tempRow = (ALIEN3_IN[row]);
-//			}
-//			else {
-//				tempRow = (ALIEN3_OUT[row]);
-//			}
-//
-//	}
-//	return tempRow;
-//}
-
-

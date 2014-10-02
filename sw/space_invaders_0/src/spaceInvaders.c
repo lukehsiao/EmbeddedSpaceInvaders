@@ -103,16 +103,13 @@ int main()
      if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
     	 xil_printf("vdma parking failed\n\r");
      }
-     initGlobals();
-     blankScreen();
-     render();
+     initGlobals(); //setup space invaders
+     blankScreen(); // erase old data
+     render();      // draw initialized game
      u8 inputKey;
      u32 userInput;
      u32 sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
      while (1) {
-//    	 while (sillyTimer) sillyTimer--;    // Decrement the timer.
-//    	 sillyTimer = MAX_SILLY_TIMER;       // Reset the timer.
-//    	 render();
     	 sillyTimer--;
     	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
     	 if (inputKey == '2') {

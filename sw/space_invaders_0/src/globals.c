@@ -8,8 +8,6 @@
 
 #include "globals.h"
 
-
-
 //******************* Variables of Space Invaders*************************
 // Alien Variables
 u16 alienStatus[5];		// one u16 tracks life/death of one row of aliens
@@ -49,7 +47,7 @@ void initGlobals(){
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0x013F;
+		alienStatus[i] = 0xFFFF;
 	}
 
 	point_t temp;
@@ -94,91 +92,45 @@ point_t getTankBulletPosition() {
 	return tankBulletPosition;
 }
 
-/**
- * @ return 0xFF if it's not inside, 0 if it is
- */
-u8 isInsideTank(point_t val) {
-	return 0xFF;
-}
-
-
 /////////////////////////////////////
 // Implement the Alien Globals
 /////////////////////////////////////
+
+/**
+ * Sets the value of the top-left corner of the alien block
+ * @param val The coordinates to set the alien block position to
+ */
 void setAlienBlockPosition(point_t val) {
 	alienBlockPosition = val;
 }
+
+/**
+ * @return The coordinates of the top-left corner of the block.
+ */
 point_t getAlienBlockPosition() {
 	return alienBlockPosition;
 }
 
-u8 toggleAlienGuise() {
-	u8 temp = alienGuise;
-	alienGuise = (~alienGuise) & 0x1;
-	return temp;
+/**
+ * Sets the alien block to move in the passed in direction.
+ * @param tempDirection The direction you want the block to move.
+ */
+void setAlienDirection(u8 tempDirection) {
+	direction = tempDirection;
 }
 
-u8 getAlienGuise() {
-	return alienGuise;
+/**
+ * @return The direction that the aliens are going.
+ */
+u8 getAlienDirection() {
+	return direction;
 }
 
-u16 getRightPad() {
-	return rightPad;
-}
-
-void setRightPad(u16 new) {
-	rightPad = new;
-}
-
-u16 getLeftPad() {
-	return leftPad;
-}
-
-void setLeftPad(u16 new) {
-	leftPad = new;
-}
-
-alienBullet getAlienBullet(u8 bulletNum) {
-	alienBullet bullet;
-	switch (bulletNum)
-	{
-	case 0:
-		bullet = alienBullet_0;
-		break;
-	case 1:
-		bullet = alienBullet_1;
-		break;
-	case 2:
-		bullet = alienBullet_2;
-		break;
-	default:
-		bullet = alienBullet_3;
-		break;
-	}
-	return bullet;
-}
-
-void setAlienBullet(alienBullet val, u8 bulletNum) {
-	alienBullet bullet;
-	bullet = getAlienBullet(bulletNum);
-	switch (bulletNum)
-	{
-	case 0:
-		alienBullet_0 = val;
-		break;
-	case 1:
-		alienBullet_1 = val;
-		break;
-	case 2:
-		alienBullet_2 = val;
-	break;
-	default:
-		alienBullet_3 = val;
-	break;
-	}
-}
-
-
+/**
+ * Sets the alien at alienNumber to the given status.
+ * @param alienNumber Which alien to edit.
+ * @param status The alien's status. 0 = dead, 1 = alive.
+ */
 void setAlienStatus(u32 alienNumber, u32 status) {
 	if (alienNumber < 11) {
 		// clearing the bit
@@ -212,6 +164,11 @@ void setAlienStatus(u32 alienNumber, u32 status) {
 	}
 }
 
+/**
+ * Read the alien status for the given alien.
+ * @param alienNumber Which alien to get the status of.
+ * @return 0 if dead, 1 if alive.
+ */
 u16 getAlienStatus(u32 alienNumber) {
 	u16 temp;
 	if (alienNumber < 11) {
@@ -232,17 +189,110 @@ u16 getAlienStatus(u32 alienNumber) {
 	return temp;
 }
 
-u8 getAlienDirection() {
-	return direction;
+/**
+ * Toggles the alien guise from open to closed and closed to open.
+ * @return The value that the alien guise used to be before toggling.
+ */
+u8 toggleAlienGuise() {
+	u8 temp = alienGuise;
+	alienGuise = (~alienGuise) & 0x1;
+	return temp;
 }
 
-void setAlienDirection(u8 tempDirection) {
-	direction = tempDirection;
+/**
+ * @return The value of the alien guise.
+ */
+u8 getAlienGuise() {
+	return alienGuise;
+}
+
+/**
+ * Gets the specified alien bullet.
+ * @param bulletNum The Alien Bullet struct associated with that number. (0-3)
+ * @return the alien bullet associated with bulletNum
+ */
+alienBullet getAlienBullet(u8 bulletNum) {
+	alienBullet bullet;
+	switch (bulletNum)
+	{
+	case 0:
+		bullet = alienBullet_0;
+		break;
+	case 1:
+		bullet = alienBullet_1;
+		break;
+	case 2:
+		bullet = alienBullet_2;
+		break;
+	default:
+		bullet = alienBullet_3;
+		break;
+	}
+	return bullet;
+}
+
+/**
+ * Sets the specified alien bullet values.
+ * @param val The alien bullet to set.
+ * @param bulletNum the number to assign to the passed in alien bullet.
+ */
+void setAlienBullet(alienBullet val, u8 bulletNum) {
+	alienBullet bullet;
+	bullet = getAlienBullet(bulletNum);
+	switch (bulletNum)
+	{
+	case 0:
+		alienBullet_0 = val;
+		break;
+	case 1:
+		alienBullet_1 = val;
+		break;
+	case 2:
+		alienBullet_2 = val;
+	break;
+	default:
+		alienBullet_3 = val;
+	break;
+	}
+}
+
+/**
+ * Sets the right padding value to newVal
+ * @param newVal The value to set the right pad to.
+ */
+void setRightPad(u16 newVal) {
+	rightPad = new;
+}
+
+/**
+ * @return The value of the right pad.
+ */
+u16 getRightPad() {
+	return rightPad;
+}
+
+/**
+ * Sets the left padding value to newVal
+ * @param newVal The value to set the left pad to.
+ */
+void setLeftPad(u16 newVal) {
+	leftPad = new;
+}
+
+/**
+ * @return The value of the left pad.
+ */
+u16 getLeftPad() {
+	return leftPad;
 }
 
 /////////////////////////////////////
 // Implement the Bunker Globals
 /////////////////////////////////////
+
+/**
+ * Initializes the bunkers in the correct positions
+ */
 void initBunkers() {
 	int i;
 	for (i = 0; i < 4; i++) {
@@ -260,23 +310,6 @@ void initBunkers() {
 	bunkerPosition_3.x = 488;
 	bunkerPosition_3.y = 380;
 }
-point_t getBunkerPosition(u8 bunkerNumber) {
-	point_t temp;
-	switch(bunkerNumber) {
-		case 0:
-			return bunkerPosition_0;
-		case 1:
-			return bunkerPosition_1;
-		case 2:
-			return bunkerPosition_2;
-		case 3:
-			return bunkerPosition_3;
-		default:
-			temp.x = 0;
-			temp.y = 0;
-			return temp;
-	}
-}
 
 /**
  * Sets the erosion state of the specified block.
@@ -289,8 +322,8 @@ point_t getBunkerPosition(u8 bunkerNumber) {
 void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 	u32 tempState = bunkerState[bunkerNumber];
 	tempState = 0x3FFFFFFF & tempState;
-
 	u32 newErosion;
+	
 	if (blockNumber < 9) {
 		//clear old state by creating a ..1100011... mask and ANDing
 		u32 mask = 0xFFFFFFF8; //...1111 1000
@@ -320,8 +353,6 @@ void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 		tempState = tempState | newErosion;
 		bunkerState[bunkerNumber] = tempState;
 	}
-	//xil_printf("\n\rTemp State is:\n\r%x", tempState);
-
 }
 
 /**
@@ -350,8 +381,37 @@ u8 getBlockState(u8 bunkerNumber, u8 blockNumber) {
 	return erosionState;
 }
 
+/**
+ * Returns the entire u32 containing all block's state data.
+ *
+ * @param bunkerNumber the number of the bunker (0-3)
+ * @return Entire erosion state for the given bunker.
+ */
 u32 getBunkerState(u8 bunkerNumber) {
 	return bunkerState[bunkerNumber];
+}
+
+/**
+ * Gets the (x,y) coordinates of top-left corner of the bunker.
+ * @param bunkerNumber The Bunker Number to check (0-3).
+ * @return The (x,y) coordinates of the top-left corner of the bunker.
+ */
+point_t getBunkerPosition(u8 bunkerNumber) {
+	point_t temp;
+	switch(bunkerNumber) {
+		case 0:
+			return bunkerPosition_0;
+		case 1:
+			return bunkerPosition_1;
+		case 2:
+			return bunkerPosition_2;
+		case 3:
+			return bunkerPosition_3;
+		default:
+			temp.x = 0;
+			temp.y = 0;
+			return temp;
+	}
 }
 
 /////////////////////////////////////

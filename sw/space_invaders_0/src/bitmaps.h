@@ -1,11 +1,15 @@
+/**
+ * These are the prototypes and #defines for bitmaps.
+ *
+ * @author Luke Hsiao
+ * @author Jeff Ravert
+ * @date 23 Sept 2014
+ */
+
 
 #ifndef bitmaps_h
 #define bitmaps_h
 #include "globals.h"
-
-#define u8 unsigned char
-#define u16 unsigned short
-#define u32 unsigned int
 
 // Packs each horizontal line of the figures const unsigned int a single 32 bit word.
 #define packWord32(b31,b30,b29,b28,b27,b26,b25,b24,b23,b22,b21,b20,b19,b18,b17,b16,b15,b14,b13,b12,b11,b10,b9,b8,b7,b6,b5,b4,b3,b2,b1,b0) \

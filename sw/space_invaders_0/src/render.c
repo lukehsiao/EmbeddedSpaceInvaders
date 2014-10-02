@@ -22,6 +22,23 @@ void renderTank() {
 	}
 }
 
+/**
+ * Writes BLACK to the box that the tank is currently in
+ */
+void unrenderTank() {
+	int row, col;
+	point_t position = getTankPositionGlobal();
+	for(row = 0; row < ALIEN_HEIGHT; row++) {
+		for(col=0; col<32; col++) {
+			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;  // frame 0 is red here.
+		}
+	}
+}
+
+/**
+ * Draws the bunker
+ * @param bunkerNumber The bunker to draw (0-3)
+ */
 void renderBunker(u8 bunkerNumber){
 	int col;
 	int row;
@@ -49,6 +66,9 @@ void renderBunker(u8 bunkerNumber){
 	}
 }
 
+//////////////////////////////////////////////////////////////////
+// Functions for Rendering Aliens
+//////////////////////////////////////////////////////////////////
 
 /**
  * Deletes only the necessary pixels when the aliens are moving right or left.
@@ -173,6 +193,13 @@ void renderAliens() {
 	}
 }
 
+
+//////////////////////////////////////////////////////////////////
+// Functions for Rendering Alien Bullets
+//////////////////////////////////////////////////////////////////
+/**
+ * Erases the alien bullet at it's current location
+ */
 void unrenderAlienBullet() {
 	alienBullet bullet;
 	u8 bulletNum;
@@ -190,6 +217,9 @@ void unrenderAlienBullet() {
 	}
 }
 
+/**
+ *  Updates the alien bullet locations
+ */
 void updateAlienBulletPosition() {
 	unrenderAlienBullet();
 	alienBullet bullet;
@@ -208,6 +238,9 @@ void updateAlienBulletPosition() {
 	}
 }
 
+/**
+ *  Draws all the alien bullets.
+ */
 void renderAlienBullet() {
 	updateAlienBulletPosition();
 	alienBullet bullet;
@@ -231,7 +264,13 @@ void renderAlienBullet() {
 	}
 }
 
+//////////////////////////////////////////////////////////////////
+// Functions for Rendering Tank Bullets
+//////////////////////////////////////////////////////////////////
 
+/**
+ *  Erases the tank at it's current position
+ */
 void unrenderTankBullet() {
 	point_t position = getTankBulletPosition();
 	u32 row;
@@ -245,6 +284,9 @@ void unrenderTankBullet() {
 	}
 }
 
+/**
+ *  Updates the tank's bullet position
+ */
 void updateTankBulletPosition() {
 	unrenderTankBullet();
 	point_t position = getTankBulletPosition();
@@ -254,6 +296,9 @@ void updateTankBulletPosition() {
 	}
 }
 
+/**
+ *  Draws the tank's bullet position
+ */
 void renderTankBullet() {
 	updateTankBulletPosition();
 	point_t position = getTankBulletPosition();
@@ -268,6 +313,10 @@ void renderTankBullet() {
 	}
 }
 
+
+//////////////////////////////////////////////////////////////////
+// Functions for Shooting
+//////////////////////////////////////////////////////////////////
 /**
  * Fires the tank bullet from the tank's current position.
  */
@@ -286,8 +335,15 @@ void fireTankBullet() {
 	renderTank();	//to compensate for automatic single shift.
 }
 
+/**
+ * Searches up the column to find the lowest live alien.  If there are
+ * none, iterate over the other columns.
+ *
+ * @return the number of the alien to fire the bullet from
+ */
 u32 findFiringAlien(u32 randomCol) {
 	u32 alienNumber;
+	alienNumber = 0;
 	//Check up the column first
 	int row, col;
 	col = randomCol;
@@ -299,7 +355,8 @@ u32 findFiringAlien(u32 randomCol) {
 	}
 
 	//If no alien is alive in that row
-	while (1) {
+	int check;
+	for (check = 0; check < 11; check++) {
 		col++;	//check next column
 		if (col > 10) {
 			col = 0;
@@ -311,6 +368,8 @@ u32 findFiringAlien(u32 randomCol) {
 			}
 		}
 	}
+	
+	//Shouldn't reach here, all aliens are dead?
 	return alienNumber;
 }
 
@@ -353,18 +412,23 @@ void blankScreen() {
 }
 
 /**
- * Writes BLACK to the box that the tank is currently in
+ * Renders all of the objects on the screen
  */
-void unrenderTank() {
-	int row, col;
-	point_t position = getTankPositionGlobal();
-	for(row = 0; row < ALIEN_HEIGHT; row++) {
-		for(col=0; col<32; col++) {
-			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;  // frame 0 is red here.
-		}
-	}
+void render() {
+	//blankScreen();
+	renderTank();
+	renderBunker(0);
+	renderBunker(1);
+	renderBunker(2);
+	renderBunker(3);
+	renderAliens();
+	renderTankBullet();
+	renderAlienBullet();
 }
 
+/**
+ * Specifically for Lab 3.  Parses the keyboard inputs.
+ */
 void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 	point_t temp;
 	u8 random;
@@ -427,25 +491,6 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 	}
 }
 
-/**
- * Renders all of the objects on the screen
- */
-void render() {
-	//blankScreen();
-	renderTank();
-	renderBunker(0);
-	renderBunker(1);
-	renderBunker(2);
-	renderBunker(3);
-	renderAliens();
-	renderTankBullet();
-	renderAlienBullet();
-}
 
-void unrender() {
-	// Unrender tanks
-	//unrenderAliens();
-	// unrender aliens
-	// unrender bullets
-}
+
 
