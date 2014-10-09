@@ -160,14 +160,18 @@ void killAlien(u32 alienNumber) {
 
 /**
  *  Draws all the aliens.  Note that it will toggle the alien guise each time it is called
+ *  @param animate 1 = toggle guise and move location, 0 = just refresh
  */
-void renderAliens() {
-	updateAlienLocation();
+void renderAliens(u8 animate) {
 	int col;
 	int row;
 	int alienNumber;
+	if (animate) {
+		toggleAlienGuise();
+		updateAlienLocation();
+	}
 	point_t position = getAlienBlockPosition();
-	toggleAlienGuise();
+
 	const u32* arrayToRender;
 
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
@@ -250,8 +254,10 @@ void updateAlienBulletPosition() {
 /**
  *  Draws all the alien bullets.
  */
-void renderAlienBullet() {
-	updateAlienBulletPosition();
+void renderAlienBullet(u8 animate) {
+	if (animate) {
+		updateAlienBulletPosition();
+	}
 	alienBullet bullet;
 	u8 bulletNum;
 	u32 row, col, bulletGuise;
@@ -311,8 +317,10 @@ void updateTankBulletPosition() {
 /**
  *  Draws the tank's bullet position
  */
-void renderTankBullet() {
-	updateTankBulletPosition();
+void renderTankBullet(u8 animate) {
+	if (animate) {
+		updateTankBulletPosition();
+	}
 	point_t position = getTankBulletPosition();
 	u32 row;
 	u32 col;
@@ -339,11 +347,11 @@ void fireTankBullet() {
 	tankBullet = getTankBulletPosition();
 	tankPosition = getTankPositionGlobal();
 	if (tankBullet.y > 490) {	//if it's not on the screen
-		tankBullet.y = tankPosition.y - TANK_BULLET_HEIGHT + TANK_BULLET_SPEED;
+		tankBullet.y = tankPosition.y - TANK_BULLET_HEIGHT;
 		tankBullet.x = tankPosition.x + 15;	//center on turret
 		setTankBulletPosition(tankBullet);
 	}
-	renderTankBullet();
+	renderTankBullet(0);
 	//renderTank();	//to compensate for automatic single shift.
 }
 
@@ -398,13 +406,14 @@ void fireAlienBullet(u32 randomCol) {
 		if (bullet.position.y >= 480) {	//if a bullet is available
 			//find random bottom row alien and fire from his location
 			alienNumber = findFiringAlien(randomCol);
-			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 8; //8 to center bullet
-			position.y = getAlienBlockPosition().y + (alienNumber/11)*(ALIEN_HEIGHT+10) + ALIEN_BULLET_HEIGHT + 3; //3 buffer
+			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 9; //8 to center bullet
+			position.y = getAlienBlockPosition().y + (alienNumber/11)*(ALIEN_HEIGHT+10) + (ALIEN_HEIGHT);
 			bullet.position = position;
 			bullet.type = (randomCol % 2) & 0x1;
 			bullet.guise = 0;
 			setAlienBullet(bullet, bulletNum);
-			renderAlienBullet();
+			renderAlienBullet(0);
+			//renderAliens(0); //redraw aliens to mask overlap
 			return;
 		}
 	}
@@ -432,9 +441,9 @@ void render() {
 	renderBunker(1);
 	renderBunker(2);
 	renderBunker(3);
-	renderAliens();
-	renderTankBullet();
-	renderAlienBullet();
+	renderAliens(1);
+	renderTankBullet(1);
+	renderAlienBullet(1);
 }
 
 /**
@@ -467,7 +476,7 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			renderTank();
 			break;
 		case '8':
-			renderAliens();
+			renderAliens(1);
 			break;
 		case '2':
 			setAlienStatus(userInput, 0); //kill the random alien
@@ -486,8 +495,8 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			fireAlienBullet(random);
 			break;
 		case '9':
-			renderTankBullet();
-			renderAlienBullet();
+			renderTankBullet(1);
+			renderAlienBullet(1);
 			break;
 		case '7':
 			for (blockNumber = 0; blockNumber < 12; blockNumber++) {
