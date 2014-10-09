@@ -41,7 +41,7 @@
 // It calls all the state machines for timing.
 void timer_interrupt_handler() {
 	unsigned char tasksNum = 4;
-	unsigned long tasksPeriodGCD = 1;
+//	unsigned long tasksPeriodGCD = 1;
 	u32 tempWcet = 0;
 	u8 i;
 	for (i = 0; i < tasksNum; ++i) { // Heart of the scheduler code

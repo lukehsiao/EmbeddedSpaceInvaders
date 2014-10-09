@@ -50,7 +50,7 @@ space_invaders_0.elf.size: space_invaders_0.elf
 
 space_invaders_0.elf.elfcheck: space_invaders_0.elf
 	@echo Invoking: Xilinx ELF Check
-	elfcheck space_invaders_0.elf -hw ../../427_hw_platform/system.xml -pe microblaze_0  |tee "space_invaders_0.elf.elfcheck"
+	elfcheck space_invaders_0.elf -hw ../../SpaceInvaderTestHW2_hw_platform/system.xml -pe microblaze_0  |tee "space_invaders_0.elf.elfcheck"
 	@echo Finished building: $@
 	@echo ' '
 

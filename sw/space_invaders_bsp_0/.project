@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>hello_world_bsp_0</name>
+	<name>space_invaders_bsp_0</name>
 	<comment></comment>
 	<projects>
 		<project>SpaceInvaderTestHW2_hw_platform</project>

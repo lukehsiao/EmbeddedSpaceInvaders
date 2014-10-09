@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>space_invaders_0</name>
-	<comment></comment>
+	<comment>space_invaders_bsp_0 - microblaze_0</comment>
 	<projects>
 		<project>space_invaders_bsp_0</project>
-		<project>hello_world_bsp_0</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -32,7 +31,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>${workspace_loc:/hello_world_0/Debug}</value>
+					<value>${workspace_loc:/space_invaders_0/Debug}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
