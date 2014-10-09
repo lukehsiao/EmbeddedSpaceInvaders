@@ -32,6 +32,7 @@ u32 bunkerState[4];			// We track the 5 states of each of the 10 blocks
 // Tank Variables
 point_t tankPosition;
 point_t tankBulletPosition; // Tank bullet is 2*8 pixels tall
+u8 tankLife;				// 1 = Tank Alive  0 = Tank Dead
 
 // Score & Lives Variables
 u32 score;
@@ -90,6 +91,14 @@ void setTankBulletPosition(point_t val) {
 }
 point_t getTankBulletPosition() {
 	return tankBulletPosition;
+}
+
+void setTankLife(u8 newVal) {
+	tankLife = newVal;
+}
+
+u8 getTankLife() {
+	return tankLife;
 }
 
 /////////////////////////////////////
@@ -261,7 +270,7 @@ void setAlienBullet(alienBullet val, u8 bulletNum) {
  * @param newVal The value to set the right pad to.
  */
 void setRightPad(u16 newVal) {
-	rightPad = new;
+	rightPad = newVal;
 }
 
 /**
@@ -276,7 +285,7 @@ u16 getRightPad() {
  * @param newVal The value to set the left pad to.
  */
 void setLeftPad(u16 newVal) {
-	leftPad = new;
+	leftPad = newVal;
 }
 
 /**

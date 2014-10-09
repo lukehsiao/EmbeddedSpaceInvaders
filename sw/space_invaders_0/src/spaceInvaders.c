@@ -25,10 +25,61 @@
 #include "unistd.h"
 #include "render.h"			// Our rendering file.
 #include "xuartlite_l.h"
+#include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
+#include "xgpio.h"          // Provides access to PB GPIO driver.
+#include "xintc_l.h"        // Provides handy macros for the interrupt controller.
+#include "stateMachines.h"
 #define DEBUG
+
 //void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
+
+
+
+// This is invoked in response to a timer interrupt.
+// It calls all the state machines for timing.
+void timer_interrupt_handler() {
+	unsigned char tasksNum = 4;
+	unsigned long tasksPeriodGCD = 1;
+	u32 tempWcet = 0;
+	u8 i;
+	for (i = 0; i < tasksNum; ++i) { // Heart of the scheduler code
+		if (tasks[i].elapsedTime >= tasks[i].period){
+//			XTmrCtr_SetResetValue(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID, 0);
+			// Task is ready to tick, so call its tick function
+//			XTmrCtr_Start(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
+			tasks[i].state = tasks[i].TickFct(tasks[i].state);
+//			XTmrCtr_Stop(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
+//			tempWcet = XTmrCtr_GetValue(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
+			tasks[i].elapsedTime = 0; // Reset the elapsed time
+		}
+		tasks[i].elapsedTime += 1;
+		if(tempWcet > tasks[i].wcet)
+		{
+			tasks[i].wcet = tempWcet;
+		}
+
+	}
+
+//	timerFlag = 1;
+	// Clear interrupt status bit in control register
+//	XTmrCtr_SetControlStatusReg(XPAR_AXI_TIMER_0_BASEADDR, 0, XTmrCtr_GetControlStatusReg(XPAR_AXI_TIMER_0_BASEADDR, 0));
+}
+
+// Main interrupt handler, queries the interrupt controller to see what peripheral
+// fired the interrupt and then dispatches the corresponding interrupt handler.
+// This routine acks the interrupt at the controller level but the peripheral
+// interrupt must be ack'd by the dispatched interrupt handler.
+void interrupt_handler_dispatcher(void* ptr) {
+	int intc_status = XIntc_GetIntrStatus(XPAR_INTC_0_BASEADDR);
+	// Check the FIT interrupt first.
+	if (intc_status & XPAR_FIT_TIMER_0_INTERRUPT_MASK){
+		XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_FIT_TIMER_0_INTERRUPT_MASK);
+		timer_interrupt_handler();
+	}
+}
+
 
 int main()
 {
@@ -103,6 +154,35 @@ int main()
      if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
     	 xil_printf("vdma parking failed\n\r");
      }
+
+     //	unsigned char taski=0;
+     //	//ADC
+     //	tasks[taski].state = -1;
+     //	tasks[taski].period = 1;
+     //	tasks[taski].elapsedTime = 1;
+     //	tasks[taski].TickFct = &ADC_SM;
+     //	++taski;
+     //
+     //	tasks[taski].state = -1;
+     //	tasks[taski].period = 1;
+     //	tasks[taski].elapsedTime = 0;
+     //	tasks[taski].TickFct = &Life_SM;
+     //	++taski;
+     //
+     //	//DAC
+     //	tasks[taski].state = -1;
+     //	tasks[taski].period = 1;
+     //	tasks[taski].elapsedTime = 1;
+     //	tasks[taski].TickFct = &DAC_SM;
+     //	++taski;
+     //
+     //	//trigger
+     //	tasks[taski].state = -1;
+     //	tasks[taski].period = 1;
+     //	tasks[taski].elapsedTime = 1;
+     //	tasks[taski].TickFct = &trigger;
+     //	++taski;
+
      initGlobals(); //setup space invaders
      blankScreen(); // erase old data
      render();      // draw initialized game

@@ -22,7 +22,6 @@
 
 #include <stdio.h>
 #include "platform.h"
-#include "globals.h"
 
 void print(char *str);
 
@@ -30,23 +29,7 @@ int main()
 {
     init_platform();
 
-    xil_printf("\n\r\n\rTest...\n\r");
-
-    // initialize
-    int i;
-    xil_printf("Initially:\n\r");
-    for (i = 0; i <= 9; i++) {
-    	setBunkerState(0, i, 0);
-    	xil_printf("%x", getBunkerState(0,i));
-    }
-    xil_printf("\n\rAfter changing:\n\r");
-
-    //test!
-    setBunkerState(0, 5, 0x7);
-    setBunkerState(0, 2, 0x2);
-    for (i = 9; i >= 0; i--) {
-    	xil_printf("%x", getBunkerState(0,i));
-    }
+    print("Hello World\n\r");
 
     cleanup_platform();
 

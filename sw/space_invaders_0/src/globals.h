@@ -52,6 +52,10 @@ point_t getTankPositionGlobal();
 void setTankBulletPosition(point_t val);
 point_t getTankBulletPosition();
 
+void setTankLife(u8 newVal);
+u8 getTankLife();
+
+
 /////////////////////////////////////
 // Setup the Alien Globals
 /////////////////////////////////////
