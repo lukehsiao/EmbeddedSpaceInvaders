@@ -71,7 +71,7 @@ void initGlobals(){
 	temp.y = 8888;
 	temp.x = 20;
 	setTankBulletPosition(temp);
-	leftPad = 32*7;
+	leftPad = 0;
 	rightPad = 640;
 }
 

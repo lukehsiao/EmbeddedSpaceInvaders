@@ -203,14 +203,23 @@ void renderAliens() {
 void unrenderAlienBullet() {
 	alienBullet bullet;
 	u8 bulletNum;
-	u32 row, col;
+	u32 row, col, bulletGuise;
+	const u32* arrayToRender;
+	u32 framePixel;
 
 	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
 		bullet = getAlienBullet(bulletNum);
+		arrayToRender = getAlienBulletArray(bullet.type);
 		if (bullet.position.y < 480) { //if it's not off the screen
 			for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
 				for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
-					framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+					bulletGuise = bullet.guise;
+					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
+					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
+					// Only blank pixels, not the surrounding.
+					if (pixelPresent) {
+						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
@@ -257,7 +266,10 @@ void renderAlienBullet() {
 					bulletGuise = bullet.guise;
 					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
 					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
-					framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = pixelPresent? WHITE : BLACK;;
+					// Only draw pixels, not the black.
+					if (pixelPresent) {
+						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
+					}
 				}
 			}
 		}
@@ -327,18 +339,17 @@ void fireTankBullet() {
 	tankBullet = getTankBulletPosition();
 	tankPosition = getTankPositionGlobal();
 	if (tankBullet.y > 490) {	//if it's not on the screen
-		tankBullet.y = tankPosition.y;
+		tankBullet.y = tankPosition.y - TANK_BULLET_HEIGHT + TANK_BULLET_SPEED;
 		tankBullet.x = tankPosition.x + 15;	//center on turret
 		setTankBulletPosition(tankBullet);
 	}
 	renderTankBullet();
-	renderTank();	//to compensate for automatic single shift.
+	//renderTank();	//to compensate for automatic single shift.
 }
 
 /**
  * Searches up the column to find the lowest live alien.  If there are
  * none, iterate over the other columns.
- *
  * @return the number of the alien to fire the bullet from
  */
 u32 findFiringAlien(u32 randomCol) {
@@ -461,6 +472,9 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 		case '2':
 			setAlienStatus(userInput, 0); //kill the random alien
 			killAlien(userInput);
+			break;
+		case '1':
+			unrenderAlienBullet();
 			break;
 		case '5':
 			//fire bullet
