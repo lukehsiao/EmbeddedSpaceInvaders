@@ -197,20 +197,20 @@ void updateAlienLocation() {
  */
 void adjustPadding() {
 	u32 col, alienNumber;
-
+	u8 flag;
+	flag = 0;
 	// Iterate over all the columns
 	for(col = 0; col < 11; col++) {
 		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
-			xil_printf("\n\r Checking from the left.");
 			if (getAlienStatus(alienNumber) == 1) {
 				xil_printf("\n\rLeft Column: %d\n\r", alienNumber%11);
 				setLeftCol(alienNumber % 11);
-				break;
+				goto rightside;
 			}
 		}
-		break;
 	}
 
+rightside:
 	// Iterate over all the Right to left
 	for(col = 10; col >= 0; col--) {
 		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {

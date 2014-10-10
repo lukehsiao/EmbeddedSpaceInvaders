@@ -51,7 +51,7 @@ void initGlobals(){
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0xFFFF;
+		alienStatus[i] = 0x0043;
 	}
 	leftMostColumn = 0;
 	rightMostColumn = 10;
@@ -333,7 +333,7 @@ u8 setRightCol(u8 rightCol) {
 	rightMostColumn = rightCol;
 
 	//Adjust the border
-	rightPad = 640 - (32*rightMostColumn);
+	rightPad = 640 + (32*(10-rightMostColumn));
 }
 
 /////////////////////////////////////
