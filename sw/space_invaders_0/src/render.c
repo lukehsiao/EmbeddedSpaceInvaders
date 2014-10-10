@@ -486,6 +486,18 @@ void blankScreen() {
 }
 
 /**
+ * Draws the green line at the bottom of the screen
+ */
+void renderBottomLine() {
+	u32 col;
+	u32 row;
+	row = 479;
+	for(col=0; col<640; col++) {
+		framePointer0[row*640 + col] = GREEN;  // frame 0 is red here.
+	}
+}
+
+/**
  * Renders all of the objects on the screen
  */
 void render() {
@@ -498,6 +510,7 @@ void render() {
 	renderBunker(1);
 	renderBunker(2);
 	renderBunker(3);
+	renderBottomLine();
 }
 
 /**
