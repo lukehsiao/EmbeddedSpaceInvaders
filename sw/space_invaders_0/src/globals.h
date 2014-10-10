@@ -13,6 +13,9 @@
 // Starting location in DDR where we will store the images that we display.
 #define FRAME_BUFFER_0_ADDR 0xC1000000  
 
+// We defined this to make it easy to see how many bits are used.
+// Throughout our code, we tried to used the smallest amount of bits for
+// what we needed in the global variables.
 #define u8 unsigned char
 #define u16 unsigned short
 #define u32 unsigned int

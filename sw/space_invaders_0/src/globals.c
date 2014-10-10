@@ -8,6 +8,8 @@
 
 #include "globals.h"
 
+u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
+
 //******************* Variables of Space Invaders*************************
 // Alien Variables
 u16 alienStatus[5];		// one u16 tracks life/death of one row of aliens

@@ -1,5 +1,6 @@
 /**
- * This interface will provide a structured way to handle rendering
+ * This interface will provide a structured way to handle rendering the general
+ * game elements like score, lives, blanking the screen.
  *
  * @author Luke Hsiao
  * @author Jeff Ravert
@@ -12,8 +13,6 @@
 
 void render();
 void blankScreen();
-void fireTankBullet();
-void fireAlienBullet();
 
 //Specifically for Lab 3.
 void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput);
