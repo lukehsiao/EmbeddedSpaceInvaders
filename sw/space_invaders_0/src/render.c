@@ -57,6 +57,11 @@ void renderBunker(u8 bunkerNumber){
 						framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = GREEN;
 					}
 				}
+				else {
+					if (framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = BLACK;
+					}
+				}
 			}
 		}
 	}
@@ -70,6 +75,11 @@ void renderBunker(u8 bunkerNumber){
 						framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = GREEN;
 					}
 				}
+				else {
+					if (framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = BLACK;
+					}
+				}
 			}
 		}
 	}
@@ -81,6 +91,11 @@ void renderBunker(u8 bunkerNumber){
 				if (pixelPresent) {
 					if (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] != WHITE) {
 						framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = GREEN;
+					}
+				}
+				else {
+					if (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = BLACK;
 					}
 				}
 			}
@@ -488,6 +503,7 @@ u32 findFiringAlien(u32 randomCol) {
 	}
 	
 	//Shouldn't reach here, all aliens are dead?
+	xil_printf("\n\rSomething bad happened in findFiringAlien()\n\r");
 	return alienNumber;
 }
 

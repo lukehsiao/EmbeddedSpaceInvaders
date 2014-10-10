@@ -57,7 +57,7 @@ void initGlobals(){
 	rightMostColumn = 10;
 	point_t temp;
 	temp.x = 160;
-	temp.y = 150;
+	temp.y = 240;
 	setAlienBlockPosition(temp);
 	direction = 1;
 	setLives(3);
