@@ -143,14 +143,18 @@ void unrenderAliens() {
 	if(position.x + (32*11) >= getRightPad() && direction == 1) {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
-				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 	} // Alien Block hit left side
 	else if(position.x + getLeftPad() <= 5 && direction == 0) {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
-				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 	}
