@@ -53,7 +53,7 @@ void initGlobals(){
 
 	point_t temp;
 	temp.x = 160;
-	temp.y = 50;
+	temp.y = 240;
 	setAlienBlockPosition(temp);
 	direction = 1;
 
