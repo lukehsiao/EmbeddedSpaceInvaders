@@ -321,7 +321,6 @@ u32 findFiringAlien(u32 randomCol) {
 	col = randomCol;
 	for (row = 4; row >= 0; row--) {
 		alienNumber = 11*row + col;
-		xil_printf("\n\rRow is: %d\n\r", row);
 		if (getAlienStatus(alienNumber) == 1) {
 			return alienNumber;
 		}
