@@ -519,7 +519,7 @@ void renderScoreText() {
 	arrayToRender = getScoreText1();
 	point_t defaultPosition;
 	defaultPosition.x = 5;
-	defaultPosition.y = 5;
+	defaultPosition.y = 11;
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
 		for(col = 0; col < 32; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
@@ -555,7 +555,7 @@ void renderLivesText() {
 	arrayToRender = getLivesText1();
 	point_t defaultPosition;
 	defaultPosition.x = 350;
-	defaultPosition.y = 5;
+	defaultPosition.y = 11;
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
 		for(col = 0; col < 32; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
@@ -579,7 +579,22 @@ void renderLivesText() {
  * Renders the number of extra lives the player has as tank icons
  */
 void renderLives() {
+	u8 lives = getLives();
+	point_t position;
+	position.x = 420;
+	position.y = 5;
 
+	u32 col;
+	u32 row;
+	for (; lives > 0; lives--) {
+		// Same Algorithm as Render Tank
+		for (row = 0; row < 16; row++) {
+			for (col = 0; col < 32; col++) {
+				framePointer0[(position.y+row)*640 + (position.x+col)] = getTankPixel(row, col); //Green
+			}
+		}
+		position.x += 42;
+	}
 }
 
 
@@ -591,6 +606,7 @@ void render() {
 	//blankScreen();
 	renderScoreText();
 	renderLivesText();
+	renderLives();
 	renderTank();
 	renderTankBullet(1);
 	renderAlienBullet(1);
