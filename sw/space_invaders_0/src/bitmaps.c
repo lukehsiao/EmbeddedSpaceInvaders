@@ -814,3 +814,17 @@ const u32* getScoreText1() {
 const u32* getScoreText2() {
 	return SCORE2;
 }
+
+/**
+ * returns the array to print for the first half of the word.
+ */
+const u32* getLivesText1() {
+	return LIVES1;
+}
+
+/**
+ * returns the array to print for the first half of the word.
+ */
+const u32* getLivesText2() {
+	return LIVES2;
+}

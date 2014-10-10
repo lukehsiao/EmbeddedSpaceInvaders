@@ -27,5 +27,7 @@ const u32* getAlienBulletArray(u8 bulletNum);
 
 const u32* getScoreText1();
 const u32* getScoreText2();
+const u32* getLivesText1();
+const u32* getLivesText2();
 
 #endif

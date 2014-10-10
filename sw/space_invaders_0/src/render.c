@@ -537,7 +537,6 @@ void renderScoreText() {
 			}
 		}
 	}
-
 }
 
 /**
@@ -551,7 +550,29 @@ void renderScore() {
  * Renders the word "LIVES" at the top right of the screen
  */
 void renderLivesText() {
+	u32 row, col;
+	const u32* arrayToRender;
+	arrayToRender = getLivesText1();
+	point_t defaultPosition;
+	defaultPosition.x = 350;
+	defaultPosition.y = 5;
+	for(row = 0; row < ALIEN_HEIGHT; row++) {
+		for(col = 0; col < 32; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
 
+	arrayToRender = getLivesText2();
+	defaultPosition.x += 32;
+	for(row = 0; row < ALIEN_HEIGHT; row++) {
+		for(col = 0; col < 32; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
 }
 
 /**
@@ -569,6 +590,7 @@ void renderLives() {
 void render() {
 	//blankScreen();
 	renderScoreText();
+	renderLivesText();
 	renderTank();
 	renderTankBullet(1);
 	renderAlienBullet(1);
