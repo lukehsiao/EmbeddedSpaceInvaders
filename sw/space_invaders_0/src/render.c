@@ -44,34 +44,44 @@ void renderBunker(u8 bunkerNumber){
 	u32 row;
 	u32 blockNum;
 	point_t bunkerPosition;
-	u32 pixelColor;
+	u32 rowsPixels;
+	u8 pixelPresent;
 	bunkerPosition = getBunkerPosition(bunkerNumber);
 	for (blockNum = 0; blockNum < 4; blockNum++) {
 		for (row = 0; row < 12; row++) {
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
 			for (col = 0; col < 12; col++) {
-				pixelColor = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
-				if (framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] != WHITE) {
-					framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = pixelColor;
+				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				if (pixelPresent) {
+					if (framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = GREEN;
+					}
 				}
 			}
 		}
 	}
 	for (blockNum = 4; blockNum < 8; blockNum++) {
 		for (row = 0; row < 12; row++) {
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
 			for (col = 0; col < 12; col++) {
-				pixelColor = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
-				if (framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] != WHITE) {
-					framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = pixelColor;
+				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				if (pixelPresent) {
+					if (framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = GREEN;
+					}
 				}
 			}
 		}
 	}
 	for (blockNum = 8; blockNum < 12; blockNum++) {
 		for (row = 0; row < 12; row++) {
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
 			for (col = 0; col < 12; col++) {
-				pixelColor = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
-				if (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] != WHITE) {
-					framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = pixelColor;
+				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				if (pixelPresent) {
+					if (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = GREEN;
+					}
 				}
 			}
 		}
@@ -210,7 +220,6 @@ void renderAliens(u8 animate) {
 	point_t position = getAlienBlockPosition();
 
 	const u32* arrayToRender;
-
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
 		//algorithm to adjust x and y for drawing
 		if (alienNumber != 0) {
@@ -478,13 +487,13 @@ void blankScreen() {
 void render() {
 	//blankScreen();
 	renderTank();
+	renderTankBullet(1);
+	renderAlienBullet(1);
 	renderAliens(1);
 	renderBunker(0);
 	renderBunker(1);
 	renderBunker(2);
 	renderBunker(3);
-	renderTankBullet(1);
-	renderAlienBullet(1);
 }
 
 /**

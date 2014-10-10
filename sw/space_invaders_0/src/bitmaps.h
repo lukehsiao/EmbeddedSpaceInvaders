@@ -21,7 +21,7 @@
 #define BUNKER_SQUARE_HEIGHT 12
 
 u32 getTankPixel(u32 row, u32 col);
-u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber);
+u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber);
 const u32* getAlienArray(u32 alienNumber);
 const u32* getAlienBulletArray(u8 bulletNum);
 

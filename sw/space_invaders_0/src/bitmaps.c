@@ -10,6 +10,8 @@
  
 #include "bitmaps.h"
 
+extern u32 blockToDraw[BUNKER_SQUARE_HEIGHT];
+
 //---------------------Bit Map Definitions----------------------------------
 const unsigned int ALIEN_DEAD[ALIEN_HEIGHT] =
 {
@@ -570,6 +572,23 @@ packWord32(0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 };
+
+const unsigned int BUNKER_DEAD[BUNKER_SQUARE_HEIGHT] =
+{
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+};
+
 //---------------------End Bit Map Definitions------------------------------
 
 /**
@@ -592,7 +611,6 @@ u32 getTankPixel(u32 row, u32 col) {
 	}
 	return temp;
 }
-
 /**
  * This function returns the color of the pixel to draw assuming we're
  * already looking inside the specified bunker. Note that this is note
@@ -602,9 +620,9 @@ u32 getTankPixel(u32 row, u32 col) {
  * @param col The column number of the pixel within the given bunker
  * @param bunkerNumber	number of the bunker (0-3)
  * @param blockNumber	number of the block(0-11)
- * @return the color value to draw at that pixel
+ * @return The pixels present in the given row
  */
-u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
+u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 	u8 tempBlockErosion;
 	u32 tempResult;
 	u32 tempBase, erosionMask;
@@ -612,19 +630,19 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 	tempBlockErosion = getBlockState(bunkerNumber, blockNumber);
 	switch (blockNumber) {
 		case 0:
-			tempBase = (BUNKER_TOP_LEFT[row] >> (31-col)) & 0x00000001;
+			tempBase = (BUNKER_TOP_LEFT[row]);
 			switch (tempBlockErosion) {
 				case 0:
-					erosionMask = (BUNKER_ERODE_01_LEFT[row] >> (31-col)) & 0x00000001;
+					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = (BUNKER_ERODE_01_LEFT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row] >> (31-col)) & 0x00000001;
+					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
 					break;
 				case 3:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				default:
 					erosionMask = BLACK;
@@ -632,19 +650,19 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 			tempResult = tempBase & erosionMask;
 			break;
 		case 3:
-			tempBase = (BUNKER_TOP_RIGHT[row] >> (31-col)) & 0x00000001;
+			tempBase = (BUNKER_TOP_RIGHT[row]);
 			switch (tempBlockErosion) {
 				case 0:
-					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
 					break;
 				case 3:
-					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				default:
 					erosionMask = BLACK;
@@ -652,19 +670,19 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 			tempResult = tempBase & erosionMask;
 			break;
 		case 5:
-			tempBase = (BUNKER_MIDDLE_LEFT[row] >> (31-col)) & 0x00000001;
+			tempBase = (BUNKER_MIDDLE_LEFT[row]);
 			switch (tempBlockErosion) {
 				case 0:
-					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
 					break;
 				case 3:
-					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				default:
 					erosionMask = BLACK;
@@ -672,19 +690,19 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 			tempResult = tempBase & erosionMask;
 			break;
 		case 6:
-			tempBase = (BUNKER_MIDDLE_RIGHT[row] >> (31-col)) & 0x00000001;
+			tempBase = (BUNKER_MIDDLE_RIGHT[row]);
 			switch (tempBlockErosion) {
 				case 0:
-					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
 					break;
 				case 3:
-					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				default:
 					erosionMask = BLACK;
@@ -696,19 +714,19 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 		case 10:
 			return BLACK;
 		default:
-			tempBase = 0x00000001;	//other blocks are all 1s
+			tempBase = 0xFFF00000;	//other blocks are all 1s
 			switch (tempBlockErosion) {
 				case 0:
-					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
 					break;
 				case 3:
-					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
 					break;
 				default:
 					erosionMask = BLACK;
@@ -716,15 +734,141 @@ u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
 			tempResult = tempBase & erosionMask;
 			break;
 	}
-	if (tempResult != 0) {
-		tempResult = GREEN;
-	}
-	else {
-		tempResult = BLACK;
-	}
-
 	return tempResult;
 }
+
+///**
+// * This function returns the color of the pixel to draw assuming we're
+// * already looking inside the specified bunker. Note that this is note
+// * very efficient, and may be optimized in the future.
+// *
+// * @param row The row number of the pixel within the given bunker
+// * @param col The column number of the pixel within the given bunker
+// * @param bunkerNumber	number of the bunker (0-3)
+// * @param blockNumber	number of the block(0-11)
+// * @return the color value to draw at that pixel
+// */
+//u32 getBunkerPixel(u32 row, u32 col, u8 bunkerNumber, u8 blockNumber) {
+//	u8 tempBlockErosion;
+//	u32 tempResult;
+//	u32 tempBase, erosionMask;
+//
+//	tempBlockErosion = getBlockState(bunkerNumber, blockNumber);
+//	switch (blockNumber) {
+//		case 0:
+//			tempBase = (BUNKER_TOP_LEFT[row] >> (31-col)) & 0x00000001;
+//			switch (tempBlockErosion) {
+//				case 0:
+//					erosionMask = (BUNKER_ERODE_01_LEFT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 1:
+//					erosionMask = (BUNKER_ERODE_01_LEFT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				case 2:
+//					erosionMask = (BUNKER_ERODE_23_LEFT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 3:
+//					erosionMask = (BUNKER_ERODE_23_LEFT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				default:
+//					erosionMask = BLACK;
+//			}
+//			tempResult = tempBase & erosionMask;
+//			break;
+//		case 3:
+//			tempBase = (BUNKER_TOP_RIGHT[row] >> (31-col)) & 0x00000001;
+//			switch (tempBlockErosion) {
+//				case 0:
+//					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 1:
+//					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				case 2:
+//					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 3:
+//					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				default:
+//					erosionMask = BLACK;
+//			}
+//			tempResult = tempBase & erosionMask;
+//			break;
+//		case 5:
+//			tempBase = (BUNKER_MIDDLE_LEFT[row] >> (31-col)) & 0x00000001;
+//			switch (tempBlockErosion) {
+//				case 0:
+//					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 1:
+//					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				case 2:
+//					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 3:
+//					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				default:
+//					erosionMask = BLACK;
+//			}
+//			tempResult = tempBase & erosionMask;
+//			break;
+//		case 6:
+//			tempBase = (BUNKER_MIDDLE_RIGHT[row] >> (31-col)) & 0x00000001;
+//			switch (tempBlockErosion) {
+//				case 0:
+//					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 1:
+//					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				case 2:
+//					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 3:
+//					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				default:
+//					erosionMask = BLACK;
+//			}
+//			tempResult = tempBase & erosionMask;
+//			break;
+//		case 9:
+//			return BLACK;	//blocks 9 and 10 are always black
+//		case 10:
+//			return BLACK;
+//		default:
+//			tempBase = 0x00000001;	//other blocks are all 1s
+//			switch (tempBlockErosion) {
+//				case 0:
+//					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 1:
+//					erosionMask = (BUNKER_ERODE_01_RIGHT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				case 2:
+//					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (31-col)) & 0x00000001;
+//					break;
+//				case 3:
+//					erosionMask = (BUNKER_ERODE_23_RIGHT[row] >> (20-col)) & 0x00000001;
+//					break;
+//				default:
+//					erosionMask = BLACK;
+//			}
+//			tempResult = tempBase & erosionMask;
+//			break;
+//	}
+//	if (tempResult != 0) {
+//		tempResult = GREEN;
+//	}
+//	else {
+//		tempResult = BLACK;
+//	}
+//
+//	return tempResult;
+//}
 
 /**
  * This function calculates which alien array to return based on alien
