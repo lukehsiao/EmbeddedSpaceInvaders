@@ -203,7 +203,6 @@ void adjustPadding() {
 	for(col = 0; col < 11; col++) {
 		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
 			if (getAlienStatus(alienNumber) == 1) {
-				xil_printf("\n\rLeft Column: %d\n\r", alienNumber%11);
 				setLeftCol(alienNumber % 11);
 				goto rightside;
 			}
@@ -215,12 +214,12 @@ rightside:
 	for(col = 10; col >= 0; col--) {
 		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
 			if (getAlienStatus(alienNumber) == 1) {
-				xil_printf("Right Column: %d\n\r", alienNumber%11);
 				setRightCol(alienNumber % 11);
 				return;
 			}
 		}
 	}
+	return;
 }
 
 /**
