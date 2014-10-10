@@ -248,6 +248,7 @@ void renderLives() {
  */
 void render() {
 	//blankScreen();
+	renderSpaceShip();
 	renderScoreText();
 	renderScore();
 	renderLivesText();
@@ -293,14 +294,14 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			renderTank();
 			break;
 		case '8':
-			renderAliens(1);
+			render();
 			break;
 		case '2':
 			setAlienStatus(userInput, 0); //kill the random alien
 			killAlien(userInput);
 			break;
 		case '1':
-			render();
+			startSpaceShip();
 			break;
 		case '5':
 			//fire bullet
