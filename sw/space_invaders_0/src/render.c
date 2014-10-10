@@ -506,6 +506,40 @@ void renderBottomLine() {
 	}
 }
 
+//////////////////////////////////////////////////////////////////
+// Functions for Rendering Score/Lives
+//////////////////////////////////////////////////////////////////
+
+/**
+ * Renders the word "SCORE" at the top left of the screen
+ */
+void renderScoreText() {
+
+}
+
+/**
+ * Renders the numeric value of the player's current score.
+ */
+void renderScore() {
+
+}
+
+/**
+ * Renders the word "LIVES" at the top right of the screen
+ */
+void renderLivesText() {
+
+}
+
+/**
+ * Renders the number of extra lives the player has as tank icons
+ */
+void renderLives() {
+
+}
+
+
+
 /**
  * Renders all of the objects on the screen
  */
