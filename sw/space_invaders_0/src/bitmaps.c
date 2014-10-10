@@ -800,3 +800,17 @@ const u32* getAlienBulletArray(u8 bulletNum) {
 			break;
 	}
 }
+
+/**
+ * returns the array to print for the first half of the word.
+ */
+const u32* getScoreText1() {
+	return SCORE1;
+}
+
+/**
+ * returns the array to print for the first half of the word.
+ */
+const u32* getScoreText2() {
+	return SCORE2;
+}

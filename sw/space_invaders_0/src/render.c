@@ -514,6 +514,29 @@ void renderBottomLine() {
  * Renders the word "SCORE" at the top left of the screen
  */
 void renderScoreText() {
+	u32 row, col;
+	const u32* arrayToRender;
+	arrayToRender = getScoreText1();
+	point_t defaultPosition;
+	defaultPosition.x = 5;
+	defaultPosition.y = 5;
+	for(row = 0; row < ALIEN_HEIGHT; row++) {
+		for(col = 0; col < 32; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
+
+	arrayToRender = getScoreText2();
+	defaultPosition.x = 5+32;
+	for(row = 0; row < ALIEN_HEIGHT; row++) {
+		for(col = 0; col < 32; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
 
 }
 
@@ -545,6 +568,7 @@ void renderLives() {
  */
 void render() {
 	//blankScreen();
+	renderScoreText();
 	renderTank();
 	renderTankBullet(1);
 	renderAlienBullet(1);

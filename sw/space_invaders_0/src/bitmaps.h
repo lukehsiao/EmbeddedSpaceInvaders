@@ -25,4 +25,7 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber);
 const u32* getAlienArray(u32 alienNumber);
 const u32* getAlienBulletArray(u8 bulletNum);
 
+const u32* getScoreText1();
+const u32* getScoreText2();
+
 #endif
