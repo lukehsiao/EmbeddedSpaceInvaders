@@ -276,7 +276,12 @@ void unrenderAlienBullet() {
 					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
 					// Only blank pixels, not the surrounding.
 					if (pixelPresent) {
-						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+						if ((bullet.position.y + row) != 479) {
+							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+						}
+						else {
+							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = GREEN;
+						}
 					}
 				}
 			}
@@ -328,7 +333,9 @@ void renderAlienBullet(u8 animate) {
 					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
 					// Only draw pixels, not the black.
 					if (pixelPresent) {
-						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
+						if (framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] != GREEN) {
+							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
+						}
 					}
 				}
 			}
@@ -381,7 +388,9 @@ void renderTankBullet(u8 animate) {
 	if (position.y < 480) {
 		for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
 			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
-				framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+				if (framePointer0[(position.y + row)*640 + (position.x + col)] != GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+				}
 			}
 		}
 	}
