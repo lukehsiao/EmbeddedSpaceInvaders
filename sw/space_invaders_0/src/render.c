@@ -13,8 +13,8 @@ u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
  * Draws the tank in it's current position
  */
 void renderTank() {
-	u32col;
-	u32row;
+	u32 col;
+	u32 row;
 	for (row = 0; row < 16; row++) {
 		for (col = 0; col < 32; col++) {
 			framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = getTankPixel(row, col); //Green
@@ -209,7 +209,6 @@ void unrenderAlienBullet() {
 	u8 bulletNum;
 	u32 row, col, bulletGuise;
 	const u32* arrayToRender;
-	u32 framePixel;
 
 	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
 		bullet = getAlienBullet(bulletNum);
