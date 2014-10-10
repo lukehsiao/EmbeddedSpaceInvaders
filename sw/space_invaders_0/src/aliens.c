@@ -317,10 +317,11 @@ u32 findFiringAlien(u32 randomCol) {
 	u32 alienNumber;
 	alienNumber = 0;
 	//Check up the column first
-	u32 row, col;
+	int row, col;	// chose a signed int in this case rather than a u32 so it wouldn't wrap.
 	col = randomCol;
 	for (row = 4; row >= 0; row--) {
 		alienNumber = 11*row + col;
+		xil_printf("\n\rRow is: %d\n\r", row);
 		if (getAlienStatus(alienNumber) == 1) {
 			return alienNumber;
 		}

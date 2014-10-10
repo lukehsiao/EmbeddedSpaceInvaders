@@ -48,12 +48,18 @@ u8 lives;	//starts w/ 3 and decrements each death
 // Initializations
 /////////////////////////////////////
 void initGlobals(){
+	// Initialize Tank
 	setTankPositionGlobal(200);
+
+
+	// Initialize Bunkers
     initBunkers();
+
+    // Initialize Aliens
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0xFFFF;
+		alienStatus[i] = 0x004F;
 	}
 	leftMostColumn = 0;
 	rightMostColumn = 10;
@@ -62,8 +68,11 @@ void initGlobals(){
 	temp.y = 240;
 	setAlienBlockPosition(temp);
 	direction = 1;
+
+	// Initialize Game Variables
 	setLives(3);
 	setScore(7348);
+
 
 	alienBullet bullet;
 	u8 j;
