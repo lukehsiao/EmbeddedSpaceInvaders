@@ -74,10 +74,13 @@ u8 getAlienGuise();
 alienBullet getAlienBullet(u8 bulletNum);
 void setAlienBullet(alienBullet val, u8 bulletNum);
 
-void setRightPad(u16 newVal);
 u16 getRightPad();
-void setLeftPad(u16 newVal);
 u16 getLeftPad();
+
+u8 setLeftCol(u8 leftCol);
+u8 setRightCol(u8 rightCol);
+u8 getLeftCol();
+u8 getRightCol();
 
 
 

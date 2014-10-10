@@ -192,6 +192,38 @@ void updateAlienLocation() {
 }
 
 /**
+ * If the killed alien is on an edge column, traverses up to see if the
+ * column is empty and adjusts the global variables.
+ */
+void adjustPadding() {
+	u32 col, alienNumber;
+
+	// Iterate over all the columns
+	for(col = 0; col < 11; col++) {
+		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
+			xil_printf("\n\r Checking from the left.");
+			if (getAlienStatus(alienNumber) == 1) {
+				xil_printf("\n\rLeft Column: %d\n\r", alienNumber%11);
+				setLeftCol(alienNumber % 11);
+				break;
+			}
+		}
+		break;
+	}
+
+	// Iterate over all the Right to left
+	for(col = 10; col >= 0; col--) {
+		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
+			if (getAlienStatus(alienNumber) == 1) {
+				xil_printf("Right Column: %d\n\r", alienNumber%11);
+				setRightCol(alienNumber % 11);
+				return;
+			}
+		}
+	}
+}
+
+/**
  * Writes a black box in the given Alien's location
  */
 void killAlien(u32 alienNumber) {
@@ -207,6 +239,11 @@ void killAlien(u32 alienNumber) {
 			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
 		}
 	}
+
+	// Adjust leftPad and rightPad if necessary:
+	setAlienStatus(alienNumber, 0);
+	adjustPadding();
+
 }
 
 /**
