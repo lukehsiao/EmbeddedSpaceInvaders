@@ -121,7 +121,9 @@ void unrenderAliens() {
 	if(direction == 1){
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < X_SHIFT; col++) {
-				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 	}
