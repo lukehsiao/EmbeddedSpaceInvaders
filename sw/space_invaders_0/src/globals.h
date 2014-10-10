@@ -34,6 +34,7 @@
 #define ALIEN_BULLET_HEIGHT 10
 #define TANK_BULLET_WIDTH 2
 #define TANK_BULLET_HEIGHT 10
+#define SPACESHIP_SPEED 10
 
 #include "bitmaps.h"
 
@@ -80,8 +81,8 @@ void setAlienBullet(alienBullet val, u8 bulletNum);
 u16 getRightPad();
 u16 getLeftPad();
 
-u8 setLeftCol(u8 leftCol);
-u8 setRightCol(u8 rightCol);
+void setLeftCol(u8 leftCol);
+void setRightCol(u8 rightCol);
 u8 getLeftCol();
 u8 getRightCol();
 

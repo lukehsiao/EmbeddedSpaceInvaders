@@ -856,3 +856,10 @@ const u32* getDigitArray(u8 digit) {
 			return NINE;
 	}
 }
+
+/**
+ * Returns the UFO Array
+ */
+const u32* getSpaceShipArray() {
+	return UFO;
+}

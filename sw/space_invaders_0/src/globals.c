@@ -329,7 +329,7 @@ u8 getRightCol() {
 /**
  * Set the value of the left pad.
  */
-u8 setLeftCol(u8 leftCol) {
+void setLeftCol(u8 leftCol) {
 	leftMostColumn = leftCol;
 
 	//Adjust the border
@@ -340,7 +340,7 @@ u8 setLeftCol(u8 leftCol) {
 /**
  * set the value of the left pad.
  */
-u8 setRightCol(u8 rightCol) {
+void setRightCol(u8 rightCol) {
 	rightMostColumn = rightCol;
 
 	//Adjust the border
