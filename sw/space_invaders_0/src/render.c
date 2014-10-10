@@ -49,7 +49,7 @@ void renderBunker(u8 bunkerNumber){
 	bunkerPosition = getBunkerPosition(bunkerNumber);
 	for (blockNum = 0; blockNum < 4; blockNum++) {
 		for (row = 0; row < 12; row++) {
-			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum);
 			for (col = 0; col < 12; col++) {
 				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
 				if (pixelPresent) {
@@ -67,7 +67,7 @@ void renderBunker(u8 bunkerNumber){
 	}
 	for (blockNum = 4; blockNum < 8; blockNum++) {
 		for (row = 0; row < 12; row++) {
-			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum);
 			for (col = 0; col < 12; col++) {
 				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
 				if (pixelPresent) {
@@ -85,7 +85,7 @@ void renderBunker(u8 bunkerNumber){
 	}
 	for (blockNum = 8; blockNum < 12; blockNum++) {
 		for (row = 0; row < 12; row++) {
-			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum);
 			for (col = 0; col < 12; col++) {
 				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
 				if (pixelPresent) {
@@ -384,9 +384,7 @@ void renderAlienBullet(u8 animate) {
 					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
 					// Only draw pixels, not the black.
 					if (pixelPresent) {
-						if (framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] != GREEN) {
-							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
-						}
+						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
 					}
 				}
 			}
@@ -439,9 +437,7 @@ void renderTankBullet(u8 animate) {
 	if (position.y < 480) {
 		for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
 			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
-				if (framePointer0[(position.y + row)*640 + (position.x + col)] != GREEN) {
-					framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
-				}
+				framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
 			}
 		}
 	}
@@ -486,7 +482,6 @@ u32 findFiringAlien(u32 randomCol) {
 			return alienNumber;
 		}
 	}
-
 	//If no alien is alive in that row
 	u32 check;
 	for (check = 0; check < 11; check++) {
@@ -503,7 +498,6 @@ u32 findFiringAlien(u32 randomCol) {
 	}
 	
 	//Shouldn't reach here, all aliens are dead?
-	xil_printf("\n\rSomething bad happened in findFiringAlien()\n\r");
 	return alienNumber;
 }
 

@@ -51,7 +51,7 @@ void initGlobals(){
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0x004F;
+		alienStatus[i] = 0xFFFF;
 	}
 	leftMostColumn = 0;
 	rightMostColumn = 10;
