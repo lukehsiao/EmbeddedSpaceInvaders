@@ -13,8 +13,8 @@ u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
  * Draws the tank in it's current position
  */
 void renderTank() {
-	int col;
-	int row;
+	u32 col;
+	u32 row;
 	for (row = 0; row < 16; row++) {
 		for (col = 0; col < 32; col++) {
 			framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = getTankPixel(row, col); //Green
@@ -26,7 +26,7 @@ void renderTank() {
  * Writes BLACK to the box that the tank is currently in
  */
 void unrenderTank() {
-	int row, col;
+	u32 row, col;
 	point_t position = getTankPositionGlobal();
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
 		for(col=0; col<32; col++) {
@@ -40,27 +40,49 @@ void unrenderTank() {
  * @param bunkerNumber The bunker to draw (0-3)
  */
 void renderBunker(u8 bunkerNumber){
-	int col;
-	int row;
-	int blockNum;
+	u32 col;
+	u32 row;
+	u32 blockNum;
+	point_t bunkerPosition;
+	u32 rowsPixels;
+	u8 pixelPresent;
+	bunkerPosition = getBunkerPosition(bunkerNumber);
 	for (blockNum = 0; blockNum < 4; blockNum++) {
 		for (row = 0; row < 12; row++) {
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
 			for (col = 0; col < 12; col++) {
-				framePointer0[(getBunkerPosition(bunkerNumber).y + row)*640 + (getBunkerPosition(bunkerNumber).x+(blockNum*12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
+				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				if (pixelPresent) {
+					if (framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = GREEN;
+					}
+				}
 			}
 		}
 	}
 	for (blockNum = 4; blockNum < 8; blockNum++) {
 		for (row = 0; row < 12; row++) {
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
 			for (col = 0; col < 12; col++) {
-				framePointer0[(getBunkerPosition(bunkerNumber).y + 12 + row)*640 + (getBunkerPosition(bunkerNumber).x+((blockNum-4)*12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
+				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				if (pixelPresent) {
+					if (framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = GREEN;
+					}
+				}
 			}
 		}
 	}
 	for (blockNum = 8; blockNum < 12; blockNum++) {
 		for (row = 0; row < 12; row++) {
+			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum); //Green
 			for (col = 0; col < 12; col++) {
-				framePointer0[(getBunkerPosition(bunkerNumber).y + 24 + row)*640 + (getBunkerPosition(bunkerNumber).x+((blockNum-8)*12)+col)] = getBunkerPixel(row, col, bunkerNumber, blockNum); //Green
+				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				if (pixelPresent) {
+					if (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = GREEN;
+					}
+				}
 			}
 		}
 	}
@@ -75,18 +97,43 @@ void renderBunker(u8 bunkerNumber){
  * Then, blanks the entire block when the aliens drop a row.
  */
 void unrenderAliens() {
-	int col;
-	int row;
+	u32 col;
+	u32 row;
 	point_t position;
 	position = getAlienBlockPosition();
 	static u8 direction;
 	direction = getAlienDirection();
 
+//	const u32* arrayToRender;
+//	u32 alienNumber;
+//	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
+//		//algorithm to adjust x and y for drawing
+//		if (alienNumber != 0) {
+//			position.x = position.x + 32;
+//			if (alienNumber % 11 == 0) {	//if end of row is reached, increment
+//				position.y = position.y + (ALIEN_HEIGHT + 10);
+//				position.x = getAlienBlockPosition().x;
+//			}
+//		}
+//
+//		//Rendering each alien
+//		arrayToRender = getAlienArray(alienNumber);
+//		for (row = 0; row < ALIEN_HEIGHT; row++) {
+//			for (col = 0; col < 32; col++) {
+//				u8 pixelPresent = (arrayToRender[row] >> (31-col)) & 0x1;
+//				if (pixelPresent) {
+//					framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+//				}
+//			}
+//		}
+//	}
 	//If moving right..
 	if(direction == 1){
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < X_SHIFT; col++) {
-				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 	}
@@ -96,14 +143,18 @@ void unrenderAliens() {
 	if(position.x + (32*11) >= getRightPad() && direction == 1) {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
-				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 	} // Alien Block hit left side
 	else if(position.x + getLeftPad() <= 5 && direction == 0) {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
-				framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 	}
@@ -145,8 +196,8 @@ void updateAlienLocation() {
  */
 void killAlien(u32 alienNumber) {
 	point_t position = getAlienBlockPosition();
-	int col;
-	int row;
+	u32 col;
+	u32 row;
 	//Adjust X and Y location
 	position.y = position.y + (alienNumber/11)*(ALIEN_HEIGHT + 10);
 	position.x = position.x + (alienNumber%11)*32;
@@ -160,16 +211,19 @@ void killAlien(u32 alienNumber) {
 
 /**
  *  Draws all the aliens.  Note that it will toggle the alien guise each time it is called
+ *  @param animate 1 = toggle guise and move location, 0 = just refresh
  */
-void renderAliens() {
-	updateAlienLocation();
-	int col;
-	int row;
-	int alienNumber;
+void renderAliens(u8 animate) {
+	u32 col;
+	u32 row;
+	u32 alienNumber;
+	if (animate) {
+		updateAlienLocation();
+		toggleAlienGuise();
+	}
 	point_t position = getAlienBlockPosition();
-	toggleAlienGuise();
-	const u32* arrayToRender;
 
+	const u32* arrayToRender;
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
 		//algorithm to adjust x and y for drawing
 		if (alienNumber != 0) {
@@ -184,10 +238,15 @@ void renderAliens() {
 		arrayToRender = getAlienArray(alienNumber);
 		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32; col++) {
-				//if (getAlienStatus(alienNumber) == 1) {//if the alien is alive, otherwise do nothing.
 				u8 pixelPresent = (arrayToRender[row] >> (31-col)) & 0x1;
-				framePointer0[(position.y + row)*640 + (position.x + col)] = pixelPresent? WHITE : BLACK;
-				//}
+				if (pixelPresent) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+				}
+				else {
+					if (framePointer0[(position.y + row)*640 + (position.x + col)] == WHITE) {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
+				}
 			}
 		}
 	}
@@ -203,14 +262,22 @@ void renderAliens() {
 void unrenderAlienBullet() {
 	alienBullet bullet;
 	u8 bulletNum;
-	u32 row, col;
+	u32 row, col, bulletGuise;
+	const u32* arrayToRender;
 
 	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
 		bullet = getAlienBullet(bulletNum);
+		arrayToRender = getAlienBulletArray(bullet.type);
 		if (bullet.position.y < 480) { //if it's not off the screen
 			for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
 				for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
-					framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+					bulletGuise = bullet.guise;
+					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
+					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
+					// Only blank pixels, not the surrounding.
+					if (pixelPresent) {
+						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
@@ -241,8 +308,10 @@ void updateAlienBulletPosition() {
 /**
  *  Draws all the alien bullets.
  */
-void renderAlienBullet() {
-	updateAlienBulletPosition();
+void renderAlienBullet(u8 animate) {
+	if (animate) {
+		updateAlienBulletPosition();
+	}
 	alienBullet bullet;
 	u8 bulletNum;
 	u32 row, col, bulletGuise;
@@ -257,7 +326,10 @@ void renderAlienBullet() {
 					bulletGuise = bullet.guise;
 					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
 					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
-					framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = pixelPresent? WHITE : BLACK;;
+					// Only draw pixels, not the black.
+					if (pixelPresent) {
+						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
+					}
 				}
 			}
 		}
@@ -299,8 +371,10 @@ void updateTankBulletPosition() {
 /**
  *  Draws the tank's bullet position
  */
-void renderTankBullet() {
-	updateTankBulletPosition();
+void renderTankBullet(u8 animate) {
+	if (animate) {
+		updateTankBulletPosition();
+	}
 	point_t position = getTankBulletPosition();
 	u32 row;
 	u32 col;
@@ -327,25 +401,24 @@ void fireTankBullet() {
 	tankBullet = getTankBulletPosition();
 	tankPosition = getTankPositionGlobal();
 	if (tankBullet.y > 490) {	//if it's not on the screen
-		tankBullet.y = tankPosition.y;
+		tankBullet.y = tankPosition.y - TANK_BULLET_HEIGHT;
 		tankBullet.x = tankPosition.x + 15;	//center on turret
 		setTankBulletPosition(tankBullet);
 	}
-	renderTankBullet();
-	renderTank();	//to compensate for automatic single shift.
+	renderTankBullet(0);
+	//renderTank();	//to compensate for automatic single shift.
 }
 
 /**
  * Searches up the column to find the lowest live alien.  If there are
  * none, iterate over the other columns.
- *
  * @return the number of the alien to fire the bullet from
  */
 u32 findFiringAlien(u32 randomCol) {
 	u32 alienNumber;
 	alienNumber = 0;
 	//Check up the column first
-	int row, col;
+	u32 row, col;
 	col = randomCol;
 	for (row = 4; row >= 0; row--) {
 		alienNumber = 11*row + col;
@@ -355,7 +428,7 @@ u32 findFiringAlien(u32 randomCol) {
 	}
 
 	//If no alien is alive in that row
-	int check;
+	u32 check;
 	for (check = 0; check < 11; check++) {
 		col++;	//check next column
 		if (col > 10) {
@@ -387,13 +460,14 @@ void fireAlienBullet(u32 randomCol) {
 		if (bullet.position.y >= 480) {	//if a bullet is available
 			//find random bottom row alien and fire from his location
 			alienNumber = findFiringAlien(randomCol);
-			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 8; //8 to center bullet
-			position.y = getAlienBlockPosition().y + (alienNumber/11)*(ALIEN_HEIGHT+10) + ALIEN_BULLET_HEIGHT + 3; //3 buffer
+			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 9; //8 to center bullet
+			position.y = getAlienBlockPosition().y + (alienNumber/11)*(ALIEN_HEIGHT+10) + (ALIEN_HEIGHT);
 			bullet.position = position;
 			bullet.type = (randomCol % 2) & 0x1;
 			bullet.guise = 0;
 			setAlienBullet(bullet, bulletNum);
-			renderAlienBullet();
+			renderAlienBullet(0);
+			//renderAliens(0); //redraw aliens to mask overlap
 			return;
 		}
 	}
@@ -403,7 +477,7 @@ void fireAlienBullet(u32 randomCol) {
  * Writes Black to the entire screen
  */
 void blankScreen() {
-	int row=0, col=0;
+	u32 row=0, col=0;
 	for( row=0; row<480; row++) {
 		for(col=0; col<640; col++) {
 			framePointer0[row*640 + col] = BLACK;  // frame 0 is red here.
@@ -417,13 +491,13 @@ void blankScreen() {
 void render() {
 	//blankScreen();
 	renderTank();
+	renderTankBullet(1);
+	renderAlienBullet(1);
+	renderAliens(1);
 	renderBunker(0);
 	renderBunker(1);
 	renderBunker(2);
 	renderBunker(3);
-	renderAliens();
-	renderTankBullet();
-	renderAlienBullet();
 }
 
 /**
@@ -456,11 +530,14 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			renderTank();
 			break;
 		case '8':
-			renderAliens();
+			renderAliens(1);
 			break;
 		case '2':
 			setAlienStatus(userInput, 0); //kill the random alien
 			killAlien(userInput);
+			break;
+		case '1':
+			render();
 			break;
 		case '5':
 			//fire bullet
@@ -472,8 +549,8 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 			fireAlienBullet(random);
 			break;
 		case '9':
-			renderTankBullet();
-			renderAlienBullet();
+			renderTankBullet(1);
+			renderAlienBullet(1);
 			break;
 		case '7':
 			for (blockNumber = 0; blockNumber < 12; blockNumber++) {
