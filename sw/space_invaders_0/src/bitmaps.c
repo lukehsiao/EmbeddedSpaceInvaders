@@ -828,3 +828,31 @@ const u32* getLivesText1() {
 const u32* getLivesText2() {
 	return LIVES2;
 }
+
+/**
+ * Returns the bitmap for the specified digit
+ */
+const u32* getDigitArray(u8 digit) {
+	switch (digit) {
+		case 0:
+			return ZERO;
+		case 1:
+			return ONE;
+		case 2:
+			return TWO;
+		case 3:
+			return THREE;
+		case 4:
+			return FOUR;
+		case 5:
+			return FIVE;
+		case 6:
+			return SIX;
+		case 7:
+			return SEVEN;
+		case 8:
+			return EIGHT;
+		default:
+			return NINE;
+	}
+}

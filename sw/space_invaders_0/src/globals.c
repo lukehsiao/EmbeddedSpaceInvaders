@@ -57,7 +57,7 @@ void initGlobals(){
 	setAlienBlockPosition(temp);
 	direction = 1;
 	setLives(3);
-	setScore(0);
+	setScore(7348);
 
 	alienBullet bullet;
 	u8 j;
