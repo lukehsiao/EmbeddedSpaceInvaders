@@ -13,8 +13,8 @@ u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
  * Draws the tank in it's current position
  */
 void renderTank() {
-	int col;
-	int row;
+	u32col;
+	u32row;
 	for (row = 0; row < 16; row++) {
 		for (col = 0; col < 32; col++) {
 			framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = getTankPixel(row, col); //Green
@@ -26,7 +26,7 @@ void renderTank() {
  * Writes BLACK to the box that the tank is currently in
  */
 void unrenderTank() {
-	int row, col;
+	u32 row, col;
 	point_t position = getTankPositionGlobal();
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
 		for(col=0; col<32; col++) {
@@ -40,9 +40,9 @@ void unrenderTank() {
  * @param bunkerNumber The bunker to draw (0-3)
  */
 void renderBunker(u8 bunkerNumber){
-	int col;
-	int row;
-	int blockNum;
+	u32 col;
+	u32 row;
+	u32 blockNum;
 	for (blockNum = 0; blockNum < 4; blockNum++) {
 		for (row = 0; row < 12; row++) {
 			for (col = 0; col < 12; col++) {
@@ -75,8 +75,8 @@ void renderBunker(u8 bunkerNumber){
  * Then, blanks the entire block when the aliens drop a row.
  */
 void unrenderAliens() {
-	int col;
-	int row;
+	u32 col;
+	u32 row;
 	point_t position;
 	position = getAlienBlockPosition();
 	static u8 direction;
@@ -145,8 +145,8 @@ void updateAlienLocation() {
  */
 void killAlien(u32 alienNumber) {
 	point_t position = getAlienBlockPosition();
-	int col;
-	int row;
+	u32 col;
+	u32 row;
 	//Adjust X and Y location
 	position.y = position.y + (alienNumber/11)*(ALIEN_HEIGHT + 10);
 	position.x = position.x + (alienNumber%11)*32;
@@ -163,9 +163,9 @@ void killAlien(u32 alienNumber) {
  *  @param animate 1 = toggle guise and move location, 0 = just refresh
  */
 void renderAliens(u8 animate) {
-	int col;
-	int row;
-	int alienNumber;
+	u32 col;
+	u32 row;
+	u32 alienNumber;
 	if (animate) {
 		toggleAlienGuise();
 		updateAlienLocation();
@@ -364,7 +364,7 @@ u32 findFiringAlien(u32 randomCol) {
 	u32 alienNumber;
 	alienNumber = 0;
 	//Check up the column first
-	int row, col;
+	u32 row, col;
 	col = randomCol;
 	for (row = 4; row >= 0; row--) {
 		alienNumber = 11*row + col;
@@ -374,7 +374,7 @@ u32 findFiringAlien(u32 randomCol) {
 	}
 
 	//If no alien is alive in that row
-	int check;
+	u32 check;
 	for (check = 0; check < 11; check++) {
 		col++;	//check next column
 		if (col > 10) {
@@ -423,7 +423,7 @@ void fireAlienBullet(u32 randomCol) {
  * Writes Black to the entire screen
  */
 void blankScreen() {
-	int row=0, col=0;
+	u32 row=0, col=0;
 	for( row=0; row<480; row++) {
 		for(col=0; col<640; col++) {
 			framePointer0[row*640 + col] = BLACK;  // frame 0 is red here.
