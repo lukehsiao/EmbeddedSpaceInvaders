@@ -7,7 +7,6 @@
  */
 
 #include "globals.h"
-//#include "stateMachines.h"
 
 u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
 u32* framePointer1 = ((unsigned int *) FRAME_BUFFER_0_ADDR) + 640*480;
@@ -44,6 +43,7 @@ u8 tankLife;				// 1 = Tank Alive  0 = Tank Dead
 // Score & Lives Variables
 u32 score;
 u8 lives;	//starts w/ 3 and decrements each death
+u8 gameOver; // 1 is gameOver. 0 game is running
 //******************* End Variables of Space Invaders**********************
 
 /////////////////////////////////////
@@ -495,3 +495,13 @@ void setLives(u8 newLives) {
 u8 getLives() {
 	return lives;
 }
+
+u8 getGameOver() {
+	return gameOver;
+}
+
+void setGameOver(u8 newVal) {
+	gameOver = newVal;
+}
+
+
