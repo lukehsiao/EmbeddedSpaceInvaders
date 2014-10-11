@@ -103,5 +103,110 @@ void updateSpaceShipLocation() {
 			activated = 0;
 		}
 	}
+}
 
+/**
+ *  Renders the number of points passed in at the location of the spaceship
+ */
+void renderPoints(u32 points) {
+	u8 ones, tens, hundreds;
+	//This code assumes that the score will never exceed 9999
+
+	ones = points % 10;
+	tens = (points / 10) % 10;
+	hundreds = (points / 100) % 10;
+
+	u32 row, col;
+	const u32* arrayToRender;
+	point_t position;
+	if (points < 10) {
+		arrayToRender = getDigitArray(ones);
+		for(row = 0; row < ALIEN_HEIGHT; row++) {
+			for(col = 0; col < 10; col++) {
+				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
+			}
+		}
+	}
+	else if (points < 100) {
+		arrayToRender = getDigitArray(tens);
+		for(row = 0; row < ALIEN_HEIGHT; row++) {
+			for(col = 0; col < 10; col++) {
+				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
+			}
+		}
+		position.x += 12;
+
+		arrayToRender = getDigitArray(ones);
+		for(row = 0; row < ALIEN_HEIGHT; row++) {
+			for(col = 0; col < 10; col++) {
+				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
+			}
+		}
+	}
+	else {
+		arrayToRender = getDigitArray(hundreds);
+		for(row = 0; row < ALIEN_HEIGHT; row++) {
+			for(col = 0; col < 10; col++) {
+				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
+			}
+		}
+		position.x += 12;
+
+		arrayToRender = getDigitArray(tens);
+		for(row = 0; row < ALIEN_HEIGHT; row++) {
+			for(col = 0; col < 10; col++) {
+				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
+			}
+		}
+		position.x += 12;
+
+		arrayToRender = getDigitArray(ones);
+		for(row = 0; row < ALIEN_HEIGHT; row++) {
+			for(col = 0; col < 10; col++) {
+				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Blanks the spot where the score is to help with flashing
+ */
+void unrenderPoints() {
+	u32 row, col;
+	for (row = 0; row < 16; row++) {
+		for (col = 0; col < 32; col++) {
+			framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK; //Green
+		}
+	}
 }
