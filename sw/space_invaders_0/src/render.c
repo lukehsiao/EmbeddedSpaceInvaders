@@ -9,6 +9,7 @@
 
 
 extern u32* framePointer0;
+extern u32* framePointer1;
 
 
 /**
@@ -31,7 +32,8 @@ void renderBottomLine() {
 	u32 row;
 	row = 479;
 	for(col=0; col<640; col++) {
-		framePointer0[row*640 + col] = GREEN;  // frame 0 is red here.
+		framePointer0[row*640 + col] = GREEN;
+		framePointer1[row*640 + col] = GREEN;
 	}
 }
 
