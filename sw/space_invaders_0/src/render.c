@@ -9,6 +9,7 @@
 #include "aliens.h"
 #include "tank.h"
 #include "bunkers.h"
+#include "spaceship.h"
 
 extern u32* framePointer0;
 

@@ -34,6 +34,7 @@
 //void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
+unsigned char taski;
 
 
 
@@ -49,7 +50,22 @@ void timer_interrupt_handler() {
 //			XTmrCtr_SetResetValue(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID, 0);
 			// Task is ready to tick, so call its tick function
 //			XTmrCtr_Start(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
-			tasks[i].state = tasks[i].TickFct(tasks[i].state);
+			switch (i) {
+				case 0:
+					tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 1:
+					tasks[i].state = TankBulletUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 2:
+					tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 3:
+					tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				default:
+					break;
+			}
 //			XTmrCtr_Stop(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
 //			tempWcet = XTmrCtr_GetValue(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
 			tasks[i].elapsedTime = 0; // Reset the elapsed time
@@ -59,7 +75,6 @@ void timer_interrupt_handler() {
 		{
 			tasks[i].wcet = tempWcet;
 		}
-
 	}
 
 //	timerFlag = 1;
@@ -137,8 +152,7 @@ int main()
     		               myFrameBuffer.FrameStoreStartAddr)) {
     	 xil_printf("DMA Set Address Failed Failed\r\n");
      }
-     // Print a sanity message if you get this far.
-     xil_printf("Woohoo! I made it through initialization.\n\r");
+
 
      // This tells the HDMI controller the resolution of your display (there must be a better way to do this).
      XIo_Out32(XPAR_AXI_HDMI_0_BASEADDR, 640*480);
@@ -155,33 +169,50 @@ int main()
     	 xil_printf("vdma parking failed\n\r");
      }
 
-     //	unsigned char taski=0;
-     //	//ADC
-     //	tasks[taski].state = -1;
-     //	tasks[taski].period = 1;
-     //	tasks[taski].elapsedTime = 1;
-     //	tasks[taski].TickFct = &ADC_SM;
-     //	++taski;
-     //
-     //	tasks[taski].state = -1;
-     //	tasks[taski].period = 1;
-     //	tasks[taski].elapsedTime = 0;
-     //	tasks[taski].TickFct = &Life_SM;
-     //	++taski;
-     //
-     //	//DAC
-     //	tasks[taski].state = -1;
-     //	tasks[taski].period = 1;
-     //	tasks[taski].elapsedTime = 1;
-     //	tasks[taski].TickFct = &DAC_SM;
-     //	++taski;
-     //
-     //	//trigger
-     //	tasks[taski].state = -1;
-     //	tasks[taski].period = 1;
-     //	tasks[taski].elapsedTime = 1;
-     //	tasks[taski].TickFct = &trigger;
-     //	++taski;
+     Status = XGpio_Initialize(&gpPB, XPAR_PUSH_BUTTONS_5BITS_DEVICE_ID);
+     // Set the push button peripheral to be inputs.
+     XGpio_SetDataDirection(&gpPB, 1, 0x0000001F);
+     // Enable the global GPIO interrupt for push buttons.
+     XGpio_InterruptGlobalEnable(&gpPB);
+     // Enable all interrupts in the push button peripheral.
+     XGpio_InterruptEnable(&gpPB, 0xFFFFFFFF);
+
+     microblaze_register_handler(interrupt_handler_dispatcher, NULL);
+     XIntc_EnableIntr(XPAR_INTC_0_BASEADDR,
+     		(XPAR_FIT_TIMER_0_INTERRUPT_MASK | XPAR_PUSH_BUTTONS_5BITS_IP2INTC_IRPT_MASK));
+     XIntc_MasterEnable(XPAR_INTC_0_BASEADDR);
+
+
+     // Print a sanity message if you get this far.
+     xil_printf("Woohoo! I made it through initialization.\n\r");
+
+     	taski=0;
+     	// Tank Movement
+     	tasks[taski].state = -1;
+     	tasks[taski].period = 4;
+     	tasks[taski].elapsedTime = 4;
+     	tasks[taski].TickFct = &TankMovementAndBullet_SM;
+     	++taski;
+     	// Tank Bullet Movement
+     	tasks[taski].state = -1;
+     	tasks[taski].period = 5;
+     	tasks[taski].elapsedTime = 5;
+     	tasks[taski].TickFct = &TankBulletUpdate_SM;
+     	++taski;
+
+     	// Aliens Movement
+     	tasks[taski].state = -1;
+     	tasks[taski].period = 20;
+     	tasks[taski].elapsedTime = 20;
+     	tasks[taski].TickFct = &AlienMovementAndBullets_SM;
+     	++taski;
+
+     	// Aliens Bullets Movement
+     	tasks[taski].state = -1;
+     	tasks[taski].period = 5;
+     	tasks[taski].elapsedTime = 5;
+     	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
+     	++taski;
 
      initGlobals(); //setup space invaders
      blankScreen(); // erase old data
@@ -189,6 +220,7 @@ int main()
      u8 inputKey;
      u32 userInput;
      u32 sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
+     microblaze_enable_interrupts();
      while (1) {
     	 sillyTimer--;
     	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);

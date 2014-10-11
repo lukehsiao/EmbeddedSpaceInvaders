@@ -12,5 +12,6 @@
 void renderSpaceShip();
 void unrenderSpaceShip();
 void updateSpaceShipLocation();
+void startSpaceShip();
 
 #endif /* SPACESHIP_H_ */

@@ -10,6 +10,6 @@
 #ifndef BUNKERS_H_
 #define BUNKERS_H_
 
-void renderBunker(u8 bunkerNumber);
+//void renderBunker(u8 bunkerNumber);
 
 #endif /* BUNKERS_H_ */
