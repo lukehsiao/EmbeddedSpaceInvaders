@@ -24,17 +24,16 @@ int TankMovementAndBullet_SM(int state) {
 	else{
 		switch(state) { // Transitions
 		case SM1_alive:
-			if (0) { // it the tank is dead TANK DEATH FLAG
+
+			if(centerButton){
+				fireTankBullet();
+			}
+
+			if (tankLife == 0) { // it the tank is dead TANK DEATH FLAG
 				state = SM1_dead;
 				cycles = TANK_MAP_FLIP_CYCLES;
 				i = 0;
-				xil_printf("\n\rDead Tank!!!");
-			}
-			else if(centerButton){
-				fireTankBullet();
-			}
-			if (0) { // it the tank is dead
-				state = SM1_alive;
+//				xil_printf("\n\rDead Tank!!!");
 			}
 			else if(!rightButton && !leftButton){
 				state = SM1_alive;
@@ -51,18 +50,26 @@ int TankMovementAndBullet_SM(int state) {
 		case SM1_dead:
 			if (cycles <= 0) { // it the tank is dead TANK DEATH FLAG
 				state = SM1_alive;
+				tankLife = 1;
+				cycles = TANK_MAP_FLIP_CYCLES;
+				i = 0;
+				moveTank(TANK_INIT_POSITION_X);
 			}
 			else if(i < TANK_MAP_FLIP_COUNT/2) {
 				state = SM1_dead;
 				deathTank1();
+				i++;
 			}
 			else if(i < TANK_MAP_FLIP_COUNT) {
 				state = SM1_dead;
 				deathTank2();
+				i++;
 			}
 			else if(i >= TANK_MAP_FLIP_COUNT) {
 				state = SM1_dead;
 				cycles--;
+				i = 0;
+//				xil_printf("\n\rCYCLE!!!");
 			}
 			break;
 		default:

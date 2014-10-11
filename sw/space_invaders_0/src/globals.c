@@ -49,7 +49,7 @@ u8 lives;	//starts w/ 3 and decrements each death
 /////////////////////////////////////
 void initGlobals(){
 	// Initialize Tank
-	setTankPositionGlobal(200);
+	setTankPositionGlobal(70);
 
 
 	// Initialize Bunkers

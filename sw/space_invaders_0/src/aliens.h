@@ -10,7 +10,8 @@
 #define ALIENS_H_
 
 #define X_SHIFT 6           // # of pixels the Alien Block shifts horizontally.
-#define ALIEN_BULLET_FIRE_RATE 50
+#define ALIEN_BULLET_FIRE_RATE 10
+#define ALIEN_BULLET_SPEED 6   // # of pixel the alien bullets moves per update
 
 void unrenderAliens();
 void updateAlienLocation();
