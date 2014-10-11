@@ -30,8 +30,6 @@
 
 #define TASKS_NUM 5
 
-u8 gameOver; // 1 is gameOver. 0 game is running
-
 #include "bitmaps.h"
 
 typedef struct {u32 x; u32 y;} point_t;
@@ -82,8 +80,6 @@ void setRightCol(u8 rightCol);
 u8 getLeftCol();
 u8 getRightCol();
 
-
-
 /////////////////////////////////////
 // Setup the Bunker Globals
 /////////////////////////////////////
@@ -103,5 +99,8 @@ u32 getScore();
 
 void setLives(u8 newLives);
 u8 getLives();
+
+void setGameOver(u8 newVal);
+u8 getGameOver();
 
 #endif

@@ -14,6 +14,8 @@ extern u32* framePointer1;
 
 u32 findFiringAlien(u32 randomCol);
 
+u32 lowestLiveRow = 4;
+
 //////////////////////////////////////////////////////////////////
 // Functions for Rendering Aliens
 //////////////////////////////////////////////////////////////////
@@ -113,6 +115,10 @@ void updateAlienLocation() {
 		}
 	}
 	setAlienBlockPosition(tempAlien);
+	// Check if aliens are too low
+	if ((getAlienBlockPosition().y+((lowestLiveRow*(ALIEN_HEIGHT+10))+ALIEN_HEIGHT)) > BOTTOM_BORDER) {
+		setGameOver(1);
+	}
 }
 
 /**
@@ -250,6 +256,9 @@ void renderAliens(u8 animate) {
 					}
 				}
 			}
+		}
+		if (getAlienStatus(alienNumber) == 1) {
+			lowestLiveRow = alienNumber/11;
 		}
 	}
 }

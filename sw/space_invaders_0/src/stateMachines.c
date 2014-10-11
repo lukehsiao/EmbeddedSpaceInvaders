@@ -73,7 +73,7 @@ int TankMovementAndBullet_SM(int state) {
 	else{
 		switch(state) { // Transitions
 		case SM1_alive:
-			if(gameOver){
+			if(getGameOver()){
 				state = SM1_gameOver;
 			}
 			else{
@@ -99,7 +99,7 @@ int TankMovementAndBullet_SM(int state) {
 			}
 			break;
 		case SM1_dead:
-			if(gameOver){
+			if(getGameOver()){
 				state = SM1_gameOver;
 			}
 			else if (cycles <= 0) { // it the tank is dead TANK DEATH FLAG
@@ -112,7 +112,7 @@ int TankMovementAndBullet_SM(int state) {
 				lives--;
 				if(lives <= 0 || lives > 10){
 					lives = 0;
-					gameOver = 1;
+					setGameOver(1);
 				}
 				setLives(lives);
 				renderLives();
@@ -171,7 +171,7 @@ int TankBulletUpdate_SM(int state) {
 	else{
 		switch(state) { // Transitions
 		case SM2_bullet:
-			if(gameOver){
+			if(getGameOver()){
 				state = SM2_gameOver;
 			}
 			else if (0) { // if there are no bullets
@@ -210,7 +210,7 @@ int AlienMovementAndBullets_SM(int state) {
 			if(random < 10)
 				fireAlienBullet(random);
 
-			if(gameOver){
+			if(getGameOver()){
 				state = SM3_gameOver;
 			}
 			else if(1){
@@ -243,7 +243,7 @@ int AlienbulletsUpdate_SM(int state) {
 	else{
 		switch(state) { // Transitions
 		case SM4_bullets:
-			if(gameOver){
+			if(getGameOver()){
 				state = SM4_gameOver;
 			}
 			else if (0) { // if there are no bulletss
@@ -280,7 +280,7 @@ int SpaceShipUpdate_SM(int state) {
 	else{
 		switch(state) { // Transitions
 		case SM5_alive:
-			if(gameOver){
+			if(getGameOver()){
 				state = SM5_gameOver;
 			}
 			else if(upButton) { // Space Ship is dead
