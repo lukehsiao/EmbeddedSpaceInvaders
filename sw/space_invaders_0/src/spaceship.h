@@ -9,6 +9,9 @@
 #ifndef SPACESHIP_H_
 #define SPACESHIP_H_
 
+#define SPACESHIP_START_RATE 1//1000000
+#define SPACESHIP_SPEED 5
+
 void renderSpaceShip();
 void unrenderSpaceShip();
 void updateSpaceShipLocation();

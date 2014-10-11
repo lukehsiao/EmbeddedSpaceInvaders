@@ -39,7 +39,7 @@ typedef struct task {
 	int wcet; //WCET of the task
 } task;
 
-task tasks[4];
+task tasks[TASKS_NUM];
 
 enum SM1_States { SM1_tank } SM1_State;
 int TankMovementAndBullet_SM();
@@ -52,6 +52,9 @@ int AlienMovementAndBullets_SM();
 
 enum SM4_States { SM4_bullets } SM4_State;
 int AlienbulletsUpdate_SM();
+
+enum SM5_States { SM5_alive, SM5_dead } SM5_State;
+int SpaceShipUpdate_SM();
 
 
 #endif /* STATEMACHINES_H_ */
