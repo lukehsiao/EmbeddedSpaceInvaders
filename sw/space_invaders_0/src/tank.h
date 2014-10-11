@@ -21,6 +21,7 @@ void fireTankBullet();
 void moveTankLeft();
 void moveTankRight();
 u8 hitTank(point_t position);
+u8 calculateTankBulletHit();
 void deathTank1();
 void deathTank2();
 

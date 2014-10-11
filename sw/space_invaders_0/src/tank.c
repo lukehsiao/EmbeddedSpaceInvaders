@@ -8,6 +8,7 @@
 
 #include "globals.h"
 #include "tank.h"
+#include "bunkers.h"
 
 extern u32* framePointer0;
 
@@ -126,11 +127,17 @@ void renderTankBullet(u8 animate) {
 	u32 row;
 	u32 col;
 	if (position.y < 480) {
-		for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
-			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
-				//Don't draw the tank bullet above the line
-				if ((position.y + row) > 35) {
-					framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;
+		if (calculateTankBulletHit()) {
+			position.y = 800; //deactivate the tank bullet
+			setTankBulletPosition(position);
+		}
+		else {
+			for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
+				for (col = 0; col < TANK_BULLET_WIDTH; col++) {
+					//Don't draw the tank bullet above the line
+					if ((position.y + row) > 35) {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;
+					}
 				}
 			}
 		}
@@ -206,4 +213,23 @@ void moveTankRight() {
 	}
 	setTankPositionGlobal(temp.x);
 	renderTank();
+}
+
+/**
+ * Calculates whether the tank bullet hit the bunkers.
+ *
+ * @return 1=hit, 0=no hit
+ */
+u8 calculateTankBulletHit() {
+	u32 bunkerNum;
+	u8 result;
+	point_t position = getTankBulletPosition();
+	position.x += TANK_BULLET_WIDTH/2;
+	for (bunkerNum = 0; bunkerNum < 4; bunkerNum++){
+		result = hitBunker(position, bunkerNum);
+		if (result != 0xFF) {
+			return 1;
+		}
+	}
+	return 0;
 }
