@@ -36,6 +36,20 @@ void unrenderTank() {
 	}
 }
 
+/**
+ * Renders the 1st Dead Tank Bitmap at the tank's current location
+ */
+void deathTank1() {
+
+}
+
+/**
+ * Renders the 2nd Dead Tank Bitmap at the tank's current location
+ */
+void deathTank2() {
+
+}
+
 
 //////////////////////////////////////////////////////////////////
 // Functions for Rendering Tank Bullets
