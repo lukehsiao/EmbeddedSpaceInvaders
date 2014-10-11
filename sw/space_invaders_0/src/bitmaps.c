@@ -696,13 +696,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_LEFT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_LEFT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;
@@ -716,13 +716,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_RIGHT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_RIGHT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;
@@ -736,13 +736,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_RIGHT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_RIGHT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;
@@ -756,13 +756,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_RIGHT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_RIGHT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;
@@ -780,13 +780,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_RIGHT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_RIGHT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;

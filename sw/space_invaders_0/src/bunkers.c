@@ -77,3 +77,83 @@ void renderBunker(u8 bunkerNumber){
 		}
 	}
 }
+
+/**
+ * Calculates whether the given position falls within the bunker.
+ *
+ * @param position the (x,y) position to test
+ * @param bunkerNumber the number of the bunker to test
+ * @return the block number that the position falls in, or 0xFF if it isn't hit
+ */
+u8 hitBunker(point_t position, u8 bunkerNumber) {
+	point_t bunkerPosition;
+	bunkerPosition = getBunkerPosition(bunkerNumber);
+	u8 currentBlockState;
+	// If it's not within the bunker itself
+	if (position.x < bunkerPosition.x || position.y < bunkerPosition.y) {
+		return 0xFF;
+	}
+	else if (position.x > (bunkerPosition.x + 48) || position.y > (bunkerPosition.y + 36)) {
+		return 0xFF;
+	}
+
+	u32 blockNum;
+
+	xil_printf("Position passed in: (%d, %d)\n\r", position.x, position.y);
+
+	//Check top row intersections
+	for (blockNum = 0; blockNum < 4; blockNum++) {
+		// If the block is alive
+		currentBlockState = getBlockState(bunkerNumber, blockNum);
+		if (currentBlockState < 4) {
+			//If it's within the horizontal range
+			if (position.x >= bunkerPosition.x && position.x <= (bunkerPosition.x + (12*(blockNum+1)))) {
+				//If it's also within the vertical range
+				if (position.y > bunkerPosition.y && position.y < (bunkerPosition.y + 12)) {
+					currentBlockState++;
+					setBlockState(bunkerNumber, blockNum, currentBlockState);
+					renderBunker(bunkerNumber);
+					return blockNum;
+				}
+			}
+		}
+	}
+
+	//Check Middle row intersections
+	for (blockNum = 4; blockNum < 8; blockNum++) {
+		currentBlockState = getBlockState(bunkerNumber, blockNum);
+		if (currentBlockState < 4) {
+			//If it's within the horizontal range
+			if (position.x >= bunkerPosition.x && position.x <= (bunkerPosition.x + (12*(blockNum-3)))) {
+				//If it's also within the vertical range
+				if (position.y > (bunkerPosition.y+12) && position.y < (bunkerPosition.y + 24)) {
+					currentBlockState++;
+					setBlockState(bunkerNumber, blockNum, currentBlockState);
+					renderBunker(bunkerNumber);
+					return blockNum;
+				}
+			}
+		}
+	}
+
+	//Check Bottom row intersections
+	for (blockNum = 8; blockNum < 12; blockNum++) {
+		// If the block is alive
+		currentBlockState = getBlockState(bunkerNumber, blockNum);
+		if (currentBlockState < 4) {
+			//If it's within the horizontal range
+			if (position.x >= bunkerPosition.x && position.x <= (bunkerPosition.x + (12*(blockNum-7)))) {
+				//If it's also within the vertical range
+				if (position.y > (bunkerPosition.y+24) && position.y < (bunkerPosition.y + 36)) {
+					currentBlockState++;
+					setBlockState(bunkerNumber, blockNum, currentBlockState);
+					renderBunker(bunkerNumber);
+					return blockNum;
+				}
+			}
+		}
+	}
+
+	// If none of those...
+	return 0xFF;
+}

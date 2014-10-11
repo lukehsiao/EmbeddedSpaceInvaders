@@ -96,6 +96,31 @@ void renderTankBullet(u8 animate) {
 	}
 }
 
+/**
+ * Calculates whether an alien bullet hit the tank
+ *
+ * @param position The position to test
+ * @return 1 if hit, 0 if not
+ */
+u8 hitTank(point_t position) {
+	point_t tankPosition;
+	tankPosition = getTankPositionGlobal();
+
+	//If it's outside the tank
+	if (position.x < tankPosition.x || position.y < tankPosition.y) {
+		return 0;
+	}
+	else if (position.x > (tankPosition.x+32) || position.y > (tankPosition.y+16)) {
+		return 0;
+	}
+	else {
+		// Otherwise, it must be in the tank.
+		unrenderTank();
+		return 1;
+	}
+}
+
+
 //////////////////////////////////////////////////////////////////
 // Functions for Shooting
 //////////////////////////////////////////////////////////////////

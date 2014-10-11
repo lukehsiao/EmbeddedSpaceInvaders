@@ -8,6 +8,8 @@
 
 #include "globals.h"
 #include "aliens.h"
+#include "tank.h"
+#include "bunkers.h"
 
 extern u32* framePointer0;
 
@@ -288,21 +290,48 @@ void renderAlienBullet(u8 animate) {
 		bullet = getAlienBullet(bulletNum);
 		arrayToRender = getAlienBulletArray(bullet.type);
 		if (bullet.position.y < 480) { //if it's not off the screen
-			for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
-				for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
-					bulletGuise = bullet.guise;
-					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
-					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
-					// Only draw pixels, not the black.
-					if (pixelPresent) {
-						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
+			if (!calculateAlienBulletHit(bullet)) {
+				for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
+					for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
+						bulletGuise = bullet.guise;
+						u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
+						u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
+						// Only draw pixels, not the black.
+						if (pixelPresent) {
+							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
+						}
 					}
 				}
+			}
+			else {
+				bullet.position.y = 800; //deactivate the bullet
+				setAlienBullet(bullet, bulletNum);
 			}
 		}
 	}
 }
 
+/**
+ * Calculates whether the bullet hit the tank or the bunkers.  This
+ * will update global flags so that we can transition to death animations
+ *
+ * @param bullet The Alien Bullet to evaluate
+ * @return 1=hit, 0=no hit
+ */
+u8 calculateAlienBulletHit(alienBullet bullet) {
+	u32 bunkerNum;
+	u8 result;
+	bullet.position.y += ALIEN_BULLET_HEIGHT;
+	bullet.position.x += ALIEN_BULLET_WIDTH/2;
+	for (bunkerNum = 0; bunkerNum < 4; bunkerNum++){
+		result = hitBunker(bullet.position, bunkerNum);
+		if (result != 0xFF) {
+			return 1;
+		}
+	}
+
+	return hitTank(bullet.position);
+}
 
 //////////////////////////////////////////////////////////////////
 // Functions for Shooting
@@ -361,6 +390,10 @@ void fireAlienBullet(u32 randomCol) {
 			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 9; //8 to center bullet
 			position.y = getAlienBlockPosition().y + (alienNumber/11)*(ALIEN_HEIGHT+10) + (ALIEN_HEIGHT);
 			bullet.position = position;
+			//If it's low enough on the screen
+			if ((bullet.position.y + ALIEN_BULLET_HEIGHT) > 379) {
+				calculateAlienBulletHit(bullet);
+			}
 			bullet.type = (randomCol % 2) & 0x1;
 			bullet.guise = 0;
 			setAlienBullet(bullet, bulletNum);

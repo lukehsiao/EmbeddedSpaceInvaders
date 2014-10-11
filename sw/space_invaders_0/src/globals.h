@@ -28,7 +28,7 @@
 #define OFFWHITE	0x00FFFFFE
 
 // Movement Definitions
-#define X_SHIFT 6           // # of pixels the Alien Block shifts horizontally.
+#define X_SHIFT 5           // # of pixels the Alien Block shifts horizontally.
 #define TANK_BULLET_SPEED 15    // # of pixel the tank bullet moves per update
 #define TANK_MOVEMENT_SPEED 8    // # of pixel the tank bullet moves per update
 #define ALIEN_BULLET_SPEED 10   // # of pixel the alien bullets moves per update

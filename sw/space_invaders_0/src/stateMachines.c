@@ -97,7 +97,7 @@ int AlienMovementAndBullets_SM() {
 		switch(SM3_State) { // Transitions
 		case SM3_alien:{
 			u8 random;
-			random = (char)(rand() % 100);//((timerSeed * 13) / 3) % 11; //pseudo random number between 0-10
+			random = (char)(rand() % 10);//((timerSeed * 13) / 3) % 11; //pseudo random number between 0-10
 			if(random < 10){
 				fireAlienBullet(random);
 			}
