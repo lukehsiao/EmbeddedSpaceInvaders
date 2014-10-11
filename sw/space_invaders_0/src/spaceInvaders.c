@@ -41,11 +41,10 @@ unsigned char taski;
 // This is invoked in response to a timer interrupt.
 // It calls all the state machines for timing.
 void timer_interrupt_handler() {
-	unsigned char tasksNum = 4;
 //	unsigned long tasksPeriodGCD = 1;
 	u32 tempWcet = 0;
 	u8 i;
-	for (i = 0; i < tasksNum; ++i) { // Heart of the scheduler code
+	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
 		if (tasks[i].elapsedTime >= tasks[i].period){
 //			XTmrCtr_SetResetValue(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID, 0);
 			// Task is ready to tick, so call its tick function
@@ -62,6 +61,9 @@ void timer_interrupt_handler() {
 					break;
 				case 3:
 					tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 4:
+					tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
 					break;
 				default:
 					break;
@@ -213,6 +215,21 @@ int main()
      	tasks[taski].elapsedTime = 5;
      	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
      	++taski;
+
+     	// Aliens Bullets Movement
+     	tasks[taski].state = -1;
+     	tasks[taski].period = 5;
+     	tasks[taski].elapsedTime = 5;
+     	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
+     	++taski;
+
+     	// Spaceship Movement and creation
+     	tasks[taski].state = -1;
+     	tasks[taski].period = 5;
+     	tasks[taski].elapsedTime = 5;
+     	tasks[taski].TickFct = &SpaceShipUpdate_SM;
+     	++taski;
+
 
      initGlobals(); //setup space invaders
      blankScreen(); // erase old data

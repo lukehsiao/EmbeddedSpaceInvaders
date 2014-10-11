@@ -10,6 +10,10 @@
 #ifndef RENDER_H_
 #define RENDER_H_
 #include "globals.h"		//to give access to the global variables
+#include "aliens.h"
+#include "tank.h"
+#include "bunkers.h"
+#include "spaceship.h"
 
 void render();
 void blankScreen();

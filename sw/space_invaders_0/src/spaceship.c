@@ -11,7 +11,7 @@
 
 extern u32* framePointer0;
 
-static u8 direction; // 1 = left, 0 = right
+static u8 direction; // 1 = right, 0 = left
 point_t position;
 u8 activated;		// 1 = draw, 0 = ignore
 
@@ -19,17 +19,19 @@ u8 activated;		// 1 = draw, 0 = ignore
  * Call this to put the spaceship in motion
  */
 void startSpaceShip() {
-	unrenderSpaceShip();
-	activated = 1;
-	direction = (direction ^ 0x1) & 0x1;		// choose opposite direction
-	position.y = 35;
-	if (direction == 1) {
-		position.x = 0;
+	if (activated != 1) {
+		unrenderSpaceShip();
+		activated = 1;
+		direction = (direction ^ 0x1) & 0x1;		// choose opposite direction
+		position.y = 35;
+		if (direction == 1) {
+			position.x = 0;
+		}
+		else {
+			position.x = 640-32;
+		}
+		renderSpaceShip();
 	}
-	else {
-		position.x = 640-32;
-	}
-	renderSpaceShip();
 }
 
 /**
@@ -50,6 +52,9 @@ void renderSpaceShip() {
 						framePointer0[(position.y+row)*640 + (position.x+col)] = RED;
 					}
 				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 	}
@@ -62,11 +67,22 @@ void renderSpaceShip() {
 void unrenderSpaceShip() {
 	u32 col;
 	u32 row;
-	for (row = 0; row < 16; row++) {
-		for (col = 0; col < 32; col++) {
-			framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK; //Green
+
+	if (direction == 1) {
+		for (row = 0; row < 16; row++) {
+			for (col = 0; col < SPACESHIP_SPEED; col++) {
+				framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK; //Green
+			}
 		}
 	}
+	else {
+		for (row = 0; row < 16; row++) {
+			for (col = 31; col > (31-SPACESHIP_SPEED); col--) {
+				framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK; //Green
+			}
+		}
+	}
+
 }
 
 /**

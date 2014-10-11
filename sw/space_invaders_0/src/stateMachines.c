@@ -6,39 +6,40 @@
  */
 #include "stateMachines.h"
 #include "globals.h"
+#include "render.h"
 
 
-int TankMovementAndBullet_SM() {
+int TankMovementAndBullet_SM(int state) {
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 rightButton = ((buttons & RIGHT) >> 1) & 0x1;
 	u32 leftButton = ((buttons & LEFT) >> 3) & 0x1;
 	u32 centerButton = (buttons & CENTER) & 0x1;
 	//	xil_printf("\n\rButtons: %x",buttons);
-	if(SM1_State == -1)
+	if(state == -1)
 	{
-		SM1_State = SM1_tank;
+		state = SM1_tank;
 	}
 	else{
-		switch(SM1_State) { // Transitions
+		switch(state) { // Transitions
 		case SM1_tank:
 			if (0) { // it the tank is dead
-				SM1_State = SM1_tank;
+				state = SM1_tank;
 			}
 			else if(centerButton){
 				fireTankBullet();
 			}
 			if (0) { // it the tank is dead
-				SM1_State = SM1_tank;
+				state = SM1_tank;
 			}
 			else if(!rightButton && !leftButton){
-				SM1_State = SM1_tank;
+				state = SM1_tank;
 			}
 			else if(rightButton) {
-				SM1_State = SM1_tank;
+				state = SM1_tank;
 				moveTankRight();
 			}
 			else if(leftButton) {
-				SM1_State = SM1_tank;
+				state = SM1_tank;
 				moveTankLeft();
 			}
 			break;
@@ -46,7 +47,7 @@ int TankMovementAndBullet_SM() {
 			SM1_State = SM1_tank;
 		} // Transitions
 
-		switch(SM1_State) { // State actions
+		switch(state) { // State actions
 		case SM1_tank:{
 
 		}
@@ -55,29 +56,29 @@ int TankMovementAndBullet_SM() {
 			break;
 		} // State actions
 	}
-	return SM1_State;
+	return state;
 }
 
-int TankBulletUpdate_SM() {
-	if(SM2_State == -1)
+int TankBulletUpdate_SM(int state) {
+	if(state == -1)
 	{
-		SM2_State = SM2_bullet;
+		state = SM2_bullet;
 	}
 	else{
-		switch(SM2_State) { // Transitions
+		switch(state) { // Transitions
 		case SM2_bullet:
 			if (0) { // if there are no bullets
-				SM2_State = SM2_bullet;
+				state = SM2_bullet;
 			}
 			else if(1){
 				renderTankBullet(1);
 			}
 			break;
 		default:
-			SM2_State = SM2_bullet;
+			state = SM2_bullet;
 		} // Transitions
 
-		switch(SM2_State) { // State actions
+		switch(state) { // State actions
 		case SM2_bullet:{
 		}
 		break;
@@ -85,19 +86,19 @@ int TankBulletUpdate_SM() {
 			break;
 		} // State actions
 	}
-	return SM2_State;
+	return state;
 }
 
-int AlienMovementAndBullets_SM() {
-	if(SM3_State == -1)
+int AlienMovementAndBullets_SM(int state) {
+	if(state == -1)
 	{
-		SM3_State = SM3_alien;
+		state = SM3_alien;
 	}
 	else{
-		switch(SM3_State) { // Transitions
+		switch(state) { // Transitions
 		case SM3_alien:{
 			u8 random;
-			random = (char)(rand() % 100);//((timerSeed * 13) / 3) % 11; //pseudo random number between 0-10
+			random = (char)(rand() % ALIEN_BULLET_FIRE_RATE);
 			if(random < 10){
 				fireAlienBullet(random);
 			}
@@ -107,14 +108,15 @@ int AlienMovementAndBullets_SM() {
 
 			if(1){
 				renderAliens(1);
+				state = SM3_alien;
 			}
 		}
-			break;
+		break;
 		default:
-			SM3_State = SM3_alien;
+			state = SM3_alien;
 		} // Transitions
 
-		switch(SM3_State) { // State actions
+		switch(state) { // State actions
 		case SM3_alien:{
 
 		}
@@ -123,29 +125,30 @@ int AlienMovementAndBullets_SM() {
 			break;
 		} // State actions
 	}
-	return SM3_State;
+	return state;
 }
 
-int AlienbulletsUpdate_SM() {
-	if(SM4_State == -1)
+int AlienbulletsUpdate_SM(int state) {
+	if(state == -1)
 	{
-		SM4_State = SM4_bullets;
+		state = SM4_bullets;
 	}
 	else{
-		switch(SM4_State) { // Transitions
+		switch(state) { // Transitions
 		case SM4_bullets:
 			if (0) { // if there are no bulletss
-				SM4_State = SM4_bullets;
+				state = SM4_bullets;
 			}
 			else if(1){
 				renderAlienBullet(1);
+				state = SM4_bullets;
 			}
 			break;
 		default:
-			SM4_State = SM4_bullets;
+			state = SM4_bullets;
 		} // Transitions
 
-		switch(SM4_State) { // State actions
+		switch(state) { // State actions
 		case SM4_bullets:{
 		}
 		break;
@@ -153,5 +156,47 @@ int AlienbulletsUpdate_SM() {
 			break;
 		} // State actions
 	}
-	return SM4_State;
+	return state;
+}
+
+int SpaceShipUpdate_SM(int state) {
+	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
+	u32 upButton = ((buttons & UP) >> 4) & 0x1;
+	if(state == -1)
+	{
+		state = SM5_alive;
+	}
+	else{
+		switch(state) { // Transitions
+		case SM5_alive:
+			if(upButton) { // Space Ship is dead
+				state = SM5_dead;
+			}
+			else {
+				state = SM5_alive;
+				renderSpaceShip();
+			}
+			break;
+		default:
+			state = SM5_alive;
+		} // Transitions
+
+		switch(state) { // State actions
+		case SM5_alive:{
+			u8 random;
+			random = (char)(rand() % SPACESHIP_START_RATE);
+			if(random < 1){
+				startSpaceShip();
+			}
+		}
+		break;
+		case SM5_dead: {
+
+		}
+		break;
+		default: // ADD default behaviour below
+			break;
+		} // State actions
+	}
+	return state;
 }
