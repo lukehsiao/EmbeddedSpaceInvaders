@@ -26,13 +26,6 @@ void initStateMachines(){
  	tasks[taski].TickFct = &TankBulletUpdate_SM;
  	++taski;
 
- 	// Aliens Bullets Movement
- 	tasks[taski].state = -1;
- 	tasks[taski].period = 5;
- 	tasks[taski].elapsedTime = 1;
- 	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
- 	++taski;
-
  	// Aliens Movement
  	tasks[taski].state = -1;
  	tasks[taski].period = 63;
@@ -40,7 +33,12 @@ void initStateMachines(){
  	tasks[taski].TickFct = &AlienMovementAndBullets_SM;
  	++taski;
 
-
+ 	// Aliens Bullets Movement
+ 	tasks[taski].state = -1;
+ 	tasks[taski].period = 5;
+ 	tasks[taski].elapsedTime = 1;
+ 	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
+ 	++taski;
 
  	// Aliens Bullets Movement
  	tasks[taski].state = -1;
