@@ -12,6 +12,7 @@
 #include "bunkers.h"
 
 extern u32* framePointer0;
+extern u32* framePointer1;
 
 u32 findFiringAlien(u32 randomCol);
 
@@ -31,35 +32,17 @@ void unrenderAliens() {
 	static u8 direction;
 	direction = getAlienDirection();
 
-//	const u32* arrayToRender;
-//	u32 alienNumber;
-//	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
-//		//algorithm to adjust x and y for drawing
-//		if (alienNumber != 0) {
-//			position.x = position.x + 32;
-//			if (alienNumber % 11 == 0) {	//if end of row is reached, increment
-//				position.y = position.y + (ALIEN_HEIGHT + 10);
-//				position.x = getAlienBlockPosition().x;
-//			}
-//		}
-//
-//		//Rendering each alien
-//		arrayToRender = getAlienArray(alienNumber);
-//		for (row = 0; row < ALIEN_HEIGHT; row++) {
-//			for (col = 0; col < 32; col++) {
-//				u8 pixelPresent = (arrayToRender[row] >> (31-col)) & 0x1;
-//				if (pixelPresent) {
-//					framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
-//				}
-//			}
-//		}
-//	}
 	//If moving right..
 	if(direction == 1){
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < X_SHIFT; col++) {
 				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
-					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+					}
+					else {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
@@ -71,7 +54,12 @@ void unrenderAliens() {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
 				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
-					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+					}
+					else {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
@@ -80,7 +68,12 @@ void unrenderAliens() {
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < 32*11; col++) {
 				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
-					framePointer0[(position.y + row)*640 + (position.x+col)] = BLACK;
+					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+					}
+					else {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
@@ -207,7 +200,12 @@ void renderAliens(u8 animate) {
 				}
 				else {
 					if (framePointer0[(position.y + row)*640 + (position.x + col)] == WHITE) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+							framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+						}
+						else {
+							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						}
 					}
 				}
 			}
@@ -240,7 +238,12 @@ void unrenderAlienBullet() {
 					// Only blank pixels, not the surrounding.
 					if (pixelPresent) {
 						if ((bullet.position.y + row) != 479) {
-							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+							if (framePointer1[(bullet.position.y + row)*640 + (bullet.position.x + col)] == GREEN) {
+								framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = GREEN;
+							}
+							else {
+								framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+							}
 						}
 						else {
 							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = GREEN;

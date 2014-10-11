@@ -9,6 +9,7 @@
 #include "globals.h"
 
 u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
+u32* framePointer1 = ((unsigned int *) FRAME_BUFFER_0_ADDR) + 640*480;
 
 //******************* Variables of Space Invaders*************************
 // Alien Variables

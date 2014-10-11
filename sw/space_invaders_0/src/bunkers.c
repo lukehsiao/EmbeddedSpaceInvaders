@@ -9,6 +9,7 @@
 #include "bunkers.h"
 
 extern u32* framePointer0;
+extern u32* framePointer1;
 
 /**
  * Draws the bunker
@@ -30,11 +31,13 @@ void renderBunker(u8 bunkerNumber){
 				if (pixelPresent) {
 					if (framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] != WHITE) {
 						framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = GREEN;
+						framePointer1[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = GREEN;
 					}
 				}
 				else {
 					if (framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] != WHITE) {
 						framePointer0[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = BLACK;
+						framePointer1[(bunkerPosition.y + row)*640 + (bunkerPosition.x+(blockNum*12))+col] = BLACK;
 					}
 				}
 			}
@@ -48,11 +51,13 @@ void renderBunker(u8 bunkerNumber){
 				if (pixelPresent) {
 					if (framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] != WHITE) {
 						framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = GREEN;
+						framePointer1[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = GREEN;
 					}
 				}
 				else {
 					if (framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] != WHITE) {
 						framePointer0[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = BLACK;
+						framePointer1[(bunkerPosition.y + 12 + row)*640 + (bunkerPosition.x+((blockNum-4)*12))+col] = BLACK;
 					}
 				}
 			}
@@ -66,6 +71,7 @@ void renderBunker(u8 bunkerNumber){
 				if (pixelPresent) {
 					if (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] != WHITE) {
 						framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = GREEN;
+						framePointer1[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = GREEN;
 					}
 				}
 				else {
@@ -73,6 +79,7 @@ void renderBunker(u8 bunkerNumber){
 					u32 bulletPresent = (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] == OFFWHITE);
 					if (!alienPresent && !bulletPresent) {
 						framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = BLACK;
+						framePointer1[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = BLACK;
 					}
 				}
 			}
