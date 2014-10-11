@@ -163,7 +163,7 @@ u8 hitTank(point_t position) {
 	}
 	else {
 		// Otherwise, it must be in the tank.
-		deathTank1();
+		tankLife = 0;
 		return 1;
 	}
 }
@@ -189,6 +189,17 @@ void fireTankBullet() {
 	}
 	renderTankBullet(0);
 	//renderTank();	//to compensate for automatic single shift.
+}
+
+void moveTank(u32 position) {
+	point_t temp;
+	unrenderTank();
+	temp.x = position;
+	if (temp.x > (640-32)) {
+		temp.x = 0;
+	}
+	setTankPositionGlobal(temp.x);
+	renderTank();
 }
 
 void moveTankLeft() {

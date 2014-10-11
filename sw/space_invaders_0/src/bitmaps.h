@@ -19,7 +19,6 @@
  (b7  << 7 ) | (b6  << 6 ) | (b5  << 5 ) | (b4  << 4 ) | (b3  << 3 ) | (b2  << 2 ) | (b1  << 1 ) | (b0  << 0 ) )
 #define ALIEN_HEIGHT 16
 #define BUNKER_SQUARE_HEIGHT 12
-#define ALIEN_BULLET_SPEED 10   // # of pixel the alien bullets moves per update
 #define ALIEN_BULLET_WIDTH 6
 #define ALIEN_BULLET_HEIGHT 10
 #define TANK_BULLET_WIDTH 2

@@ -10,6 +10,8 @@
 
 
 int TankMovementAndBullet_SM(int state) {
+	static int i;
+	static int cycles;
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 rightButton = ((buttons & RIGHT) >> 1) & 0x1;
 	u32 leftButton = ((buttons & LEFT) >> 3) & 0x1;
@@ -17,38 +19,65 @@ int TankMovementAndBullet_SM(int state) {
 	//	xil_printf("\n\rButtons: %x",buttons);
 	if(state == -1)
 	{
-		state = SM1_tank;
+		state = SM1_alive;
 	}
 	else{
 		switch(state) { // Transitions
-		case SM1_tank:
-			if (0) { // it the tank is dead
-				state = SM1_tank;
-			}
-			else if(centerButton){
+		case SM1_alive:
+
+			if(centerButton){
 				fireTankBullet();
 			}
-			if (0) { // it the tank is dead
-				state = SM1_tank;
+
+			if (tankLife == 0) { // it the tank is dead TANK DEATH FLAG
+				state = SM1_dead;
+				cycles = TANK_MAP_FLIP_CYCLES;
+				i = 0;
+//				xil_printf("\n\rDead Tank!!!");
 			}
 			else if(!rightButton && !leftButton){
-				state = SM1_tank;
+				state = SM1_alive;
 			}
 			else if(rightButton) {
-				state = SM1_tank;
+				state = SM1_alive;
 				moveTankRight();
 			}
 			else if(leftButton) {
-				state = SM1_tank;
+				state = SM1_alive;
 				moveTankLeft();
 			}
 			break;
+		case SM1_dead:
+			if (cycles <= 0) { // it the tank is dead TANK DEATH FLAG
+				state = SM1_alive;
+				tankLife = 1;
+				cycles = TANK_MAP_FLIP_CYCLES;
+				i = 0;
+				moveTank(TANK_INIT_POSITION_X);
+			}
+			else if(i < TANK_MAP_FLIP_COUNT/2) {
+				state = SM1_dead;
+				deathTank1();
+				i++;
+			}
+			else if(i < TANK_MAP_FLIP_COUNT) {
+				state = SM1_dead;
+				deathTank2();
+				i++;
+			}
+			else if(i >= TANK_MAP_FLIP_COUNT) {
+				state = SM1_dead;
+				cycles--;
+				i = 0;
+//				xil_printf("\n\rCYCLE!!!");
+			}
+			break;
 		default:
-			SM1_State = SM1_tank;
+			SM1_State = SM1_alive;
 		} // Transitions
 
 		switch(state) { // State actions
-		case SM1_tank:{
+		case SM1_alive:{
 
 		}
 		break;

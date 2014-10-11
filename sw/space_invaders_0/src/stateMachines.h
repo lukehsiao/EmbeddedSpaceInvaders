@@ -41,7 +41,7 @@ typedef struct task {
 
 task tasks[TASKS_NUM];
 
-enum SM1_States { SM1_tank } SM1_State;
+enum SM1_States { SM1_alive, SM1_dead } SM1_State;
 int TankMovementAndBullet_SM();
 
 enum SM2_States { SM2_bullet } SM2_State;
