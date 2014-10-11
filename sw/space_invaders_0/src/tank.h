@@ -15,7 +15,7 @@
 #define TANK_MOVEMENT_SPEED 8    // # of pixel the tank bullet moves per update
 #define TANK_BULLET_SPEED 15    // # of pixel the tank bullet moves per update
 #define TANK_MAP_FLIP_COUNT 2	// how long one cycle is for the tank death bitmap flipping
-#define TANK_MAP_FLIP_CYCLES 7  // # of times the 2 bitmaps will show
+#define TANK_MAP_FLIP_CYCLES 10  // # of times the 2 bitmaps will show
 
 u8 tankLife; // 1 is alive. 0 is dead
 

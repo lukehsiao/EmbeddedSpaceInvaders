@@ -55,6 +55,11 @@ int TankMovementAndBullet_SM(int state) {
 				i = 0;
 				moveTank(TANK_INIT_POSITION_X);
 			}
+			else if (cycles <= TANK_MAP_FLIP_CYCLES/2) {
+				state = SM1_dead;
+				deathTank2();
+				cycles--;
+			}
 			else if(i < TANK_MAP_FLIP_COUNT/2) {
 				state = SM1_dead;
 				deathTank1();
@@ -136,7 +141,7 @@ int AlienMovementAndBullets_SM(int state) {
 			}
 
 			if(1){
-				//renderAliens(1);
+				renderAliens(1);
 				state = SM3_alien;
 			}
 		}
