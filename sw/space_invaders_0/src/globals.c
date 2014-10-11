@@ -66,6 +66,8 @@ void initGlobals(){
 	}
 	leftMostColumn = 0;
 	rightMostColumn = 10;
+	leftPad = 0;
+	rightPad = 640;
 	point_t temp;
 	temp.x = 160;
 	temp.y = 70;
@@ -74,28 +76,23 @@ void initGlobals(){
 
 	// Initialize Game Variables
 	setLives(3);
-	setScore(7348);
+	setScore(0);
 
-
+	// Initialize Bullets
 	alienBullet bullet;
 	u8 j;
 	for(j= 0; j < 4; j++){
 		bullet = getAlienBullet(j);
 		temp.x = 20 + 150*j;
-		temp.y = 200 + 50*j;
+		temp.y = 8888;	//not activated if >480
 		bullet.position = temp;
 		bullet.type = j%2;
 		setAlienBullet(bullet, j);
 	}
-
-	temp.y = 8888;
+	temp.y = 8888;	// also not actiavted
 	temp.x = 20;
 	setTankBulletPosition(temp);
-	leftPad = 0;
-	rightPad = 640;
 
-//	// Init State Machines
-//	initStateMachines();
 }
 
 /////////////////////////////////////

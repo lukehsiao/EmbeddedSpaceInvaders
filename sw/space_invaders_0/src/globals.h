@@ -26,6 +26,7 @@
 #define RED   		0x00FF0000
 #define BLACK 		0x00000000
 #define OFFWHITE	0x00FFFFFE
+#define YELLOW		0x00FFFF00
 
 #define TASKS_NUM 5
 
