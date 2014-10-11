@@ -65,6 +65,10 @@ void updateTankBulletPosition() {
 	point_t position = getTankBulletPosition();
 	if (position.y < 480) {
 		position.y = position.y - TANK_BULLET_SPEED;
+		//Don't let the tank bullet get up to the score/lives
+		if ((position.y + TANK_BULLET_HEIGHT) < 35) {
+			position.y = 8888;	// just a number to signify it's off the screen
+		}
 		setTankBulletPosition(position);
 	}
 }
@@ -83,7 +87,10 @@ void renderTankBullet(u8 animate) {
 	if (position.y < 480) {
 		for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
 			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
-				framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+				//Don't draw the tank bullet above the line
+				if ((position.y + row) > 35) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+				}
 			}
 		}
 	}
