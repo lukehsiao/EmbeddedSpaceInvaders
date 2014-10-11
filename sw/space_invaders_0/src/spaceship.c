@@ -126,6 +126,9 @@ void renderPoints(u32 points) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
 					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
 				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 	}
@@ -136,6 +139,9 @@ void renderPoints(u32 points) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
 					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
 				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 		position.x += 12;
@@ -145,6 +151,9 @@ void renderPoints(u32 points) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
 					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -156,6 +165,9 @@ void renderPoints(u32 points) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
 					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
 				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
 			}
 		}
 		position.x += 12;
@@ -165,6 +177,9 @@ void renderPoints(u32 points) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
 					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -176,7 +191,22 @@ void renderPoints(u32 points) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
 					framePointer0[(position.y+row)*640 + (position.x+col)] = WHITE;  // frame 0 is red here.
 				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
 			}
+		}
+	}
+}
+
+/**
+ * Blanks the spot where the score is to help with flashing
+ */
+void unrenderPoints() {
+	u32 row, col;
+	for (row = 0; row < 16; row++) {
+		for (col = 0; col < 32; col++) {
+			framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK; //Green
 		}
 	}
 }
