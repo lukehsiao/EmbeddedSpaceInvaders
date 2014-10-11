@@ -36,6 +36,20 @@ void unrenderTank() {
 	}
 }
 
+/**
+ * Renders the 1st Dead Tank Bitmap at the tank's current location
+ */
+void deathTank1() {
+
+}
+
+/**
+ * Renders the 2nd Dead Tank Bitmap at the tank's current location
+ */
+void deathTank2() {
+
+}
+
 
 //////////////////////////////////////////////////////////////////
 // Functions for Rendering Tank Bullets
@@ -96,6 +110,31 @@ void renderTankBullet(u8 animate) {
 	}
 }
 
+/**
+ * Calculates whether an alien bullet hit the tank
+ *
+ * @param position The position to test
+ * @return 1 if hit, 0 if not
+ */
+u8 hitTank(point_t position) {
+	point_t tankPosition;
+	tankPosition = getTankPositionGlobal();
+
+	//If it's outside the tank
+	if (position.x < tankPosition.x || position.y < tankPosition.y) {
+		return 0;
+	}
+	else if (position.x > (tankPosition.x+32) || position.y > (tankPosition.y+16)) {
+		return 0;
+	}
+	else {
+		// Otherwise, it must be in the tank.
+		unrenderTank();
+		return 1;
+	}
+}
+
+
 //////////////////////////////////////////////////////////////////
 // Functions for Shooting
 //////////////////////////////////////////////////////////////////
@@ -116,4 +155,28 @@ void fireTankBullet() {
 	}
 	renderTankBullet(0);
 	//renderTank();	//to compensate for automatic single shift.
+}
+
+void moveTankLeft() {
+	point_t temp;
+	unrenderTank();
+	temp = getTankPositionGlobal();
+	temp.x = temp.x - TANK_MOVEMENT_SPEED;
+	if (temp.x > (640-32)) {
+		temp.x = 0;
+	}
+	setTankPositionGlobal(temp.x);
+	renderTank();
+}
+
+void moveTankRight() {
+	point_t temp;
+	unrenderTank();
+	temp = getTankPositionGlobal();
+	temp.x = temp.x + TANK_MOVEMENT_SPEED;
+	if (temp.x > (640-32)) {
+		temp.x = (640-32);
+	}
+	setTankPositionGlobal(temp.x);
+	renderTank();
 }

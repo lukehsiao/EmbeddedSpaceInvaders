@@ -11,5 +11,6 @@
 #define BUNKERS_H_
 
 void renderBunker(u8 bunkerNumber);
+u8 hitBunker(point_t position, u8 bunkerNumber);
 
 #endif /* BUNKERS_H_ */

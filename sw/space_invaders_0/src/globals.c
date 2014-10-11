@@ -59,13 +59,13 @@ void initGlobals(){
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0x004F;
+		alienStatus[i] = 0xFFFF;
 	}
 	leftMostColumn = 0;
 	rightMostColumn = 10;
 	point_t temp;
 	temp.x = 160;
-	temp.y = 240;
+	temp.y = 70;
 	setAlienBlockPosition(temp);
 	direction = 1;
 
@@ -422,7 +422,7 @@ void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
  *
  * @param blockNumber the block within the bunker (0-9)
  * @param bunkerNumber the number of the bunker (0-3)
- * @return the erosion state of the block specified
+ * @return the erosion state of the block specified 4 = dead, 0 = new
  */
 u8 getBlockState(u8 bunkerNumber, u8 blockNumber) {
 	u32 tempState = bunkerState[bunkerNumber];

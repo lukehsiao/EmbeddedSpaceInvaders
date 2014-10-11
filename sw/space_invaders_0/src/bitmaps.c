@@ -131,7 +131,6 @@ packWord32(1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0),
 packWord32(1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0),
 };
 
-
 const unsigned int ALIEN3_OUT[ALIEN_HEIGHT] =
 {
 packWord32(0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -150,6 +149,26 @@ packWord32(0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
+};
+
+const unsigned int ALIEN_DEATH[ALIEN_HEIGHT] =
+{
+packWord32(0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0),
+packWord32(0,0,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0),
+packWord32(0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,1,1,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,1,1,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0),
+packWord32(0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0),
 };
 
 const unsigned int UFO[ALIEN_HEIGHT] =
@@ -211,6 +230,47 @@ packWord32(0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0),
 packWord32(0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0),
 packWord32(0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0),
 };
+
+const int TANK_DEATH1[ALIEN_HEIGHT] =
+{
+packWord32(0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0),
+packWord32(0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0),
+packWord32(0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),
+packWord32(0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0),
+packWord32(0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0),
+};
+
+const int TANK_DEATH2[ALIEN_HEIGHT] =
+{
+packWord32(0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0),
+packWord32(0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0),
+packWord32(0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1),
+packWord32(0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1),
+packWord32(0,0,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0),
+packWord32(0,0,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),
+packWord32(0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),
+packWord32(0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0),
+packWord32(0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0),
+};
+
 
 const unsigned int BULLET1[ALIEN_HEIGHT] =
 {
@@ -636,13 +696,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_LEFT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_LEFT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;
@@ -656,13 +716,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_RIGHT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_RIGHT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;
@@ -676,13 +736,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_RIGHT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_RIGHT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;
@@ -696,13 +756,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_RIGHT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_RIGHT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;
@@ -720,13 +780,13 @@ u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber) {
 					erosionMask = 0xFFF00000;
 					break;
 				case 1:
-					erosionMask = ((BUNKER_ERODE_01_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_01_RIGHT[row] << 12));
 					break;
 				case 2:
-					erosionMask = (BUNKER_ERODE_23_LEFT[row]) & 0xFFF0000;
+					erosionMask = (BUNKER_ERODE_23_RIGHT[row]) & 0xFFF00000;
 					break;
 				case 3:
-					erosionMask = ((BUNKER_ERODE_23_LEFT[row] >> 8) & 0x00000FFF) << 20;
+					erosionMask = ((BUNKER_ERODE_23_RIGHT[row] << 12));
 					break;
 				default:
 					erosionMask = BLACK;

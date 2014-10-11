@@ -5,6 +5,7 @@
  *      Author: superman
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include "platform.h"
 #include "xparameters.h"
 #include "xaxivdma.h"
@@ -41,9 +42,16 @@ typedef struct task {
 task tasks[4];
 
 enum SM1_States { SM1_tank } SM1_State;
-int ADC_SM();
+int TankMovementAndBullet_SM();
 
-enum SM2_States { SM2_ready, SM2_fire } SM2_State;
-int TankBullet_SM();
+enum SM2_States { SM2_bullet } SM2_State;
+int TankBulletUpdate_SM();
+
+enum SM3_States { SM3_alien } SM3_State;
+int AlienMovementAndBullets_SM();
+
+enum SM4_States { SM4_bullets } SM4_State;
+int AlienbulletsUpdate_SM();
+
 
 #endif /* STATEMACHINES_H_ */

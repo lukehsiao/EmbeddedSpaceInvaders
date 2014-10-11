@@ -15,5 +15,10 @@ void unrenderTankBullet();
 void updateTankBulletPosition();
 void renderTankBullet(u8 animate);
 void fireTankBullet();
+void moveTankLeft();
+void moveTankRight();
+u8 hitTank(point_t position);
+void deathTank1();
+void deathTank2();
 
 #endif /* TANK_H_ */

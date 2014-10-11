@@ -16,5 +16,6 @@ void killAlien(u32 alienNumber);
 void renderAliens(u8 animate);
 void fireAlienBullet(u32 randomCol);
 void renderAlienBullet(u8 animate);
+u8 calculateAlienBulletHit(alienBullet bullet);
 
 #endif /* ALIENS_H_ */
