@@ -59,13 +59,13 @@ void initGlobals(){
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0x004F;
+		alienStatus[i] = 0xFFFF;
 	}
 	leftMostColumn = 0;
 	rightMostColumn = 10;
 	point_t temp;
 	temp.x = 160;
-	temp.y = 240;
+	temp.y = 70;
 	setAlienBlockPosition(temp);
 	direction = 1;
 

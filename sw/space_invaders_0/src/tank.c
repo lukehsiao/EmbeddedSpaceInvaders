@@ -117,3 +117,27 @@ void fireTankBullet() {
 	renderTankBullet(0);
 	//renderTank();	//to compensate for automatic single shift.
 }
+
+void moveTankLeft() {
+	point_t temp;
+	unrenderTank();
+	temp = getTankPositionGlobal();
+	temp.x = temp.x - TANK_MOVEMENT_SPEED;
+	if (temp.x > (640-32)) {
+		temp.x = 0;
+	}
+	setTankPositionGlobal(temp.x);
+	renderTank();
+}
+
+void moveTankRight() {
+	point_t temp;
+	unrenderTank();
+	temp = getTankPositionGlobal();
+	temp.x = temp.x + TANK_MOVEMENT_SPEED;
+	if (temp.x > (640-32)) {
+		temp.x = (640-32);
+	}
+	setTankPositionGlobal(temp.x);
+	renderTank();
+}

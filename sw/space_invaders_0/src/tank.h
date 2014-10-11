@@ -15,5 +15,7 @@ void unrenderTankBullet();
 void updateTankBulletPosition();
 void renderTankBullet(u8 animate);
 void fireTankBullet();
+void moveTankLeft();
+void moveTankRight();
 
 #endif /* TANK_H_ */
