@@ -7,9 +7,7 @@
  */
 
 #include "globals.h"
-#include "tank.h"
-#include "bunkers.h"
-#include "aliens.h"
+#include "render.h"
 
 extern u32* framePointer0;
 
@@ -248,6 +246,11 @@ u8 calculateTankBulletHit() {
 
 	//Check if aliens are hit
 	if (hitAlien(position) != 0xFF) {
+		return 1;
+	}
+
+	//Check if SpaceShip is hit
+	if (hitSpaceShip(position) == 1) {
 		return 1;
 	}
 

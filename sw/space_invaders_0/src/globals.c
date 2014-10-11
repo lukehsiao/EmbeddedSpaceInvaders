@@ -76,7 +76,7 @@ void initGlobals(){
 
 	// Initialize Game Variables
 	setLives(3);
-	setScore(7348);
+	setScore(0);
 
 	// Initialize Bullets
 	alienBullet bullet;
