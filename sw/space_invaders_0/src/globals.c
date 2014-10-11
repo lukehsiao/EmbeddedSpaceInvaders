@@ -76,7 +76,6 @@ void initGlobals(){
 	setLives(3);
 	setScore(7348);
 
-
 	alienBullet bullet;
 	u8 j;
 	for(j= 0; j < 4; j++){
@@ -94,8 +93,7 @@ void initGlobals(){
 	leftPad = 0;
 	rightPad = 640;
 
-//	// Init State Machines
-//	initStateMachines();
+	gameOver = 0;
 }
 
 /////////////////////////////////////
