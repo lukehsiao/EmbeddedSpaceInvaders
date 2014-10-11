@@ -30,6 +30,8 @@
 
 #define TASKS_NUM 5
 
+u8 gameOver; // 1 is gameOver. 0 game is running
+
 #include "bitmaps.h"
 
 typedef struct {u32 x; u32 y;} point_t;

@@ -478,7 +478,7 @@ void fireAlienBullet(u32 randomCol) {
 			bullet.guise = 0;
 			setAlienBullet(bullet, bulletNum);
 			renderAlienBullet(0);
-			//renderAliens(0); //redraw aliens to mask overlap
+			renderAliens(0); //redraw aliens to mask overlap
 			return;
 		}
 	}
