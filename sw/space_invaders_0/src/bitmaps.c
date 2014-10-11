@@ -231,7 +231,7 @@ packWord32(0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0),
 packWord32(0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0),
 };
 
-const int TANK_DEATH1[ALIEN_HEIGHT] =
+const unsigned int TANK_DEATH1[ALIEN_HEIGHT] =
 {
 packWord32(0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
 packWord32(0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -251,7 +251,7 @@ packWord32(0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0),
 packWord32(0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0),
 };
 
-const int TANK_DEATH2[ALIEN_HEIGHT] =
+const unsigned int TANK_DEATH2[ALIEN_HEIGHT] =
 {
 packWord32(0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0),
 packWord32(0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0),
@@ -922,4 +922,18 @@ const u32* getDigitArray(u8 digit) {
  */
 const u32* getSpaceShipArray() {
 	return UFO;
+}
+
+/**
+ * Returns the tank's death bitmap 1
+ */
+const u32* getDeathTankArray1() {
+	return TANK_DEATH1;
+}
+
+/**
+ * Returns the tank's death bitmap 1
+ */
+const u32* getDeathTankArray2() {
+	return TANK_DEATH2;
 }
