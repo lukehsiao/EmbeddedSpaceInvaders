@@ -9,6 +9,7 @@
 #include "globals.h"
 #include "tank.h"
 #include "bunkers.h"
+#include "aliens.h"
 
 extern u32* framePointer0;
 
@@ -93,7 +94,9 @@ void unrenderTankBullet() {
 	if (position.y < 480) {
 		for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
 			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
-				framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+				if (framePointer0[(position.y + row)*640 + (position.x + col)] != WHITE) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+				}
 			}
 		}
 	}
@@ -242,5 +245,11 @@ u8 calculateTankBulletHit() {
 			return 1;
 		}
 	}
+
+	//Check if aliens are hit
+	if (hitAlien(position) != 0xFF) {
+		return 1;
+	}
+
 	return 0;
 }

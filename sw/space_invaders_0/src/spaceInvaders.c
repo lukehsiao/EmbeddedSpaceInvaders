@@ -189,9 +189,6 @@ int main()
      // Print a sanity message if you get this far.
      xil_printf("Woohoo! I made it through initialization.\n\r");
 
-
-
-
      initStateMachines(); //setup space invaders
      u8 inputKey;
      u32 userInput;
