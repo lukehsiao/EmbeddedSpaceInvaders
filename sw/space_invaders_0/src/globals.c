@@ -7,6 +7,7 @@
  */
 
 #include "globals.h"
+//#include "stateMachines.h"
 
 u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
 u32* framePointer1 = ((unsigned int *) FRAME_BUFFER_0_ADDR) + 640*480;
@@ -51,6 +52,7 @@ u8 lives;	//starts w/ 3 and decrements each death
 void initGlobals(){
 	// Initialize Tank
 	setTankPositionGlobal(70);
+	tankLife = 1;
 
 
 	// Initialize Bunkers
@@ -91,6 +93,9 @@ void initGlobals(){
 	setTankBulletPosition(temp);
 	leftPad = 0;
 	rightPad = 640;
+
+//	// Init State Machines
+//	initStateMachines();
 }
 
 /////////////////////////////////////

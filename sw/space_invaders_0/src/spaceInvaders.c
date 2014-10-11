@@ -189,52 +189,7 @@ int main()
      // Print a sanity message if you get this far.
      xil_printf("Woohoo! I made it through initialization.\n\r");
 
-     	taski=0;
-     	// Tank Movement
-     	tasks[taski].state = -1;
-     	tasks[taski].period = 4;
-     	tasks[taski].elapsedTime = 4;
-     	tasks[taski].TickFct = &TankMovementAndBullet_SM;
-     	++taski;
-     	// Tank Bullet Movement
-     	tasks[taski].state = -1;
-     	tasks[taski].period = 5;
-     	tasks[taski].elapsedTime = 5;
-     	tasks[taski].TickFct = &TankBulletUpdate_SM;
-     	++taski;
-
-     	// Aliens Movement
-     	tasks[taski].state = -1;
-     	tasks[taski].period = 30;
-     	tasks[taski].elapsedTime = 30;
-     	tasks[taski].TickFct = &AlienMovementAndBullets_SM;
-     	++taski;
-
-     	// Aliens Bullets Movement
-     	tasks[taski].state = -1;
-     	tasks[taski].period = 5;
-     	tasks[taski].elapsedTime = 5;
-     	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
-     	++taski;
-
-     	// Aliens Bullets Movement
-     	tasks[taski].state = -1;
-     	tasks[taski].period = 5;
-     	tasks[taski].elapsedTime = 5;
-     	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
-     	++taski;
-
-     	// Spaceship Movement and creation
-     	tasks[taski].state = -1;
-     	tasks[taski].period = 5;
-     	tasks[taski].elapsedTime = 5;
-     	tasks[taski].TickFct = &SpaceShipUpdate_SM;
-     	++taski;
-
-
-     initGlobals(); //setup space invaders
-     blankScreen(); // erase old data
-     render();      // draw initialized game
+     initStateMachines(); //setup space invaders
      u8 inputKey;
      u32 userInput;
      u32 sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
