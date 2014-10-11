@@ -114,14 +114,6 @@ point_t getTankBulletPosition() {
 	return tankBulletPosition;
 }
 
-void setTankLife(u8 newVal) {
-	tankLife = newVal;
-}
-
-u8 getTankLife() {
-	return tankLife;
-}
-
 /////////////////////////////////////
 // Implement the Alien Globals
 /////////////////////////////////////

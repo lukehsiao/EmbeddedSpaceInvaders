@@ -17,7 +17,6 @@
 #define TANK_MAP_FLIP_COUNT 2	// how long one cycle is for the tank death bitmap flipping
 #define TANK_MAP_FLIP_CYCLES 10  // # of times the 2 bitmaps will show
 
-u8 tankLife; // 1 is alive. 0 is dead
 
 void renderTank();
 void unrenderTank();
@@ -32,5 +31,7 @@ u8 hitTank(point_t position);
 u8 calculateTankBulletHit();
 void deathTank1();
 void deathTank2();
+void setTankLife(u8 val);
+u8 getTankLife();
 
 #endif /* TANK_H_ */
