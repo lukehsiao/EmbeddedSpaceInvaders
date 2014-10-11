@@ -218,6 +218,27 @@ void renderLivesText() {
 }
 
 /**
+ * Erases the corner
+ */
+void unrenderLives() {
+	u8 lives = getLives();
+	point_t position;
+	position.x = 420;
+	position.y = 5;
+	u32 col;
+	u32 row;
+	for (; lives > 0; lives--) {
+		// Same Algorithm as Render Tank
+		for (row = 0; row < 16; row++) {
+			for (col = 0; col < 32; col++) {
+				framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+			}
+		}
+		position.x += 42;
+	}
+}
+
+/**
  * Renders the number of extra lives the player has as tank icons
  */
 void renderLives() {

@@ -356,6 +356,37 @@ u8 calculateAlienBulletHit(alienBullet bullet) {
 	return hitTank(bullet.position);
 }
 
+/**
+ * Calculates whether an alienBullet hit a tank
+ *
+ * @param position The position to test
+ * @return The number of the alien hit, 0xFF if none.
+ */
+u8 hitAlien(point_t position) {
+	point_t alienBlockPosition;
+	alienBlockPosition = getAlienBlockPosition();
+	signed int alienNumber;	//so we can start from 54 and subtract w/o overflowing
+
+	//If it's outside the alien block
+	if (position.x < alienBlockPosition.x || position.y > (alienBlockPosition.y + 5*(ALIEN_HEIGHT+10))) {
+		return 0;
+	}
+	else if (position.x > (alienBlockPosition.x + 11*32) || position.y < alienBlockPosition.y) {
+		return 0;
+	}
+	else {
+		//Calculate which alien it hit, if any
+		for (alienNumber = 55; alienNumber >= 0; alienNumber--) {
+			point_t alienPosition;
+			alienPosition.x = alienBlockPosition.x + ((alienNumber % 11)*32);
+			alienPosition.y = alienBlockPosition.y + ((alienNumber/11)*(ALIEN_HEIGHT+10));
+			if (position.x < (alienPosition.x + 20) && position.x > alienPosition.x) {
+
+			}
+		}
+	}
+}
+
 //////////////////////////////////////////////////////////////////
 // Functions for Shooting
 //////////////////////////////////////////////////////////////////
