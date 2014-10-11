@@ -39,4 +39,6 @@ const u32* getSpaceShipArray();
 
 const u32* getDeathTankArray1();
 const u32* getDeathTankArray2();
+const u32* getDeadAlienArray();
+
 #endif

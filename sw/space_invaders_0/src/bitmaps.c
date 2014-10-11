@@ -937,3 +937,10 @@ const u32* getDeathTankArray1() {
 const u32* getDeathTankArray2() {
 	return TANK_DEATH2;
 }
+
+/**
+ * Returns the alien death bitmap
+ */
+const u32* getDeadAlienArray() {
+	return ALIEN_DEAD;
+}

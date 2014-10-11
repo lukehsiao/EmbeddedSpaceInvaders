@@ -15,7 +15,8 @@
 void unrenderAliens();
 void updateAlienLocation();
 void adjustPadding();
-void killAlien(u32 alienNumber);
+void killAlien(u8 alienNumber);
+void unrenderDeadAlien(point_t position);
 void renderAliens(u8 animate);
 void fireAlienBullet(u32 randomCol);
 void renderAlienBullet(u8 animate);

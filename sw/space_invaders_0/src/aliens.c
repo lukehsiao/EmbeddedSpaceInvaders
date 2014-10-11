@@ -142,27 +142,47 @@ rightside:
 	return;
 }
 
+
 /**
- * Writes a black box in the given Alien's location
+ * Draws the death guise for the alien at the specified number
  */
-void killAlien(u32 alienNumber) {
+void killAlien(u8 alienNumber) {
 	point_t position = getAlienBlockPosition();
 	u32 col;
 	u32 row;
 	//Adjust X and Y location
 	position.y = position.y + (alienNumber/11)*(ALIEN_HEIGHT + 10);
 	position.x = position.x + (alienNumber%11)*32;
-
+	const u32* arrayToRender;
+	arrayToRender = getDeadAlienArray();
 	for (row = 0; row < ALIEN_HEIGHT; row++) {
 		for (col = 0; col < 32; col++) {
-			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;
+			}
+			else {
+				framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+			}
 		}
 	}
 
 	// Adjust leftPad and rightPad if necessary:
 	setAlienStatus(alienNumber, 0);
 	adjustPadding();
+}
 
+/**
+ * Erases the Death Guise at theposition specified.d
+ */
+void unrenderDeadAlien(point_t position) {
+	u32 row, col;
+	for (row = 0; row < ALIEN_HEIGHT; row++) {
+		for (col = 0; col < 32; col++) {
+			if (framePointer0[(position.y + row)*640 + (position.x + col)] == OFFWHITE) {
+				framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+			}
+		}
+	}
 }
 
 /**

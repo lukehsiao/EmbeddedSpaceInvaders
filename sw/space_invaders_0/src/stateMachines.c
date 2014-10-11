@@ -107,7 +107,7 @@ int AlienMovementAndBullets_SM(int state) {
 			}
 
 			if(1){
-				renderAliens(1);
+				//renderAliens(1);
 				state = SM3_alien;
 			}
 		}
