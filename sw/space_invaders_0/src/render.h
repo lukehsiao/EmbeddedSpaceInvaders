@@ -15,8 +15,13 @@
 #include "bunkers.h"
 #include "spaceship.h"
 
-void render();
 void blankScreen();
+void renderBottomLine();
+void renderScoreText();
+void renderScore();
+void renderLivesText();
+void renderLives();
+void render();
 
 //Specifically for Lab 3.
 void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput);
