@@ -14,12 +14,14 @@
 #include "tank.h"
 #include "bunkers.h"
 #include "spaceship.h"
+#define STARTING_LIVES 3
 
 void blankScreen();
 void renderBottomLine();
 void renderScoreText();
 void renderScore();
 void renderLivesText();
+void unrenderLives();
 void renderLives();
 void render();
 
