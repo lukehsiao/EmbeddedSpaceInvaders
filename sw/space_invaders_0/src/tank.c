@@ -7,6 +7,7 @@
  */
 
 #include "globals.h"
+#include "tank.h"
 
 extern u32* framePointer0;
 

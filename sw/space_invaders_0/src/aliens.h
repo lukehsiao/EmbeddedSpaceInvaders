@@ -9,6 +9,9 @@
 #ifndef ALIENS_H_
 #define ALIENS_H_
 
+#define X_SHIFT 6           // # of pixels the Alien Block shifts horizontally.
+#define ALIEN_BULLET_FIRE_RATE 50
+
 void unrenderAliens();
 void updateAlienLocation();
 void adjustPadding();
