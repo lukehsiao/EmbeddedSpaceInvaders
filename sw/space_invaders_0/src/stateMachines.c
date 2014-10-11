@@ -49,8 +49,8 @@ void initStateMachines(){
 
 	// Spaceship Movement and creation
 	tasks[taski].state = -1;
-	tasks[taski].period = 5;
-	tasks[taski].elapsedTime = 5;
+	tasks[taski].period = 2;
+	tasks[taski].elapsedTime = 2;
 	tasks[taski].TickFct = &SpaceShipUpdate_SM;
 	++taski;
 	initGlobals();
@@ -80,7 +80,7 @@ int TankMovementAndBullet_SM(int state) {
 				if(centerButton)
 					fireTankBullet();
 
-				if (tankLife == 0) { // it the tank is dead TANK DEATH FLAG
+				if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
 					state = SM1_dead;
 					cycles = TANK_MAP_FLIP_CYCLES;
 					i = 0;
@@ -104,7 +104,7 @@ int TankMovementAndBullet_SM(int state) {
 			}
 			else if (cycles <= 0) { // it the tank is dead TANK DEATH FLAG
 				state = SM1_alive;
-				tankLife = 1;
+				setTankLife(1);
 				cycles = TANK_MAP_FLIP_CYCLES;
 				i = 0;
 				moveTank(TANK_INIT_POSITION_X);
@@ -118,7 +118,7 @@ int TankMovementAndBullet_SM(int state) {
 				renderLives();
 
 			}
-			else if (cycles <= TANK_MAP_FLIP_CYCLES/2) {
+			else if (cycles <= TANK_MAP_FLIP_CYCLES/3) {
 				state = SM1_dead;
 				deathTank2();
 				cycles--;
@@ -271,6 +271,8 @@ int AlienbulletsUpdate_SM(int state) {
 }
 
 int SpaceShipUpdate_SM(int state) {
+	static int i;
+	static int cycles;
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 upButton = ((buttons & UP) >> 4) & 0x1;
 	if(state == -1)
@@ -285,12 +287,45 @@ int SpaceShipUpdate_SM(int state) {
 			}
 			else if(upButton) { // Space Ship is dead
 				state = SM5_dead;
+				cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
+				i = 0;
 			}
 			else {
 				state = SM5_alive;
 				renderSpaceShip();
 			}
 			break;
+		case SM5_dead:
+					if(gameOver){
+						state = SM5_gameOver;
+					}
+					else if (cycles <= 0) { // Score has Flashed and the Spaceship can come back
+						state = SM5_alive;
+						cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
+						i = 0;
+					}
+					else if (cycles <= SPACESHIP_SCORE_STEADY) { // Score has flashed but needs to stay visible for a sec
+						state = SM5_dead;
+						renderPoints(getScore());
+						cycles--;
+					}
+					else if(i < SPACESHIP_SCORE_CYCLES/2 + SPACESHIP_SCORE_STEADY) { // dont show the point
+						state = SM5_dead;
+						unrenderPoints();
+						renderPoints(getScore());
+						i++;
+					}
+					else if(i < SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // show the point
+						state = SM5_dead;
+						unrenderPoints();
+						i++;
+					}
+					else if(i >= SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // one cycle has happened
+						state = SM5_dead;
+						cycles--;
+						i = 0;
+					}
+					break;
 		default:
 			state = SM5_alive;
 		} // Transitions

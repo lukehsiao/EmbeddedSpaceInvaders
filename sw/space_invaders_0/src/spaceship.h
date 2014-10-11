@@ -10,7 +10,11 @@
 #define SPACESHIP_H_
 
 #define SPACESHIP_START_RATE 1//1000000
-#define SPACESHIP_SPEED 5
+#define SPACESHIP_SPEED 4
+#define SPACESHIP_SCORE_CYCLES 1
+#define SPACESHIP_SCORE_COUNT 1
+#define SPACESHIP_SCORE_STEADY 8
+
 
 void renderSpaceShip();
 void unrenderSpaceShip();

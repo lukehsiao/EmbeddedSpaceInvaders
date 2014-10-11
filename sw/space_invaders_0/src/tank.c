@@ -10,6 +10,7 @@
 #include "render.h"
 
 extern u32* framePointer0;
+u8 tankLife; // 1 is alive. 0 is dead
 
 /**
  * Draws the tank in it's current position
@@ -256,3 +257,11 @@ u8 calculateTankBulletHit() {
 
 	return 0;
 }
+
+void setTankLife(u8 val) {
+	tankLife = val;
+}
+u8 getTankLife() {
+	return tankLife;
+}
+
