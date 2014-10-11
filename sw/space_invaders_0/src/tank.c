@@ -41,14 +41,40 @@ void unrenderTank() {
  * Renders the 1st Dead Tank Bitmap at the tank's current location
  */
 void deathTank1() {
-
+	u32 row, col;
+	const u32* arrayToRender;
+	arrayToRender = getDeathTankArray1();
+	for (row = 0; row < 16; row++) {
+		for (col = 0; col < 32; col++) {
+			// If there is a pixel present
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = GREEN;
+			}
+			else {
+				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = BLACK;
+			}
+		}
+	}
 }
 
 /**
  * Renders the 2nd Dead Tank Bitmap at the tank's current location
  */
 void deathTank2() {
-
+	u32 row, col;
+	const u32* arrayToRender;
+	arrayToRender = getDeathTankArray2();
+	for (row = 0; row < 16; row++) {
+		for (col = 0; col < 32; col++) {
+			// If there is a pixel present
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = GREEN;
+			}
+			else {
+				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = BLACK;
+			}
+		}
+	}
 }
 
 
@@ -130,7 +156,7 @@ u8 hitTank(point_t position) {
 	}
 	else {
 		// Otherwise, it must be in the tank.
-		unrenderTank();
+		deathTank1();
 		return 1;
 	}
 }
