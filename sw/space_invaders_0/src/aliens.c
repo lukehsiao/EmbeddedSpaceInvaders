@@ -7,9 +7,7 @@
  */
 
 #include "globals.h"
-#include "aliens.h"
-#include "tank.h"
-#include "bunkers.h"
+#include "render.h"
 
 extern u32* framePointer0;
 extern u32* framePointer1;
@@ -175,6 +173,23 @@ void killAlien(u8 alienNumber) {
 	// Adjust leftPad and rightPad if necessary:
 	setAlienStatus(alienNumber, 0);
 	adjustPadding();
+
+	//Adjust score
+	u32 score;
+	score = getScore();
+	if (alienNumber < 11) {	//40pts
+		score += 40;
+		setScore(score);
+	}
+	else if (alienNumber < 33) {
+		score += 20;
+		setScore(score);
+	}
+	else if (alienNumber < 55) {
+		score += 10;
+		setScore(score);
+	}
+	renderScore();
 }
 
 /**

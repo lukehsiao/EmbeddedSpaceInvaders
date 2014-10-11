@@ -93,7 +93,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -103,7 +106,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -113,7 +119,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -123,7 +132,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -133,7 +145,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -143,7 +158,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -153,7 +171,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -163,7 +184,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -173,7 +197,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -183,7 +210,10 @@ void renderScore() {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;  // frame 0 is red here.
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
