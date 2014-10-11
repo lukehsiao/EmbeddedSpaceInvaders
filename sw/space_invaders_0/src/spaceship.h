@@ -16,6 +16,6 @@ void renderSpaceShip();
 void unrenderSpaceShip();
 void updateSpaceShipLocation();
 void startSpaceShip();
-void renderPoints(u8 points);
+void renderPoints(u32 points);
 
 #endif /* SPACESHIP_H_ */
