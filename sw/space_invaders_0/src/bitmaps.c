@@ -800,3 +800,66 @@ const u32* getAlienBulletArray(u8 bulletNum) {
 			break;
 	}
 }
+
+/**
+ * returns the array to print for the first half of the word.
+ */
+const u32* getScoreText1() {
+	return SCORE1;
+}
+
+/**
+ * returns the array to print for the first half of the word.
+ */
+const u32* getScoreText2() {
+	return SCORE2;
+}
+
+/**
+ * returns the array to print for the first half of the word.
+ */
+const u32* getLivesText1() {
+	return LIVES1;
+}
+
+/**
+ * returns the array to print for the first half of the word.
+ */
+const u32* getLivesText2() {
+	return LIVES2;
+}
+
+/**
+ * Returns the bitmap for the specified digit
+ */
+const u32* getDigitArray(u8 digit) {
+	switch (digit) {
+		case 0:
+			return ZERO;
+		case 1:
+			return ONE;
+		case 2:
+			return TWO;
+		case 3:
+			return THREE;
+		case 4:
+			return FOUR;
+		case 5:
+			return FIVE;
+		case 6:
+			return SIX;
+		case 7:
+			return SEVEN;
+		case 8:
+			return EIGHT;
+		default:
+			return NINE;
+	}
+}
+
+/**
+ * Returns the UFO Array
+ */
+const u32* getSpaceShipArray() {
+	return UFO;
+}

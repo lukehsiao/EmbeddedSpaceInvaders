@@ -8,6 +8,8 @@
 
 #include "globals.h"
 
+u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
+
 //******************* Variables of Space Invaders*************************
 // Alien Variables
 u16 alienStatus[5];		// one u16 tracks life/death of one row of aliens
@@ -18,8 +20,11 @@ alienBullet alienBullet_1;
 alienBullet alienBullet_2;
 alienBullet alienBullet_3;
 u8 direction;	//1 = right, 0 = left
+
 u16 rightPad;	//to allow for edge to edge rendering
 u16 leftPad;
+u8  leftMostColumn;		// left-most column number with aliens still alive
+u8  rightMostColumn;	// right-most column number with aliens still alive
 
 // Bunker Variables
 point_t bunkerPosition_0;	// Top-left position of the bunker.
@@ -43,19 +48,31 @@ u8 lives;	//starts w/ 3 and decrements each death
 // Initializations
 /////////////////////////////////////
 void initGlobals(){
+	// Initialize Tank
 	setTankPositionGlobal(200);
+
+
+	// Initialize Bunkers
     initBunkers();
+
+    // Initialize Aliens
     alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
-		alienStatus[i] = 0xFFFF;
+		alienStatus[i] = 0x004F;
 	}
-
+	leftMostColumn = 0;
+	rightMostColumn = 10;
 	point_t temp;
 	temp.x = 160;
 	temp.y = 240;
 	setAlienBlockPosition(temp);
 	direction = 1;
+
+	// Initialize Game Variables
+	setLives(3);
+	setScore(7348);
+
 
 	alienBullet bullet;
 	u8 j;
@@ -293,6 +310,41 @@ void setLeftPad(u16 newVal) {
  */
 u16 getLeftPad() {
 	return leftPad;
+}
+
+/**
+ * @return The value of the left pad.
+ */
+u8 getLeftCol() {
+	return leftMostColumn;
+}
+
+/**
+ * @return The value of the left pad.
+ */
+u8 getRightCol() {
+	return rightMostColumn;
+}
+
+/**
+ * Set the value of the left pad.
+ */
+void setLeftCol(u8 leftCol) {
+	leftMostColumn = leftCol;
+
+	//Adjust the border
+	leftPad = 0 + (32*leftMostColumn);
+
+}
+
+/**
+ * set the value of the left pad.
+ */
+void setRightCol(u8 rightCol) {
+	rightMostColumn = rightCol;
+
+	//Adjust the border
+	rightPad = 640 + (32*(10-rightMostColumn));
 }
 
 /////////////////////////////////////

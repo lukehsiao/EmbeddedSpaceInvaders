@@ -13,15 +13,19 @@
 // Starting location in DDR where we will store the images that we display.
 #define FRAME_BUFFER_0_ADDR 0xC1000000  
 
+// We defined this to make it easy to see how many bits are used.
+// Throughout our code, we tried to used the smallest amount of bits for
+// what we needed in the global variables.
 #define u8 unsigned char
 #define u16 unsigned short
 #define u32 unsigned int
 
 // Color Definitions
-#define GREEN 0x0000FF00
-#define WHITE 0x00FFFFFF
-#define RED   0x00FF0000
-#define BLACK 0x00000000
+#define GREEN 		0x0000FF00
+#define WHITE 		0x00FFFFFF
+#define RED   		0x00FF0000
+#define BLACK 		0x00000000
+#define OFFWHITE	0x00FFFFFE
 
 // Movement Definitions
 #define X_SHIFT 6           // # of pixels the Alien Block shifts horizontally.
@@ -31,6 +35,7 @@
 #define ALIEN_BULLET_HEIGHT 10
 #define TANK_BULLET_WIDTH 2
 #define TANK_BULLET_HEIGHT 10
+#define SPACESHIP_SPEED 10
 
 #include "bitmaps.h"
 
@@ -74,10 +79,13 @@ u8 getAlienGuise();
 alienBullet getAlienBullet(u8 bulletNum);
 void setAlienBullet(alienBullet val, u8 bulletNum);
 
-void setRightPad(u16 newVal);
 u16 getRightPad();
-void setLeftPad(u16 newVal);
 u16 getLeftPad();
+
+void setLeftCol(u8 leftCol);
+void setRightCol(u8 rightCol);
+u8 getLeftCol();
+u8 getRightCol();
 
 
 
