@@ -89,7 +89,7 @@ void renderTankBullet(u8 animate) {
 			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
 				//Don't draw the tank bullet above the line
 				if ((position.y + row) > 35) {
-					framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+					framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;
 				}
 			}
 		}

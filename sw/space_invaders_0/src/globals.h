@@ -21,10 +21,11 @@
 #define u32 unsigned int
 
 // Color Definitions
-#define GREEN 0x0000FF00
-#define WHITE 0x00FFFFFF
-#define RED   0x00FF0000
-#define BLACK 0x00000000
+#define GREEN 		0x0000FF00
+#define WHITE 		0x00FFFFFF
+#define RED   		0x00FF0000
+#define BLACK 		0x00000000
+#define OFFWHITE	0x00FFFFFE
 
 // Movement Definitions
 #define X_SHIFT 6           // # of pixels the Alien Block shifts horizontally.
