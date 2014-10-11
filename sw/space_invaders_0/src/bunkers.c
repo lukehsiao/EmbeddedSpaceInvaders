@@ -69,7 +69,9 @@ void renderBunker(u8 bunkerNumber){
 					}
 				}
 				else {
-					if (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] != WHITE) {
+					u32 alienPresent = (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] == WHITE);
+					u32 bulletPresent = (framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] == OFFWHITE);
+					if (!alienPresent && !bulletPresent) {
 						framePointer0[(bunkerPosition.y + 24 + row)*640 + (bunkerPosition.x+((blockNum-8)*12))+col] = BLACK;
 					}
 				}
@@ -99,15 +101,13 @@ u8 hitBunker(point_t position, u8 bunkerNumber) {
 
 	u32 blockNum;
 
-	xil_printf("Position passed in: (%d, %d)\n\r", position.x, position.y);
-
 	//Check top row intersections
 	for (blockNum = 0; blockNum < 4; blockNum++) {
 		// If the block is alive
 		currentBlockState = getBlockState(bunkerNumber, blockNum);
 		if (currentBlockState < 4) {
 			//If it's within the horizontal range
-			if (position.x >= bunkerPosition.x && position.x <= (bunkerPosition.x + (12*(blockNum+1)))) {
+			if (position.x >= (bunkerPosition.x+(blockNum)*12) && position.x <= (bunkerPosition.x + (12*(blockNum+1)))) {
 				//If it's also within the vertical range
 				if (position.y > bunkerPosition.y && position.y < (bunkerPosition.y + 12)) {
 					currentBlockState++;
@@ -124,7 +124,7 @@ u8 hitBunker(point_t position, u8 bunkerNumber) {
 		currentBlockState = getBlockState(bunkerNumber, blockNum);
 		if (currentBlockState < 4) {
 			//If it's within the horizontal range
-			if (position.x >= bunkerPosition.x && position.x <= (bunkerPosition.x + (12*(blockNum-3)))) {
+			if (position.x >= (bunkerPosition.x+(blockNum-4)*12) && position.x <= (bunkerPosition.x + (12*(blockNum-3)))) {
 				//If it's also within the vertical range
 				if (position.y > (bunkerPosition.y+12) && position.y < (bunkerPosition.y + 24)) {
 					currentBlockState++;
@@ -142,7 +142,7 @@ u8 hitBunker(point_t position, u8 bunkerNumber) {
 		currentBlockState = getBlockState(bunkerNumber, blockNum);
 		if (currentBlockState < 4) {
 			//If it's within the horizontal range
-			if (position.x >= bunkerPosition.x && position.x <= (bunkerPosition.x + (12*(blockNum-7)))) {
+			if (position.x >= (bunkerPosition.x+(blockNum-8)*12) && position.x <= (bunkerPosition.x + (12*(blockNum-7)))) {
 				//If it's also within the vertical range
 				if (position.y > (bunkerPosition.y+24) && position.y < (bunkerPosition.y + 36)) {
 					currentBlockState++;
