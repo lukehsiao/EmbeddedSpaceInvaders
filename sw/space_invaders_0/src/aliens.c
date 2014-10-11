@@ -12,6 +12,7 @@
 #include "bunkers.h"
 
 extern u32* framePointer0;
+extern u32* framePointer1;
 
 u32 findFiringAlien(u32 randomCol);
 
@@ -207,7 +208,12 @@ void renderAliens(u8 animate) {
 				}
 				else {
 					if (framePointer0[(position.y + row)*640 + (position.x + col)] == WHITE) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+							framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+						}
+						else {
+							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						}
 					}
 				}
 			}

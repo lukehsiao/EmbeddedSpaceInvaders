@@ -149,6 +149,7 @@ int main()
     // is where you will write your video data. The vdma IP/driver then streams it to the HDMI
     // IP.
      myFrameBuffer.FrameStoreStartAddr[0] = FRAME_BUFFER_0_ADDR;
+     myFrameBuffer.FrameStoreStartAddr[1] = FRAME_BUFFER_0_ADDR + 4*640*480;
 
      if(XST_FAILURE == XAxiVdma_DmaSetBufferAddr(&videoDMAController, XAXIVDMA_READ,
     		               myFrameBuffer.FrameStoreStartAddr)) {
