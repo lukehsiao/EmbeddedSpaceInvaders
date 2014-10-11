@@ -41,7 +41,9 @@ void unrenderAliens() {
 						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
 					}
 					else {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
+							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						}
 					}
 				}
 			}
@@ -58,7 +60,9 @@ void unrenderAliens() {
 						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
 					}
 					else {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
+							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						}
 					}
 				}
 			}
@@ -72,7 +76,9 @@ void unrenderAliens() {
 						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
 					}
 					else {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
+							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+						}
 					}
 				}
 			}
@@ -172,7 +178,7 @@ void killAlien(u8 alienNumber) {
 }
 
 /**
- * Erases the Death Guise at theposition specified.d
+ * Erases the Death Guise at the position specified.
  */
 void unrenderDeadAlien(point_t position) {
 	u32 row, col;
@@ -257,16 +263,11 @@ void unrenderAlienBullet() {
 					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
 					// Only blank pixels, not the surrounding.
 					if (pixelPresent) {
-						if ((bullet.position.y + row) != 479) {
-							if (framePointer1[(bullet.position.y + row)*640 + (bullet.position.x + col)] == GREEN) {
-								framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = GREEN;
-							}
-							else {
-								framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
-							}
-						}
-						else {
+						if (framePointer1[(bullet.position.y + row)*640 + (bullet.position.x + col)] == GREEN) {
 							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = GREEN;
+						}
+						else if (framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] != WHITE) {
+							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
 						}
 					}
 				}
@@ -321,7 +322,7 @@ void renderAlienBullet(u8 animate) {
 						u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
 						// Only draw pixels, not the black.
 						if (pixelPresent) {
-							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = WHITE;
+							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = OFFWHITE;
 						}
 					}
 				}
@@ -369,21 +370,31 @@ u8 hitAlien(point_t position) {
 
 	//If it's outside the alien block
 	if (position.x < alienBlockPosition.x || position.y > (alienBlockPosition.y + 5*(ALIEN_HEIGHT+10))) {
-		return 0;
+		return 0xFF;
 	}
 	else if (position.x > (alienBlockPosition.x + 11*32) || position.y < alienBlockPosition.y) {
-		return 0;
+		return 0xFF;
 	}
 	else {
 		//Calculate which alien it hit, if any
 		for (alienNumber = 55; alienNumber >= 0; alienNumber--) {
-			point_t alienPosition;
-			alienPosition.x = alienBlockPosition.x + ((alienNumber % 11)*32);
-			alienPosition.y = alienBlockPosition.y + ((alienNumber/11)*(ALIEN_HEIGHT+10));
-			if (position.x < (alienPosition.x + 20) && position.x > alienPosition.x) {
+			//If the alien is alive
+			if (getAlienStatus(alienNumber) == 1) {
+				point_t alienPosition;
+				alienPosition.x = alienBlockPosition.x + ((alienNumber % 11)*32);
+				alienPosition.y = alienBlockPosition.y + ((alienNumber/11)*(ALIEN_HEIGHT+10));
 
+				// If it's within the alien's block
+				if ((position.x < (alienPosition.x + 26)) && (position.x > alienPosition.x)) {
+					if ((position.y < (alienPosition.y + ALIEN_HEIGHT)) && (position.y > alienPosition.y)) {
+						killAlien(alienNumber);
+						return alienNumber;
+					}
+				}
 			}
 		}
+		//No aliens hit
+		return 0xFF;
 	}
 }
 

@@ -205,8 +205,8 @@ int main()
 
      	// Aliens Movement
      	tasks[taski].state = -1;
-     	tasks[taski].period = 20;
-     	tasks[taski].elapsedTime = 20;
+     	tasks[taski].period = 30;
+     	tasks[taski].elapsedTime = 30;
      	tasks[taski].TickFct = &AlienMovementAndBullets_SM;
      	++taski;
 
