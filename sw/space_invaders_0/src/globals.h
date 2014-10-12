@@ -101,6 +101,8 @@ point_t getAlienExplosionPosition();
 void setAlienDeath(u8 val);
 u8 getAlienDeath();
 
+void setNumberAliensAlive(u8 val);
+u8 getNumberAliensAlive();
 
 /////////////////////////////////////
 // Setup the Bunker Globals

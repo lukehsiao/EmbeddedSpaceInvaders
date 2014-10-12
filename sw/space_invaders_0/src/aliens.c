@@ -203,6 +203,7 @@ void killAlien(u8 alienNumber) {
 	setAlienDeath(1);
 	// Save the point_t of the explosion
 	setAlienExplosionPosition(position);
+	setNumberAliensAlive(getNumberAliensAlive() - 1);
 }
 
 /**
@@ -493,8 +494,10 @@ void fireAlienBullet(u32 randomCol) {
 			bullet.type = (randomCol % 2) & 0x1;
 			bullet.guise = 0;
 			setAlienBullet(bullet, bulletNum);
-			renderAlienBullet(0);
-			renderAliens(0); //redraw aliens to mask overlap
+			if(!getGameOver()){ // these were causing a flash of Aliens after the game ends
+				renderAlienBullet(0);
+				renderAliens(0); //redraw aliens to mask overlap
+			}
 			return;
 		}
 	}

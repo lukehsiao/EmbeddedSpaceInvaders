@@ -23,6 +23,7 @@ alienBullet alienBullet_3;
 u8 direction;	//1 = right, 0 = left
 point_t alienExplosion; // used for passing point of explosion between killAlien and AlienDeath_SM state machine
 u8 alienDeath; // flag that is raised when an alien dies then is lowered when the AlienDeath_SM transitions
+u8 numberAliensAlive; // keeps track of how many aliens are alive to calculate the rate
 
 u16 rightPad;	//to allow for edge to edge rendering
 u16 leftPad;
@@ -81,6 +82,7 @@ void initGlobals(){
 	temp.y = 70;
 	setAlienBlockPosition(temp);
 	direction = 1;
+	setNumberAliensAlive(54);
 
 	// Initialize Game Variables
 	setLives(3);
@@ -404,6 +406,14 @@ void setAlienDeath(u8 val) {
 
 u8 getAlienDeath() {
 	return alienDeath;
+}
+
+void setNumberAliensAlive(u8 val) {
+	numberAliensAlive = val;
+}
+
+u8 getNumberAliensAlive() {
+	return numberAliensAlive;
 }
 
 /////////////////////////////////////

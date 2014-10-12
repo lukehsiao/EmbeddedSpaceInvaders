@@ -73,6 +73,7 @@ int TankMovementAndBullet_SM(int state) {
 	u32 rightButton = ((buttons & RIGHT) >> 1) & 0x1;
 	u32 leftButton = ((buttons & LEFT) >> 3) & 0x1;
 	u32 centerButton = (buttons & CENTER) & 0x1;
+	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
 	//	xil_printf("\n\rButtons: %x",buttons);
 	if(state == -1)
 	{
@@ -88,7 +89,7 @@ int TankMovementAndBullet_SM(int state) {
 				if(centerButton)
 					fireTankBullet();
 
-				if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
+				if (getTankLife() == 0 || downButton) { // it the tank is dead TANK DEATH FLAG
 					state = SM1_dead;
 					cycles = TANK_MAP_FLIP_CYCLES;
 					i = 0;
@@ -123,7 +124,8 @@ int TankMovementAndBullet_SM(int state) {
 					setGameOver(1);
 				}
 				setLives(lives);
-				renderLives();
+				if(!getGameOver())
+					renderLives();
 
 			}
 			else if (cycles <= TANK_MAP_FLIP_CYCLES/3) {
@@ -186,7 +188,8 @@ int TankBulletUpdate_SM(int state) {
 				state = SM2_bullet;
 			}
 			else if(1){
-				renderTankBullet(1);
+				if(!getGameOver())
+					renderTankBullet(1);
 			}
 			break;
 		default:
@@ -236,7 +239,14 @@ int AlienMovementAndBullets_SM(int state) {
 
 		switch(state) { // State actions
 		case SM3_alien:{
-
+			signed long newPeriod = ALIEN_STATE_MACHINE_RATE_MAX
+									 -((getAlienBlockPosition().y-ALIEN_STARTING_Y_POSITION)/ALIEN_HEIGHT)*2;
+			u8 aliensAlive = getNumberAliensAlive();
+			newPeriod = newPeriod - (((54-aliensAlive)*6)/10);
+			if(newPeriod <= 1)
+				newPeriod = 1;
+			tasks[2].period = newPeriod;
+			newPeriod = newPeriod;
 		}
 		break;
 		default: // ADD default behaviour below
@@ -312,7 +322,8 @@ int SpaceShipUpdate_SM(int state) {
 			}
 			else {
 				state = SM5_alive;
-				renderSpaceShip();
+				if(!getGameOver())
+					renderSpaceShip();
 			}
 			break;
 		case SM5_dead:
