@@ -176,6 +176,8 @@ void killAlien(u8 alienNumber) {
 		}
 	}
 
+	//
+
 	// Adjust leftPad and rightPad if necessary:
 	setAlienStatus(alienNumber, 0);
 	adjustPadding();
@@ -196,6 +198,11 @@ void killAlien(u8 alienNumber) {
 		setScore(score);
 	}
 	renderScore();
+
+	// Raise Black Death Flag!!!!
+	setAlienDeath(1);
+	// Save the point_t of the explosion
+	setAlienExplosionPosition(position);
 }
 
 /**

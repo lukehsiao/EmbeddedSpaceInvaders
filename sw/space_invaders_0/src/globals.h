@@ -28,7 +28,7 @@
 #define OFFWHITE	0x00FFFFFE
 #define YELLOW		0x00FFFF00
 
-#define TASKS_NUM 5
+#define TASKS_NUM 6
 
 #include "bitmaps.h"
 
@@ -52,6 +52,10 @@ void setSpaceshipScore(u32 val);
 
 u8 getSpaceshipActivated();
 void setSpaceshipActivated(u8 val);
+
+u8 getSpaceshipDied();
+void setSpaceshipDied(u8 newVal);
+
 
 /////////////////////////////////////
 // Setup the Tank Globals
@@ -92,6 +96,12 @@ void setRightCol(u8 rightCol);
 u8 getLeftCol();
 u8 getRightCol();
 
+void setAlienExplosionPosition(point_t val);
+point_t getAlienExplosionPosition();
+void setAlienDeath(u8 val);
+u8 getAlienDeath();
+
+
 /////////////////////////////////////
 // Setup the Bunker Globals
 /////////////////////////////////////
@@ -114,5 +124,6 @@ u8 getLives();
 
 void setGameOver(u8 newVal);
 u8 getGameOver();
+
 
 #endif

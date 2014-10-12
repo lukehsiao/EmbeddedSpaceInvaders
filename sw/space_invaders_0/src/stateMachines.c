@@ -13,46 +13,54 @@
 void initStateMachines(){
 	int taski;
 	taski=0;
+//	0
 	// Tank Movement
 	tasks[taski].state = -1;
 	tasks[taski].period = 4;
-	tasks[taski].elapsedTime = 4;
+	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankMovementAndBullet_SM;
 	++taski;
+
+//	1
 	// Tank Bullet Movement
 	tasks[taski].state = -1;
 	tasks[taski].period = 5;
-	tasks[taski].elapsedTime = 5;
+	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankBulletUpdate_SM;
 	++taski;
 
+//	2
 	// Aliens Movement
 	tasks[taski].state = -1;
-	tasks[taski].period = 63;
+	tasks[taski].period = 60;
 	tasks[taski].elapsedTime = 0;
 	tasks[taski].TickFct = &AlienMovementAndBullets_SM;
 	++taski;
 
+//	3
 	// Aliens Bullets Movement
 	tasks[taski].state = -1;
 	tasks[taski].period = 5;
-	tasks[taski].elapsedTime = 1;
+	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
 	++taski;
 
-	// Aliens Bullets Movement
-	tasks[taski].state = -1;
-	tasks[taski].period = 5;
-	tasks[taski].elapsedTime = 5;
-	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
-	++taski;
-
+//	4
 	// Spaceship Movement and creation
 	tasks[taski].state = -1;
-	tasks[taski].period = 2;
-	tasks[taski].elapsedTime = 2;
+	tasks[taski].period = 5;
+	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &SpaceShipUpdate_SM;
 	++taski;
+
+//	5
+	// Alien Death and Explosion
+	tasks[taski].state = -1;
+	tasks[taski].period = tasks[3].period;
+	tasks[taski].elapsedTime = tasks[taski].period;
+	tasks[taski].TickFct = &AlienDeath_SM;
+	++taski;
+
 	initGlobals();
 	blankScreen(); // erase old data
 	render();      // draw initialized game
@@ -221,7 +229,7 @@ int AlienMovementAndBullets_SM(int state) {
 		}
 		break;
 		case SM3_gameOver:
-				break;
+			break;
 		default:
 			state = SM3_alien;
 		} // Transitions
@@ -291,11 +299,16 @@ int SpaceShipUpdate_SM(int state) {
 			if(getGameOver()){
 				state = SM5_gameOver;
 			}
-			else if(upButton || !getSpaceshipActivated()) { // Space Ship is dead
+			else if(upButton || getSpaceshipDied()) { // Space Ship is dead (up can be pressed for spaceship Death testing
+				if(upButton){
+					u32 tempScore = ((rand() % 7)+1) * 50;
+					setSpaceshipScore(tempScore);
+				}
 				state = SM5_dead;
-				cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
+				cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
 				i = 0;
 				savedPosition = getSpaceshipPosition();
+				setSpaceshipDied(0);
 			}
 			else {
 				state = SM5_alive;
@@ -308,27 +321,29 @@ int SpaceShipUpdate_SM(int state) {
 			}
 			else if (cycles <= 0) { // Score has Flashed and the Spaceship can come back
 				state = SM5_alive;
-				cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
+				unrenderPoints(savedPosition);
+				cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
 				i = 0;
 			}
-			else if (cycles <= SPACESHIP_SCORE_STEADY) { // Score has flashed but needs to stay visible for a sec
+			else if (cycles <= SPACESHIP_STEADY_SCORE_CYCLES) { // Score has flashed but needs to stay visible for a sec
 				state = SM5_dead;
 				renderPoints(getSpaceshipScore(), savedPosition);
 				cycles--;
 			}
-			else if(i < SPACESHIP_SCORE_CYCLES/2 + SPACESHIP_SCORE_STEADY) { // dont show the point
+			else if(i < SPACESHIP_SCORE_COUNT/2) { // dont show the point
 				state = SM5_dead;
 				unrenderPoints(savedPosition);
 				renderPoints(getSpaceshipScore(), savedPosition);
 				i++;
 			}
-			else if(i < SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // show the point
+			else if(i < SPACESHIP_SCORE_COUNT) { // show the point
 				state = SM5_dead;
 				unrenderPoints(savedPosition);
 				i++;
 			}
-			else if(i >= SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // one cycle has happened
+			else if(i >= SPACESHIP_SCORE_COUNT) { // one cycle has happened
 				state = SM5_dead;
+				unrenderPoints(savedPosition);
 				cycles--;
 				i = 0;
 			}
@@ -352,6 +367,65 @@ int SpaceShipUpdate_SM(int state) {
 		}
 		break;
 		default: // ADD default behaviour below
+			break;
+		} // State actions
+	}
+	return state;
+}
+
+int AlienDeath_SM(int state) {
+	static point_t position;
+	static int i;
+	if(state == -1)
+	{
+		state = SM6_noDeath;
+	}
+	else{
+		switch(state) { // Transitions
+		case SM6_noDeath:
+			if(getGameOver()){
+				state = SM6_gameOver;
+				setAlienDeath(0);
+			}
+			else if(getAlienDeath()) {
+				state = SM6_death;
+				setAlienDeath(0);
+				position = getAlienExplosionPosition();
+			}
+			else {
+				state = SM6_noDeath;
+			}
+			break;
+		case SM6_death:
+			if(getGameOver()){
+				state = SM6_gameOver;
+				unrenderDeadAlien(position);
+				i = 0;
+			}
+			else if (i >= ALIEN_EXPLOSION_SHOW_TIME) {
+				state = SM6_noDeath;
+				unrenderDeadAlien(position);
+				i = 0;
+			}
+			else {
+				state = SM6_death;
+				i++;
+			}
+			break;
+
+		default:
+			state = SM6_noDeath;
+		} // Transitions
+
+		switch(state) { // State actions
+		case SM6_noDeath:{
+			position = getAlienExplosionPosition();
+		}
+		break;
+		case SM6_death: {
+		}
+		break;
+		default:
 			break;
 		} // State actions
 	}

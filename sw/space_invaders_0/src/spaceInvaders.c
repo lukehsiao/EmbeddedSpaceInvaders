@@ -65,6 +65,9 @@ void timer_interrupt_handler() {
 				case 4:
 					tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
 					break;
+				case 5:
+					tasks[i].state = AlienDeath_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
 				default:
 					break;
 			}
