@@ -42,10 +42,10 @@ void renderSpaceShip() {
 	u32 col;
 	u32 row;
 	point_t position;
-	position = getSpaceshipPosition();
 	const u32* arrayToRender;
 	if (getSpaceshipActivated()) {
 		updateSpaceShipLocation();
+		position = getSpaceshipPosition();
 		arrayToRender = getSpaceShipArray();
 		for (row = 0; row < 16; row++) {
 			for (col = 0; col < 32; col++) {
