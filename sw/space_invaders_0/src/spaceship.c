@@ -77,7 +77,7 @@ void unrenderSpaceShip() {
 		for (row = 0; row < 16; row++) {
 			for (col = 0; col < SPACESHIP_SPEED; col++) {
 				if (framePointer0[(position.y+row)*640 + (position.x+col)] != YELLOW) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = 0xFF;
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -86,7 +86,7 @@ void unrenderSpaceShip() {
 		for (row = 0; row < 16; row++) {
 			for (col = 31; col > (31-SPACESHIP_SPEED); col--) {
 				if (framePointer0[(position.y+row)*640 + (position.x+col)] != YELLOW) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = 0xFF;
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 				}
 			}
 		}
