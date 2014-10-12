@@ -42,6 +42,8 @@ u8 tankLife;				// 1 = Tank Alive  0 = Tank Dead
 
 // Spaceship Variables
 point_t spaceshipPosition;
+u32 currentScore;
+u8 spaceshipActivated;
 
 // Score & Lives Variables
 u32 score;
@@ -106,6 +108,22 @@ void setSpaceshipPosition(point_t val) {
 }
 point_t getSpaceshipPosition() {
 	return spaceshipPosition;
+}
+
+u32 getSpaceshipScore() {
+	return currentScore;
+}
+
+void setSpaceshipScore(u32 val) {
+	currentScore = val;
+}
+
+u8 getSpaceshipActivated() {
+	return spaceshipActivated;
+}
+
+void setSpaceshipActivated(u8 val) {
+	spaceshipActivated = val;
 }
 
 /////////////////////////////////////

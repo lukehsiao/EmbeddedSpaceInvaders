@@ -291,7 +291,7 @@ int SpaceShipUpdate_SM(int state) {
 			if(getGameOver()){
 				state = SM5_gameOver;
 			}
-			else if(upButton || !getActivated()) { // Space Ship is dead
+			else if(upButton || !getSpaceshipActivated()) { // Space Ship is dead
 				state = SM5_dead;
 				cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
 				i = 0;

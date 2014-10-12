@@ -47,6 +47,12 @@ void initGlobals();
 void setSpaceshipPosition(point_t val);
 point_t getSpaceshipPosition();
 
+u32 getSpaceshipScore();
+void setSpaceshipScore(u32 val);
+
+u8 getSpaceshipActivated();
+void setSpaceshipActivated(u8 val);
+
 /////////////////////////////////////
 // Setup the Tank Globals
 /////////////////////////////////////
