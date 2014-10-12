@@ -21,6 +21,9 @@ alienBullet alienBullet_1;
 alienBullet alienBullet_2;
 alienBullet alienBullet_3;
 u8 direction;	//1 = right, 0 = left
+point_t alienExplosion; // used for passing point of explosion between killAlien and AlienDeath_SM state machine
+u8 alienDeath; // flag that is raised when an alien dies then is lowered when the AlienDeath_SM transitions
+u8 numberAliensAlive; // keeps track of how many aliens are alive to calculate the rate
 
 u16 rightPad;	//to allow for edge to edge rendering
 u16 leftPad;
@@ -43,7 +46,8 @@ u8 tankLife;				// 1 = Tank Alive  0 = Tank Dead
 // Spaceship Variables
 point_t spaceshipPosition;
 u32 currentScore;
-u8 spaceshipActivated;
+u8 spaceshipActivated; // 1 when spaceship is on the screen. 0 when the spaceship dies or is off the screen
+u8 spaceshipDied; 		// flag that is set when ship is first hit then lowered when score is shown
 
 // Score & Lives Variables
 u32 score;
@@ -78,6 +82,7 @@ void initGlobals(){
 	temp.y = 70;
 	setAlienBlockPosition(temp);
 	direction = 1;
+	setNumberAliensAlive(54);
 
 	// Initialize Game Variables
 	setLives(3);
@@ -130,6 +135,14 @@ u8 getSpaceshipActivated() {
 
 void setSpaceshipActivated(u8 val) {
 	spaceshipActivated = val;
+}
+
+u8 getSpaceshipDied() {
+	return spaceshipDied;
+}
+
+void setSpaceshipDied(u8 newVal) {
+	spaceshipDied = newVal;
 }
 
 /////////////////////////////////////
@@ -379,6 +392,30 @@ void setRightCol(u8 rightCol) {
 	rightPad = 640 + (32*(10-rightMostColumn));
 }
 
+void setAlienExplosionPosition(point_t val) {
+	alienExplosion = val;
+}
+
+point_t getAlienExplosionPosition() {
+	return alienExplosion;
+}
+
+void setAlienDeath(u8 val) {
+	alienDeath = val;
+}
+
+u8 getAlienDeath() {
+	return alienDeath;
+}
+
+void setNumberAliensAlive(u8 val) {
+	numberAliensAlive = val;
+}
+
+u8 getNumberAliensAlive() {
+	return numberAliensAlive;
+}
+
 /////////////////////////////////////
 // Implement the Bunker Globals
 /////////////////////////////////////
@@ -531,5 +568,6 @@ u8 getGameOver() {
 void setGameOver(u8 newVal) {
 	gameOver = newVal;
 }
+
 
 

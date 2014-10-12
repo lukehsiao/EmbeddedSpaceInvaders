@@ -23,6 +23,7 @@
 #define ALIEN_BULLET_HEIGHT 10
 #define TANK_BULLET_WIDTH 2
 #define TANK_BULLET_HEIGHT 10
+#define GAME_OVER_HEIGHT 32
 
 u32 getTankPixel(u32 row, u32 col);
 u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber);
@@ -39,5 +40,7 @@ const u32* getSpaceShipArray();
 const u32* getDeathTankArray1();
 const u32* getDeathTankArray2();
 const u32* getDeadAlienArray();
+
+const u32* getGameOverArray(u8 digit);
 
 #endif

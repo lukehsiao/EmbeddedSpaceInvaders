@@ -259,12 +259,12 @@ void unrenderLives() {
 	position.y = 5;
 	u32 col;
 	u32 row;
-		// Same Algorithm as Render Tank
-		for (row = 0; row < 16; row++) {
-			for (col = 0; col < (32+10)*(lives); col++) {
-				framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
-			}
+	// Same Algorithm as Render Tank
+	for (row = 0; row < 16; row++) {
+		for (col = 0; col < (32+10)*(lives); col++) {
+			framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
 		}
+	}
 }
 
 /**
@@ -322,65 +322,174 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 	u8 blockNumber;
 	u8 erosionState;
 	switch (keyPressed) {
-		case '4':
-			unrenderTank();
-			temp = getTankPositionGlobal();
-			temp.x = temp.x - 4;
-			if (temp.x > (640-32)) {
-				temp.x = 0;
+	case '4':
+		unrenderTank();
+		temp = getTankPositionGlobal();
+		temp.x = temp.x - 4;
+		if (temp.x > (640-32)) {
+			temp.x = 0;
+		}
+		setTankPositionGlobal(temp.x);
+		renderTank();
+		break;
+	case '6':
+		unrenderTank();
+		temp = getTankPositionGlobal();
+		temp.x = temp.x + 4;
+		if (temp.x > (640-32)) {
+			temp.x = (640-32);
+		}
+		setTankPositionGlobal(temp.x);
+		renderTank();
+		break;
+	case '8':
+		render();
+		break;
+	case '2':
+		setAlienStatus(userInput, 0); //kill the random alien
+		killAlien(userInput);
+		break;
+	case '1':
+		startSpaceShip();
+		break;
+	case '5':
+		//fire bullet
+		fireTankBullet();
+		break;
+	case '3':
+		//fire random alien missile
+		random = ((timerSeed * 13) / 3) % 11; //pseudo random number between 0-10
+		fireAlienBullet(random);
+		break;
+	case '9':
+		renderTankBullet(1);
+		renderAlienBullet(1);
+		break;
+	case '7':
+		for (blockNumber = 0; blockNumber < 12; blockNumber++) {
+			erosionState = getBlockState(userInput, blockNumber);
+			if (erosionState < 4) {
+				setBlockState(userInput, blockNumber, erosionState+1);
+				break;
 			}
-			setTankPositionGlobal(temp.x);
-			renderTank();
-			break;
-		case '6':
-			unrenderTank();
-			temp = getTankPositionGlobal();
-			temp.x = temp.x + 4;
-			if (temp.x > (640-32)) {
-				temp.x = (640-32);
-			}
-			setTankPositionGlobal(temp.x);
-			renderTank();
-			break;
-		case '8':
-			render();
-			break;
-		case '2':
-			setAlienStatus(userInput, 0); //kill the random alien
-			killAlien(userInput);
-			break;
-		case '1':
-			startSpaceShip();
-			break;
-		case '5':
-			//fire bullet
-			fireTankBullet();
-			break;
-		case '3':
-			//fire random alien missile
-			random = ((timerSeed * 13) / 3) % 11; //pseudo random number between 0-10
-			fireAlienBullet(random);
-			break;
-		case '9':
-			renderTankBullet(1);
-			renderAlienBullet(1);
-			break;
-		case '7':
-			for (blockNumber = 0; blockNumber < 12; blockNumber++) {
-				erosionState = getBlockState(userInput, blockNumber);
-				if (erosionState < 4) {
-					setBlockState(userInput, blockNumber, erosionState+1);
-					break;
-				}
-			}
-			renderBunker(userInput);
-			break;
-		default:
-			//do nothing
-			break;
+		}
+		renderBunker(userInput);
+		break;
+	default:
+		//do nothing
+		break;
 	}
 }
 
+/**
+ * Renders the word "GAME OVER" in the middle of the screen
+ */
+void renderGameOverText() {
+	u32 row, col;
+	const u32* arrayToRender;
+	u8 digitNum = 0;
 
+	//	G
+	arrayToRender = getGameOverArray(digitNum);
+	point_t defaultPosition;
+	defaultPosition.x = 224;
+	defaultPosition.y = 218;
+	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
+		for(col = 0; col < 20; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
 
+	//	A
+	digitNum++;
+	arrayToRender = getGameOverArray(digitNum);
+	defaultPosition.x = defaultPosition.x + 20 + 4; //G is 20 wide with a 4 pixel space
+	defaultPosition.y = 218;
+	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
+		for(col = 0; col < 20; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
 
+	//	M
+	digitNum++;
+	arrayToRender = getGameOverArray(digitNum);
+	defaultPosition.x = defaultPosition.x + 20 + 4; //A is 20 wide with a 4 pixel space
+	defaultPosition.y = 218;
+	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
+		for(col = 0; col < 28; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
+
+	//	E
+	digitNum++;
+	arrayToRender = getGameOverArray(digitNum);
+	defaultPosition.x = defaultPosition.x + 28 + 4; //M is 28 wide with a 4 pixel space
+	defaultPosition.y = 218;
+	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
+		for(col = 0; col < 20; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
+
+	//	O
+	digitNum++;
+	arrayToRender = getGameOverArray(digitNum);
+	defaultPosition.x = defaultPosition.x + 20 + 12; //O is 20 wide with a 12 pixel space between the words
+	defaultPosition.y = 218;
+	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
+		for(col = 0; col < 20; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
+
+	//	V
+	digitNum++;
+	arrayToRender = getGameOverArray(digitNum);
+	defaultPosition.x = defaultPosition.x + 20 + 4; //O is 20 wide with a 4 pixel space
+	defaultPosition.y = 218;
+	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
+		for(col = 0; col < 20; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
+
+	//	E
+	digitNum++;
+	arrayToRender = getGameOverArray(digitNum);
+	defaultPosition.x = defaultPosition.x + 20 + 4; //V is 20 wide with a 4 pixel space
+	defaultPosition.y = 218;
+	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
+		for(col = 0; col < 20; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
+
+	//	R
+	digitNum++;
+	arrayToRender = getGameOverArray(digitNum);
+	defaultPosition.x = defaultPosition.x + 20 + 4; //E is 20 wide with a 4 pixel space
+	defaultPosition.y = 218;
+	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
+		for(col = 0; col < 20; col++) {
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+			}
+		}
+	}
+}

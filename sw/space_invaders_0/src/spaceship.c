@@ -216,9 +216,9 @@ void renderPoints(u32 points, point_t position) {
  */
 void unrenderPoints(point_t position) {
 	u32 row, col;
-	for (row = 0; row < 16; row++) {
-		for (col = 0; col < 32; col++) {
-			framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK; //Green
+	for (row = 0; row < 16+2; row++) {
+		for (col = 0; col < 32+4; col++) {
+			framePointer0[(position.y+row-2)*640 + (position.x+col-2)] = BLACK; //Green
 		}
 	}
 }
@@ -238,8 +238,9 @@ u8 hitSpaceShip(point_t bulletPosition) {
 		return 0;
 	}
 	else {
-		// Otherwise, it must be in the tank.
+		// Otherwise, it must be in the spaceship.
 		setSpaceshipActivated(0);
+		setSpaceshipDied(1);
 		unrenderPoints(position);
 		u32 tempScore = ((rand() % 7)+1) * 50;
 		setSpaceshipScore(tempScore);

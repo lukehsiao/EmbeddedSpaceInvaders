@@ -46,5 +46,8 @@ int AlienbulletsUpdate_SM();
 enum SM5_States { SM5_alive, SM5_dead, SM5_gameOver } SM5_State;
 int SpaceShipUpdate_SM();
 
+enum SM6_States { SM6_noDeath, SM6_death, SM6_gameOver } SM6_State;
+int AlienDeath_SM();
+
 
 #endif /* STATEMACHINES_H_ */
