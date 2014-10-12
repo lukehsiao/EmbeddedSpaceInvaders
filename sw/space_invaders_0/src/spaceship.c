@@ -251,3 +251,11 @@ u8 hitSpaceShip(point_t bulletPosition) {
 		return 1;
 	}
 }
+
+void setActivated(u8 val) {
+	activated = val;
+}
+
+u8 getActivated() {
+	return activated;
+}

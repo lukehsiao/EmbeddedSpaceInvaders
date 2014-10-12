@@ -214,11 +214,14 @@ int AlienMovementAndBullets_SM(int state) {
 				state = SM3_gameOver;
 			}
 			else if(1){
-				renderAliens(1);
+				if(!getGameOver())
+					renderAliens(1);
 				state = SM3_alien;
 			}
 		}
 		break;
+		case SM3_gameOver:
+				break;
 		default:
 			state = SM3_alien;
 		} // Transitions
@@ -250,8 +253,10 @@ int AlienbulletsUpdate_SM(int state) {
 				state = SM4_bullets;
 			}
 			else if(1){
-				renderAlienBullet(1);
-				renderAliens(0);
+				if(!getGameOver()){
+					renderAlienBullet(1);
+					renderAliens(0);
+				}
 				state = SM4_bullets;
 			}
 			break;
@@ -286,7 +291,7 @@ int SpaceShipUpdate_SM(int state) {
 			if(getGameOver()){
 				state = SM5_gameOver;
 			}
-			else if(upButton) { // Space Ship is dead
+			else if(upButton || !getActivated()) { // Space Ship is dead
 				state = SM5_dead;
 				cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
 				i = 0;
@@ -298,36 +303,37 @@ int SpaceShipUpdate_SM(int state) {
 			}
 			break;
 		case SM5_dead:
-					if(getGameOver()){
-						state = SM5_gameOver;
-					}
-					else if (cycles <= 0) { // Score has Flashed and the Spaceship can come back
-						state = SM5_alive;
-						cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
-						i = 0;
-					}
-					else if (cycles <= SPACESHIP_SCORE_STEADY) { // Score has flashed but needs to stay visible for a sec
-						state = SM5_dead;
-						renderPoints(getScore(), savedPosition);
-						cycles--;
-					}
-					else if(i < SPACESHIP_SCORE_CYCLES/2 + SPACESHIP_SCORE_STEADY) { // dont show the point
-						state = SM5_dead;
-						unrenderPoints(savedPosition);
-						renderPoints(getScore(), savedPosition);
-						i++;
-					}
-					else if(i < SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // show the point
-						state = SM5_dead;
-						unrenderPoints(savedPosition);
-						i++;
-					}
-					else if(i >= SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // one cycle has happened
-						state = SM5_dead;
-						cycles--;
-						i = 0;
-					}
-					break;
+			if(getGameOver()){
+				state = SM5_gameOver;
+			}
+			else if (cycles <= 0) { // Score has Flashed and the Spaceship can come back
+				state = SM5_alive;
+				cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
+				i = 0;
+			}
+			else if (cycles <= SPACESHIP_SCORE_STEADY) { // Score has flashed but needs to stay visible for a sec
+				state = SM5_dead;
+				renderPoints(getScore(), savedPosition);
+				cycles--;
+			}
+			else if(i < SPACESHIP_SCORE_CYCLES/2 + SPACESHIP_SCORE_STEADY) { // dont show the point
+				state = SM5_dead;
+				unrenderPoints(savedPosition);
+				renderPoints(getScore(), savedPosition);
+				i++;
+			}
+			else if(i < SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // show the point
+				state = SM5_dead;
+				unrenderPoints(savedPosition);
+				i++;
+			}
+			else if(i >= SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // one cycle has happened
+				state = SM5_dead;
+				cycles--;
+				i = 0;
+			}
+			break;
+
 		default:
 			state = SM5_alive;
 		} // Transitions
