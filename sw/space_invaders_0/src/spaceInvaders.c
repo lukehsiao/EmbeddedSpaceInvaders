@@ -21,6 +21,7 @@
 #include "xparameters.h"
 #include "xaxivdma.h"
 #include "xio.h"
+#include "xtmrctr.h" // axi Timer
 //#include "time.h"	//is this needed?
 #include "unistd.h"
 #include "render.h"			// Our rendering file.
@@ -31,12 +32,19 @@
 #include "stateMachines.h"
 #define DEBUG
 
+XTmrCtr Timer0;
+
 //void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
 unsigned char taski;
 
 
+//void XTmrCtr_Start(XTmrCtr * InstancePtr, u8 TmrCtrNumber);
+//void XTmrCtr_Stop(XTmrCtr * InstancePtr, u8 TmrCtrNumber);
+//u32 XTmrCtr_GetValue(XTmrCtr * InstancePtr, u8 TmrCtrNumber);
+//void XTmrCtr_SetResetValue(XTmrCtr * InstancePtr, u8 TmrCtrNumber,
+//			   u32 ResetValue);
 
 // This is invoked in response to a timer interrupt.
 // It calls all the state machines for timing.
@@ -46,9 +54,8 @@ void timer_interrupt_handler() {
 	u8 i;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
 		if (tasks[i].elapsedTime >= tasks[i].period){
-//			XTmrCtr_SetResetValue(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID, 0);
-			// Task is ready to tick, so call its tick function
-//			XTmrCtr_Start(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
+			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
+			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			switch (i) {
 				case 0:
 					tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
@@ -71,8 +78,8 @@ void timer_interrupt_handler() {
 				default:
 					break;
 			}
-//			XTmrCtr_Stop(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
-//			tempWcet = XTmrCtr_GetValue(&Timer1, XPAR_AXI_TIMER_1_DEVICE_ID);
+			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			tasks[i].elapsedTime = 0; // Reset the elapsed time
 		}
 		tasks[i].elapsedTime += 1;
@@ -188,6 +195,9 @@ int main()
      		(XPAR_FIT_TIMER_0_INTERRUPT_MASK | XPAR_PUSH_BUTTONS_5BITS_IP2INTC_IRPT_MASK));
      XIntc_MasterEnable(XPAR_INTC_0_BASEADDR);
 
+
+     Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+     XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
 
      // Print a sanity message if you get this far.
      xil_printf("Woohoo! I made it through initialization.\n\r");

@@ -19,6 +19,7 @@ void initStateMachines(){
 	tasks[taski].period = 4;
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankMovementAndBullet_SM;
+	tasks[taski].wcet = 0;
 	++taski;
 
 //	1
@@ -27,6 +28,7 @@ void initStateMachines(){
 	tasks[taski].period = 5;
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankBulletUpdate_SM;
+	tasks[taski].wcet = 0;
 	++taski;
 
 //	2
@@ -35,6 +37,7 @@ void initStateMachines(){
 	tasks[taski].period = 60;
 	tasks[taski].elapsedTime = 0;
 	tasks[taski].TickFct = &AlienMovementAndBullets_SM;
+	tasks[taski].wcet = 0;
 	++taski;
 
 //	3
@@ -43,6 +46,7 @@ void initStateMachines(){
 	tasks[taski].period = 5;
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
+	tasks[taski].wcet = 0;
 	++taski;
 
 //	4
@@ -51,6 +55,7 @@ void initStateMachines(){
 	tasks[taski].period = 5;
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &SpaceShipUpdate_SM;
+	tasks[taski].wcet = 0;
 	++taski;
 
 //	5
@@ -59,6 +64,7 @@ void initStateMachines(){
 	tasks[taski].period = tasks[3].period;
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &AlienDeath_SM;
+	tasks[taski].wcet = 0;
 	++taski;
 
 	initGlobals();
@@ -93,6 +99,12 @@ int TankMovementAndBullet_SM(int state) {
 					state = SM1_dead;
 					cycles = TANK_MAP_FLIP_CYCLES;
 					i = 0;
+					xil_printf("\n\rTankMovementAndBullet_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d us\n\r", tasks[i++].wcet/100);
 				}
 				else if(!rightButton && !leftButton){
 					state = SM1_alive;
