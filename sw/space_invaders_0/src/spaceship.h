@@ -23,5 +23,7 @@ void startSpaceShip();
 void renderPoints(u32 points);
 void unrenderPoints();
 u8 hitSpaceShip(point_t bulletPosition);
+void setActivated(u8 val);
+u8 getActivated();
 
 #endif /* SPACESHIP_H_ */
