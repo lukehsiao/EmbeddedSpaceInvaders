@@ -101,9 +101,9 @@ void initGlobals(){
 
 	//Initialize Spaceship
 	spaceshipActivated = 0;
-	spaceshipPosition.x = 80;
-	spaceshipPosition.y = 40;
-	currentScore = 50;
+	spaceshipPosition.x = 5;
+	spaceshipPosition.y = 35;
+	currentScore = 0;
 
 }
 /////////////////////////////////////
