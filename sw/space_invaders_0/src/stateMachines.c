@@ -296,7 +296,7 @@ int SpaceShipUpdate_SM(int state) {
 			}
 			break;
 		case SM5_dead:
-					if(gameOver){
+					if(getGameOver()){
 						state = SM5_gameOver;
 					}
 					else if (cycles <= 0) { // Score has Flashed and the Spaceship can come back
