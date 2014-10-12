@@ -14,6 +14,7 @@ extern u32* framePointer0;
 
 static u8 direction; // 1 = right, 0 = left
 u8 activated;		// 1 = draw, 0 = ignore
+u32 spaceshipScore; // score for hitting the spaceship
 
 /**
  * Call this to put the spaceship in motion
@@ -243,6 +244,7 @@ u8 hitSpaceShip(point_t bulletPosition) {
 		activated = 0;
 		unrenderPoints(position);
 		u32 tempScore = ((rand() % 7)+1) * 50;
+		setSpaceshipScore(tempScore);
 		renderPoints(tempScore, position);
 		u32 score = getScore();
 		score += tempScore;
@@ -258,4 +260,12 @@ void setActivated(u8 val) {
 
 u8 getActivated() {
 	return activated;
+}
+
+void setSpaceshipScore(u32 val) {
+	spaceshipScore = val;
+}
+
+u32 getSpaceshipScore() {
+	return spaceshipScore;
 }

@@ -313,13 +313,13 @@ int SpaceShipUpdate_SM(int state) {
 			}
 			else if (cycles <= SPACESHIP_SCORE_STEADY) { // Score has flashed but needs to stay visible for a sec
 				state = SM5_dead;
-				renderPoints(getScore(), savedPosition);
+				renderPoints(getSpaceshipScore(), savedPosition);
 				cycles--;
 			}
 			else if(i < SPACESHIP_SCORE_CYCLES/2 + SPACESHIP_SCORE_STEADY) { // dont show the point
 				state = SM5_dead;
 				unrenderPoints(savedPosition);
-				renderPoints(getScore(), savedPosition);
+				renderPoints(getSpaceshipScore(), savedPosition);
 				i++;
 			}
 			else if(i < SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // show the point
