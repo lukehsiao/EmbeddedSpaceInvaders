@@ -118,6 +118,8 @@ void updateAlienLocation() {
 	// Check if aliens are too low
 	if ((getAlienBlockPosition().y+((lowestLiveRow*(ALIEN_HEIGHT+10))+ALIEN_HEIGHT)) > BOTTOM_BORDER) {
 		setGameOver(1);
+		blankScreen();
+		renderGameOverText();
 	}
 }
 

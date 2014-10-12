@@ -122,6 +122,7 @@ int TankMovementAndBullet_SM(int state) {
 				if(lives <= 0 || lives > 10){
 					lives = 0;
 					setGameOver(1);
+					blankScreen();
 				}
 				setLives(lives);
 				if(!getGameOver())
@@ -151,7 +152,7 @@ int TankMovementAndBullet_SM(int state) {
 			}
 			break;
 		case SM1_gameOver:
-			blankScreen();
+			renderGameOverText();
 			if(rightButton || leftButton || centerButton){
 				state = SM1_alive;
 				initStateMachines();
