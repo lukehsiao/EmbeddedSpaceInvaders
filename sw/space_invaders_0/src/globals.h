@@ -42,6 +42,12 @@ typedef struct {point_t position; u8 type; u8 guise;} alienBullet;
 void initGlobals();
 
 /////////////////////////////////////
+// Setup the Spaceship Globals
+/////////////////////////////////////
+void setSpaceshipPosition(point_t val);
+point_t getSpaceshipPosition();
+
+/////////////////////////////////////
 // Setup the Tank Globals
 /////////////////////////////////////
 void setTankPositionGlobal(unsigned short val);	// they can only modify x

@@ -246,7 +246,7 @@ int AlienbulletsUpdate_SM(int state) {
 			if(getGameOver()){
 				state = SM4_gameOver;
 			}
-			else if (0) { // if there are no bulletss
+			else if (0) { // if there are no bullets
 				state = SM4_bullets;
 			}
 			else if(1){
@@ -263,7 +263,7 @@ int AlienbulletsUpdate_SM(int state) {
 		case SM4_bullets:{
 		}
 		break;
-		default: // ADD default behaviour below
+		default: // ADD default behavior below
 			break;
 		} // State actions
 	}
@@ -273,6 +273,7 @@ int AlienbulletsUpdate_SM(int state) {
 int SpaceShipUpdate_SM(int state) {
 	static int i;
 	static int cycles;
+	static point_t savedPosition;
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 upButton = ((buttons & UP) >> 4) & 0x1;
 	if(state == -1)
@@ -289,6 +290,7 @@ int SpaceShipUpdate_SM(int state) {
 				state = SM5_dead;
 				cycles = SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY;
 				i = 0;
+				savedPosition = getSpaceshipPosition();
 			}
 			else {
 				state = SM5_alive;
@@ -306,18 +308,18 @@ int SpaceShipUpdate_SM(int state) {
 					}
 					else if (cycles <= SPACESHIP_SCORE_STEADY) { // Score has flashed but needs to stay visible for a sec
 						state = SM5_dead;
-						renderPoints(getScore());
+						renderPoints(getScore(), savedPosition);
 						cycles--;
 					}
 					else if(i < SPACESHIP_SCORE_CYCLES/2 + SPACESHIP_SCORE_STEADY) { // dont show the point
 						state = SM5_dead;
-						unrenderPoints();
-						renderPoints(getScore());
+						unrenderPoints(savedPosition);
+						renderPoints(getScore(), savedPosition);
 						i++;
 					}
 					else if(i < SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // show the point
 						state = SM5_dead;
-						unrenderPoints();
+						unrenderPoints(savedPosition);
 						i++;
 					}
 					else if(i >= SPACESHIP_SCORE_CYCLES + SPACESHIP_SCORE_STEADY) { // one cycle has happened

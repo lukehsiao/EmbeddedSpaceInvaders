@@ -40,6 +40,9 @@ point_t tankPosition;
 point_t tankBulletPosition; // Tank bullet is 2*8 pixels tall
 u8 tankLife;				// 1 = Tank Alive  0 = Tank Dead
 
+// Spaceship Variables
+point_t spaceshipPosition;
+
 // Score & Lives Variables
 u32 score;
 u8 lives;	//starts w/ 3 and decrements each death
@@ -94,6 +97,15 @@ void initGlobals(){
 	temp.x = 20;
 	setTankBulletPosition(temp);
 
+}
+/////////////////////////////////////
+// Implement the Spaceship Globals
+/////////////////////////////////////
+void setSpaceshipPosition(point_t val) {
+	spaceshipPosition = val;
+}
+point_t getSpaceshipPosition() {
+	return spaceshipPosition;
 }
 
 /////////////////////////////////////

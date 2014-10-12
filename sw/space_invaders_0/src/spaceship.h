@@ -20,8 +20,8 @@ void renderSpaceShip();
 void unrenderSpaceShip();
 void updateSpaceShipLocation();
 void startSpaceShip();
-void renderPoints(u32 points);
-void unrenderPoints();
+void renderPoints(u32 points, point_t position);
+void unrenderPoints(point_t position);
 u8 hitSpaceShip(point_t bulletPosition);
 
 #endif /* SPACESHIP_H_ */

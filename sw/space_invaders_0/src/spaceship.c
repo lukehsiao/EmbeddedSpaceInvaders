@@ -7,18 +7,19 @@
  */
 
 #include "globals.h"
+#include <stdlib.h>
 #include "render.h"
 
 extern u32* framePointer0;
 
 static u8 direction; // 1 = right, 0 = left
-point_t position;
 u8 activated;		// 1 = draw, 0 = ignore
 
 /**
  * Call this to put the spaceship in motion
  */
 void startSpaceShip() {
+	point_t position;
 	if (activated != 1) {
 		unrenderSpaceShip();
 		activated = 1;
@@ -30,6 +31,7 @@ void startSpaceShip() {
 		else {
 			position.x = 640-32;
 		}
+		setSpaceshipPosition(position);
 		renderSpaceShip();
 	}
 }
@@ -40,6 +42,8 @@ void startSpaceShip() {
 void renderSpaceShip() {
 	u32 col;
 	u32 row;
+	point_t position;
+	position = getSpaceshipPosition();
 	const u32* arrayToRender;
 	if (activated) {
 		updateSpaceShipLocation();
@@ -67,12 +71,13 @@ void renderSpaceShip() {
 void unrenderSpaceShip() {
 	u32 col;
 	u32 row;
-
+	point_t position;
+	position = getSpaceshipPosition();
 	if (direction == 1) {
 		for (row = 0; row < 16; row++) {
 			for (col = 0; col < SPACESHIP_SPEED; col++) {
 				if (framePointer0[(position.y+row)*640 + (position.x+col)] != YELLOW) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*640 + (position.x+col)] = 0xFF;
 				}
 			}
 		}
@@ -81,7 +86,7 @@ void unrenderSpaceShip() {
 		for (row = 0; row < 16; row++) {
 			for (col = 31; col > (31-SPACESHIP_SPEED); col--) {
 				if (framePointer0[(position.y+row)*640 + (position.x+col)] != YELLOW) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*640 + (position.x+col)] = 0xFF;
 				}
 			}
 		}
@@ -94,15 +99,19 @@ void unrenderSpaceShip() {
  */
 void updateSpaceShipLocation() {
 	unrenderSpaceShip();
+	point_t position;
+	position = getSpaceshipPosition();
 	// If moving right
 	if (direction == 1) {
 		position.x += SPACESHIP_SPEED;
+		setSpaceshipPosition(position);
 		if (position.x > 640) {
 			activated = 0;
 		}
 	}
 	else {
 		position.x -= SPACESHIP_SPEED;
+		setSpaceshipPosition(position);
 		if ((position.x+32) > 640) { //if it's off the screen to the left
 			activated = 0;
 		}
@@ -112,8 +121,9 @@ void updateSpaceShipLocation() {
 /**
  *  Renders the number of points passed in at the location of the spaceship
  */
-void renderPoints(u32 points) {
+void renderPoints(u32 points, point_t position) {
 	u8 ones, tens, hundreds;
+	point_t localPosition = position;
 	//This code assumes that the score will never exceed 9999
 
 	ones = points % 10;
@@ -127,10 +137,10 @@ void renderPoints(u32 points) {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = YELLOW;  // frame 0 is red here.
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
@@ -140,23 +150,23 @@ void renderPoints(u32 points) {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = YELLOW;  // frame 0 is red here.
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		localPosition.x += 12;
 
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = YELLOW;  // frame 0 is red here.
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
@@ -166,36 +176,36 @@ void renderPoints(u32 points) {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = YELLOW;  // frame 0 is red here.
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		localPosition.x += 12;
 
 		arrayToRender = getDigitArray(tens);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = YELLOW;  // frame 0 is red here.
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		localPosition.x += 12;
 
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = YELLOW;  // frame 0 is red here.
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
@@ -205,7 +215,7 @@ void renderPoints(u32 points) {
 /**
  * Blanks the spot where the score is to help with flashing
  */
-void unrenderPoints() {
+void unrenderPoints(point_t position) {
 	u32 row, col;
 	for (row = 0; row < 16; row++) {
 		for (col = 0; col < 32; col++) {
@@ -219,6 +229,8 @@ void unrenderPoints() {
  * @return 1 = hit, 0 = not hit
  */
 u8 hitSpaceShip(point_t bulletPosition) {
+	point_t position;
+	position = getSpaceshipPosition();
 	//If it's outside the spaceship
 	if (bulletPosition.x < position.x || bulletPosition.y < position.y) {
 		return 0;
@@ -229,10 +241,11 @@ u8 hitSpaceShip(point_t bulletPosition) {
 	else {
 		// Otherwise, it must be in the tank.
 		activated = 0;
-		unrenderPoints();
-		renderPoints(888);
+		unrenderPoints(position);
+		u32 tempScore = ((rand() % 7)+1) * 50;
+		renderPoints(tempScore, position);
 		u32 score = getScore();
-		score += 888;
+		score += tempScore;
 		setScore(score);
 		renderScore();
 		return 1;
