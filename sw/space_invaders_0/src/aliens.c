@@ -393,7 +393,7 @@ u8 hitAlien(point_t position) {
 	signed int alienNumber;	//so we can start from 54 and subtract w/o overflowing
 
 	//If it's outside the alien block
-	if (position.x < alienBlockPosition.x || position.y > (alienBlockPosition.y + 5*(ALIEN_HEIGHT+10))) {
+	if (position.x < (alienBlockPosition.x + getLeftPad()) || position.y > (alienBlockPosition.y + 5*(ALIEN_HEIGHT+10))) {
 		return 0xFF;
 	}
 	else if (position.x > (alienBlockPosition.x + 11*32) || position.y < alienBlockPosition.y) {
