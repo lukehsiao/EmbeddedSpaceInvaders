@@ -15,7 +15,6 @@
 #include "xaxivdma.h"
 #include "xio.h"
 #include "xtmrctr.h" // axi Timer
-//#include "time.h"	//is this needed?
 #include "unistd.h"
 #include "render.h"			// Our rendering file.
 #include "xuartlite_l.h"
@@ -44,13 +43,16 @@ void stopTiming() {
 	}
 }
 
+////////////////////////////////////////
+// Initializing State Machine Variables
+////////////////////////////////////////
 void initStateMachines(){
 	int taski;
 	taski=0;
 	//	0
 	// Tank Movement
 	tasks[taski].state = -1;
-	tasks[taski].period = 4;
+	tasks[taski].period = 1;
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankMovementAndBullet_SM;
 	tasks[taski].wcet = 0;
@@ -86,7 +88,7 @@ void initStateMachines(){
 	//	4
 	// Spaceship Movement and creation
 	tasks[taski].state = -1;
-	tasks[taski].period = 5;
+	tasks[taski].period = 1;
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &SpaceShipUpdate_SM;
 	tasks[taski].wcet = 0;
@@ -316,9 +318,9 @@ int AlienMovementAndBullets_SM(int state) {
 			u8 random;
 			random = (char)(rand() % ALIEN_BULLET_FIRE_RATE);
 			if(random < 10){
-				startTiming();
+//				startTiming();
 				fireAlienBullet(random);
-				stopTiming();
+//				stopTiming();
 			}
 
 			if(getGameOver()){

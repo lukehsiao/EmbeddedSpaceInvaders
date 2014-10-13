@@ -12,7 +12,7 @@
 #define TANK_INIT_POSITION_X 70
 #define TANK_INIT_POSITION_Y 440
 
-#define TANK_MOVEMENT_SPEED 8    // # of pixel the tank bullet moves per update
+#define TANK_MOVEMENT_SPEED 2    // # of pixel the tank bullet moves per update
 #define TANK_BULLET_SPEED 15    // # of pixel the tank bullet moves per update
 #define TANK_MAP_FLIP_COUNT 2	// how long one cycle is for the tank death bitmap flipping
 #define TANK_MAP_FLIP_CYCLES 10  // # of times the 2 bitmaps will show
