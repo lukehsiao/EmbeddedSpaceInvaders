@@ -18,12 +18,20 @@ u8 tankLife; // 1 is alive. 0 is dead
 void renderTank() {
 	u32 col;
 	u32 row;
+	const u32* arrayToRender;
+	arrayToRender = getTankArray();
 	for (row = 0; row < 16; row++) {
 		for (col = 0; col < 32; col++) {
-			framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = getTankPixel(row, col); //Green
+			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = GREEN;
+			}
+//			else {
+//				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = BLACK;
+//			}
 		}
 	}
 }
+
 
 /**
  * Writes BLACK to the box that the tank is currently in

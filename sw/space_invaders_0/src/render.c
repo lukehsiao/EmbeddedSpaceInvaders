@@ -276,14 +276,17 @@ void renderLives() {
 	point_t position;
 	position.x = 420;
 	position.y = 5;
-
+	const u32* arrayToRender;
+	arrayToRender = getTankArray();
 	u32 col;
 	u32 row;
 	for (; lives > 0; lives--) {
 		// Same Algorithm as Render Tank
 		for (row = 0; row < 16; row++) {
 			for (col = 0; col < 32; col++) {
-				framePointer0[(position.y+row)*640 + (position.x+col)] = getTankPixel(row, col); //Green
+				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				}
 			}
 		}
 		position.x += 42;
