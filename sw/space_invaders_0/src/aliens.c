@@ -9,6 +9,8 @@
 #include "globals.h"
 #include "render.h"
 
+
+
 extern u32* framePointer0;
 extern u32* framePointer1;
 

@@ -10,10 +10,44 @@
 #include "render.h"			// Our rendering file.
 #include "xgpio.h"          // Provides access to PB GPIO driver.
 
+#include "platform.h"
+#include "xparameters.h"
+#include "xaxivdma.h"
+#include "xio.h"
+#include "xtmrctr.h" // axi Timer
+//#include "time.h"	//is this needed?
+#include "unistd.h"
+#include "render.h"			// Our rendering file.
+#include "xuartlite_l.h"
+#include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
+#include "xintc_l.h"        // Provides handy macros for the interrupt controller.
+
+/////////////////////////////////////
+// Handy Timing Functions
+/////////////////////////////////////
+void startTiming() {
+	int Status;
+	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
+	XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+	tempWcet = 0;
+}
+
+void stopTiming() {
+	XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+	tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+	if(tempWcet > maxWcet){
+		maxWcet = tempWcet;
+		xil_printf("\n\r maxWcet is %d cycles", maxWcet);
+		if(maxWcet > 100000000)
+			xil_printf("\n\r TIMER OVERRUN");
+	}
+}
+
 void initStateMachines(){
 	int taski;
 	taski=0;
-//	0
+	//	0
 	// Tank Movement
 	tasks[taski].state = -1;
 	tasks[taski].period = 4;
@@ -22,7 +56,7 @@ void initStateMachines(){
 	tasks[taski].wcet = 0;
 	++taski;
 
-//	1
+	//	1
 	// Tank Bullet Movement
 	tasks[taski].state = -1;
 	tasks[taski].period = 5;
@@ -31,7 +65,7 @@ void initStateMachines(){
 	tasks[taski].wcet = 0;
 	++taski;
 
-//	2
+	//	2
 	// Aliens Movement
 	tasks[taski].state = -1;
 	tasks[taski].period = 60;
@@ -40,7 +74,7 @@ void initStateMachines(){
 	tasks[taski].wcet = 0;
 	++taski;
 
-//	3
+	//	3
 	// Aliens Bullets Movement
 	tasks[taski].state = -1;
 	tasks[taski].period = 5;
@@ -49,7 +83,7 @@ void initStateMachines(){
 	tasks[taski].wcet = 0;
 	++taski;
 
-//	4
+	//	4
 	// Spaceship Movement and creation
 	tasks[taski].state = -1;
 	tasks[taski].period = 5;
@@ -58,7 +92,7 @@ void initStateMachines(){
 	tasks[taski].wcet = 0;
 	++taski;
 
-//	5
+	//	5
 	// Alien Death and Explosion
 	tasks[taski].state = -1;
 	tasks[taski].period = tasks[3].period;
@@ -92,8 +126,9 @@ int TankMovementAndBullet_SM(int state) {
 				state = SM1_gameOver;
 			}
 			else{
-				if(centerButton)
+				if(centerButton){
 					fireTankBullet();
+				}
 
 				if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
 					state = SM1_dead;
@@ -109,6 +144,7 @@ int TankMovementAndBullet_SM(int state) {
 				else if(leftButton) {
 					state = SM1_alive;
 					moveTankLeft();
+
 				}
 			}
 			break;
@@ -127,17 +163,17 @@ int TankMovementAndBullet_SM(int state) {
 				if(lives <= 0 || lives > 10){
 					lives = 0;
 					setGameOver(1);
-					blankScreen();
 				}
 				setLives(lives);
 				if(!getGameOver())
 					renderLives();
-
 			}
 			else if (cycles <= TANK_MAP_FLIP_CYCLES/3) {
+
 				state = SM1_dead;
 				deathTank2();
 				cycles--;
+
 			}
 			else if(i < TANK_MAP_FLIP_COUNT/2) {
 				state = SM1_dead;
@@ -157,8 +193,12 @@ int TankMovementAndBullet_SM(int state) {
 			}
 			break;
 		case SM1_gameOver:
+
+			if(downButton)
+				blankScreen();
 			renderGameOverText();
 			if(rightButton || leftButton || centerButton){
+
 				state = SM1_alive;
 				initStateMachines();
 			}
@@ -199,6 +239,27 @@ int TankMovementAndBullet_SM(int state) {
 				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
 				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d ms\n\r", tasks[i++].wcet/100000);
 				i = 0;
+				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+					xil_printf("\n\n\r\t\t\tOverrun in TankMovementAndBullet_SM");
+				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+					xil_printf("\n\n\r\t\t\tOverrun in TankBulletUpdate_SM");
+				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+					xil_printf("\n\n\r\t\t\tOverrun in AlienMovementAndBullets_SM");
+				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+					xil_printf("\n\n\r\t\t\tOverrun in AlienbulletsUpdate_SM");
+				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+					xil_printf("\n\n\r\t\t\tOverrun in SpaceShipUpdate_SM");
+				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+					xil_printf("\n\n\r\t\t\tOverrun in AlienDeath_SM");
+				i = 0;
+				int j;
+				u32 tempTotalWcet = 0;
+				for(j = 0; j < 6; j++){
+					tempTotalWcet += tasks[j++].wcet;
+				}
+				xil_printf("\n\n\rTotal Wcet: %d", tempTotalWcet);
+				if(tempTotalWcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+					xil_printf("\n\n\r\t\t\tOverrun in Total Wcet");
 			}
 		}
 		break;
@@ -254,15 +315,19 @@ int AlienMovementAndBullets_SM(int state) {
 
 			u8 random;
 			random = (char)(rand() % ALIEN_BULLET_FIRE_RATE);
-			if(random < 10)
+			if(random < 10){
+				startTiming();
 				fireAlienBullet(random);
+				stopTiming();
+			}
 
 			if(getGameOver()){
 				state = SM3_gameOver;
 			}
 			else if(1){
-				if(!getGameOver())
+				if(!getGameOver()){
 					renderAliens(1);
+				}
 				state = SM3_alien;
 			}
 		}
@@ -276,7 +341,7 @@ int AlienMovementAndBullets_SM(int state) {
 		switch(state) { // State actions
 		case SM3_alien:{
 			signed long newPeriod = ALIEN_STATE_MACHINE_RATE_MAX
-									 -((getAlienBlockPosition().y-ALIEN_STARTING_Y_POSITION)/ALIEN_HEIGHT)*2;
+					-((getAlienBlockPosition().y-ALIEN_STARTING_Y_POSITION)/ALIEN_HEIGHT)*2;
 			u8 aliensAlive = getNumberAliensAlive();
 			newPeriod = newPeriod - (((54-aliensAlive)*6)/10);
 			if(newPeriod <= 1)
