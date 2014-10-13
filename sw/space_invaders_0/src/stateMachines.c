@@ -95,16 +95,9 @@ int TankMovementAndBullet_SM(int state) {
 				if(centerButton)
 					fireTankBullet();
 
-				if (getTankLife() == 0 || downButton) { // it the tank is dead TANK DEATH FLAG
+				if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
 					state = SM1_dead;
 					cycles = TANK_MAP_FLIP_CYCLES;
-					i = 0;
-					xil_printf("\n\rTankMovementAndBullet_SM wcet: \t\t%d us", tasks[i++].wcet/100);
-					xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
-					xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d us", tasks[i++].wcet/100);
-					xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
-					xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
-					xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d us\n\r", tasks[i++].wcet/100);
 				}
 				else if(!rightButton && !leftButton){
 					state = SM1_alive;
@@ -176,7 +169,37 @@ int TankMovementAndBullet_SM(int state) {
 
 		switch(state) { // State actions
 		case SM1_gameOver:{
-
+			if(downButton) {
+				i = 0;
+				xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
+				xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
+				xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d clock cycles", tasks[i++].wcet);
+				xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
+				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
+				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d clock cycles\n\r", tasks[i++].wcet);
+				i = 0;
+				xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
+				xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
+				xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d ns", tasks[i++].wcet*10);
+				xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
+				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
+				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d ns\n\r", tasks[i++].wcet*10);
+				i = 0;
+				xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+				xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+				xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d us", tasks[i++].wcet/100);
+				xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d us\n\r", tasks[i++].wcet/100);
+				i = 0;
+				xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
+				xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
+				xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d ms", tasks[i++].wcet/100000);
+				xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
+				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
+				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d ms\n\r", tasks[i++].wcet/100000);
+				i = 0;
+			}
 		}
 		break;
 		default: // ADD default behaviour below

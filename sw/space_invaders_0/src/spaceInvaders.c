@@ -54,6 +54,7 @@ void timer_interrupt_handler() {
 	u8 i;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
 		if (tasks[i].elapsedTime >= tasks[i].period){
+			u32 tempWcet = 0;
 			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
 			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			switch (i) {
@@ -81,12 +82,13 @@ void timer_interrupt_handler() {
 			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			tasks[i].elapsedTime = 0; // Reset the elapsed time
+			if(tempWcet > tasks[i].wcet)
+			{
+				tasks[i].wcet = tempWcet;
+			}
 		}
 		tasks[i].elapsedTime += 1;
-		if(tempWcet > tasks[i].wcet)
-		{
-			tasks[i].wcet = tempWcet;
-		}
+
 	}
 
 //	timerFlag = 1;
