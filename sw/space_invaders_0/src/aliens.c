@@ -118,6 +118,8 @@ void updateAlienLocation() {
 	// Check if aliens are too low
 	if ((getAlienBlockPosition().y+((lowestLiveRow*(ALIEN_HEIGHT+10))+ALIEN_HEIGHT)) > BOTTOM_BORDER) {
 		setGameOver(1);
+		blankScreen();
+		renderGameOverText();
 	}
 }
 
@@ -176,6 +178,8 @@ void killAlien(u8 alienNumber) {
 		}
 	}
 
+	//
+
 	// Adjust leftPad and rightPad if necessary:
 	setAlienStatus(alienNumber, 0);
 	adjustPadding();
@@ -196,6 +200,12 @@ void killAlien(u8 alienNumber) {
 		setScore(score);
 	}
 	renderScore();
+
+	// Raise Black Death Flag!!!!
+	setAlienDeath(1);
+	// Save the point_t of the explosion
+	setAlienExplosionPosition(position);
+	setNumberAliensAlive(getNumberAliensAlive() - 1);
 }
 
 /**
@@ -393,7 +403,7 @@ u8 hitAlien(point_t position) {
 	signed int alienNumber;	//so we can start from 54 and subtract w/o overflowing
 
 	//If it's outside the alien block
-	if (position.x < alienBlockPosition.x || position.y > (alienBlockPosition.y + 5*(ALIEN_HEIGHT+10))) {
+	if (position.x < (alienBlockPosition.x + getLeftPad()) || position.y > (alienBlockPosition.y + 5*(ALIEN_HEIGHT+10))) {
 		return 0xFF;
 	}
 	else if (position.x > (alienBlockPosition.x + 11*32) || position.y < alienBlockPosition.y) {
@@ -486,8 +496,10 @@ void fireAlienBullet(u32 randomCol) {
 			bullet.type = (randomCol % 2) & 0x1;
 			bullet.guise = 0;
 			setAlienBullet(bullet, bulletNum);
-			renderAlienBullet(0);
-			renderAliens(0); //redraw aliens to mask overlap
+			if(!getGameOver()){ // these were causing a flash of Aliens after the game ends
+				renderAlienBullet(0);
+				renderAliens(0); //redraw aliens to mask overlap
+			}
 			return;
 		}
 	}

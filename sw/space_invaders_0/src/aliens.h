@@ -13,6 +13,9 @@
 #define ALIEN_BULLET_FIRE_RATE 10
 #define ALIEN_BULLET_SPEED 6   // # of pixel the alien bullets moves per update
 #define BOTTOM_BORDER 418
+#define ALIEN_EXPLOSION_SHOW_TIME 2   // # of pixel the alien bullets moves per update
+#define ALIEN_STATE_MACHINE_RATE_MAX 60 // this is the slowest that the Aliens SM will be called
+#define ALIEN_STARTING_Y_POSITION 70
 
 void unrenderAliens();
 void updateAlienLocation();

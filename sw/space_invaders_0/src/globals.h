@@ -28,7 +28,7 @@
 #define OFFWHITE	0x00FFFFFE
 #define YELLOW		0x00FFFF00
 
-#define TASKS_NUM 5
+#define TASKS_NUM 6
 
 #include "bitmaps.h"
 
@@ -40,6 +40,22 @@ typedef struct {point_t position; u8 type; u8 guise;} alienBullet;
 // Initialize the program
 /////////////////////////////////////
 void initGlobals();
+
+/////////////////////////////////////
+// Setup the Spaceship Globals
+/////////////////////////////////////
+void setSpaceshipPosition(point_t val);
+point_t getSpaceshipPosition();
+
+u32 getSpaceshipScore();
+void setSpaceshipScore(u32 val);
+
+u8 getSpaceshipActivated();
+void setSpaceshipActivated(u8 val);
+
+u8 getSpaceshipDied();
+void setSpaceshipDied(u8 newVal);
+
 
 /////////////////////////////////////
 // Setup the Tank Globals
@@ -80,6 +96,14 @@ void setRightCol(u8 rightCol);
 u8 getLeftCol();
 u8 getRightCol();
 
+void setAlienExplosionPosition(point_t val);
+point_t getAlienExplosionPosition();
+void setAlienDeath(u8 val);
+u8 getAlienDeath();
+
+void setNumberAliensAlive(u8 val);
+u8 getNumberAliensAlive();
+
 /////////////////////////////////////
 // Setup the Bunker Globals
 /////////////////////////////////////
@@ -102,5 +126,6 @@ u8 getLives();
 
 void setGameOver(u8 newVal);
 u8 getGameOver();
+
 
 #endif

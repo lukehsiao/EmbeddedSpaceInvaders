@@ -24,6 +24,7 @@ void renderLivesText();
 void unrenderLives();
 void renderLives();
 void render();
+void renderGameOverText();
 
 //Specifically for Lab 3.
 void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput);
