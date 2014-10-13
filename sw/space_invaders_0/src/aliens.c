@@ -51,36 +51,32 @@ void unrenderAliens() {
 			}
 		}
 	}
-	// if X_SHIFT > 6, we'll need to add logic hear to clear the right side as well.
+	// if X_SHIFT > 6, we'll need to add logic here to clear the right side as well.
 
 	// If we hit the right edge
 	if(position.x + (32*11) >= getRightPad() && direction == 1) {
-		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
-			for (col = 0; col < 32*11; col++) {
-				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
-					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
-					}
-					else {
-						if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
-							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
-						}
+		for (row = 0; row < ALIEN_HEIGHT; row++) {
+			for (col = 0; col < (32*11); col++) {
+				if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+				}
+				else {
+					if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
 					}
 				}
 			}
 		}
 	} // Alien Block hit left side
 	else if(position.x + getLeftPad() <= 5 && direction == 0) {
-		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
+		for (row = 0; row < ALIEN_HEIGHT; row++) {
 			for (col = 0; col < 32*11; col++) {
-				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
-					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
-					}
-					else {
-						if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
-							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
-						}
+				if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+				}
+				else {
+					if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
 					}
 				}
 			}
@@ -93,19 +89,21 @@ void unrenderAliens() {
  * rows when they hit the edge of the screen.
  */
 void updateAlienLocation() {
+	startTiming();
 	unrenderAliens();
+	stopTiming();
 	u8 direction = getAlienDirection();
 	// Update Location each call
 	point_t tempAlien = getAlienBlockPosition();
 
 	//Right edge hit
 	if (tempAlien.x + (32*11) >= getRightPad() && direction == 1) {
-		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+		tempAlien.y = tempAlien.y + (ALIEN_HEIGHT);
 		setAlienDirection(0);
 	}
 	//left edge hit
 	else if (tempAlien.x + getLeftPad() <= 5 && direction == 0) {
-		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+		tempAlien.y = tempAlien.y + (ALIEN_HEIGHT);
 		setAlienDirection(1);
 	}
 	else {
@@ -251,7 +249,7 @@ void renderAliens(u8 animate) {
 
 		//Rendering each alien
 		arrayToRender = getAlienArray(alienNumber);
-		for (row = 0; row < ALIEN_HEIGHT; row++) {
+		for (row = 0; row < (ALIEN_HEIGHT); row++) {
 			for (col = 0; col < 32; col++) {
 				u8 pixelPresent = (arrayToRender[row] >> (31-col)) & 0x1;
 				if (pixelPresent) {

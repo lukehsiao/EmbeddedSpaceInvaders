@@ -316,9 +316,9 @@ int AlienMovementAndBullets_SM(int state) {
 			u8 random;
 			random = (char)(rand() % ALIEN_BULLET_FIRE_RATE);
 			if(random < 10){
-				startTiming();
+//				startTiming();
 				fireAlienBullet(random);
-				stopTiming();
+//				stopTiming();
 			}
 
 			if(getGameOver()){
