@@ -111,6 +111,9 @@ void initGlobals(){
 	currentScore = 0;
 
 }
+
+
+
 /////////////////////////////////////
 // Implement the Spaceship Globals
 /////////////////////////////////////

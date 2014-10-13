@@ -132,11 +132,14 @@ void renderPoints(u32 points, point_t position) {
 	u32 row, col;
 	const u32* arrayToRender;
 	if (points < 10) {
+		localPosition.x += 15; //to center it better
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
+					if ((localPosition.x+col) < 640) {
+						framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;
+					}
 				}
 				else {
 					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
@@ -145,24 +148,29 @@ void renderPoints(u32 points, point_t position) {
 		}
 	}
 	else if (points < 100) {
+		localPosition.x += 5;	//to center it better
 		arrayToRender = getDigitArray(tens);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
+					if ((localPosition.x+col) < 640) {
+						framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;
+					}
 				}
 				else {
 					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
-		localPosition.x += 12;
+		localPosition.x += 11;
 
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
+					if ((localPosition.x+col) < 640) {
+						framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;
+					}
 				}
 				else {
 					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
@@ -175,33 +183,39 @@ void renderPoints(u32 points, point_t position) {
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
+					if ((localPosition.x+col) < 640) {
+						framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;
+					}
 				}
 				else {
 					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
-		localPosition.x += 12;
+		localPosition.x += 11;
 
 		arrayToRender = getDigitArray(tens);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
+					if ((localPosition.x+col) < 640) {
+						framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;
+					}
 				}
 				else {
 					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;
 				}
 			}
 		}
-		localPosition.x += 12;
+		localPosition.x += 11;
 
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
 			for(col = 0; col < 10; col++) {
 				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;  // frame 0 is red here.
+					if ((localPosition.x+col) < 640) {
+						framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = YELLOW;
+					}
 				}
 				else {
 					framePointer0[(localPosition.y+row)*640 + (localPosition.x+col)] = BLACK;

@@ -50,43 +50,43 @@ unsigned char taski;
 // It calls all the state machines for timing.
 void timer_interrupt_handler() {
 //	unsigned long tasksPeriodGCD = 1;
-	u32 tempWcet = 0;
+//	u32 tempWcet = 0;
 	u8 i;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
 		if (tasks[i].elapsedTime >= tasks[i].period){
-			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
-			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+//			u32 tempWcet = 0;
+//			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
+//			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			switch (i) {
 				case 0:
-					tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);
 					break;
 				case 1:
-					tasks[i].state = TankBulletUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					tasks[i].state = TankBulletUpdate_SM(tasks[i].state);
 					break;
 				case 2:
-					tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);
 					break;
 				case 3:
-					tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);
 					break;
 				case 4:
-					tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);
 					break;
 				case 5:
-					tasks[i].state = AlienDeath_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					tasks[i].state = AlienDeath_SM(tasks[i].state);
 					break;
 				default:
 					break;
 			}
-			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			tasks[i].elapsedTime = 0; // Reset the elapsed time
+//			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+//			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+//			if(tempWcet > tasks[i].wcet)
+//				tasks[i].wcet = tempWcet;
 		}
 		tasks[i].elapsedTime += 1;
-		if(tempWcet > tasks[i].wcet)
-		{
-			tasks[i].wcet = tempWcet;
-		}
+
 	}
 
 //	timerFlag = 1;
