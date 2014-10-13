@@ -27,6 +27,7 @@ u32 lowestLiveRow = 4;
  * Then, blanks the entire block when the aliens drop a row.
  */
 void unrenderAliens() {
+
 	u32 col;
 	u32 row;
 	point_t position;
@@ -36,6 +37,7 @@ void unrenderAliens() {
 
 	//If moving right..
 	if(direction == 1){
+//		startTiming();
 		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
 			for (col = 0; col < X_SHIFT; col++) {
 				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
@@ -50,6 +52,7 @@ void unrenderAliens() {
 				}
 			}
 		}
+//		stopTiming();
 	}
 	// if X_SHIFT > 6, we'll need to add logic here to clear the right side as well.
 
@@ -82,6 +85,7 @@ void unrenderAliens() {
 			}
 		}
 	}
+
 }
 
 /**
@@ -141,7 +145,7 @@ void adjustPadding() {
 		}
 	}
 
-rightside:
+	rightside:
 	// Iterate over all the Right to left
 	for(col = 10; col >= 0; col--) {
 		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
