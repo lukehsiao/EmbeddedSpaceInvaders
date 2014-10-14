@@ -138,6 +138,7 @@ void renderTankBullet(u8 animate) {
 	u32 col;
 	if (position.y < 480) {
 		if (calculateTankBulletHit()) {
+			unrenderTankBullet();
 			position.y = 800; //deactivate the tank bullet
 			setTankBulletPosition(position);
 		}
