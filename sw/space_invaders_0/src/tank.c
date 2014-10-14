@@ -143,6 +143,10 @@ void updateTankBulletPosition() {
 			position.y = 8888;	// just a number to signify it's off the screen
 		}
 		setTankBulletPosition(position);
+		if (calculateTankBulletHit()) {
+			position.y = 800; //deactivate the tank bullet
+			setTankBulletPosition(position);
+		}
 	}
 }
 
@@ -158,18 +162,11 @@ void renderTankBullet(u8 animate) {
 	u32 row;
 	u32 col;
 	if (position.y < 480) {
-		if (calculateTankBulletHit()) {
-			unrenderTankBullet();
-			position.y = 800; //deactivate the tank bullet
-			setTankBulletPosition(position);
-		}
-		else {
-			for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
-				for (col = 0; col < TANK_BULLET_WIDTH; col++) {
-					//Don't draw the tank bullet above the line
-					if ((position.y + row) > 35) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;
-					}
+		for (row = 0; row < TANK_BULLET_HEIGHT; row++) {
+			for (col = 0; col < TANK_BULLET_WIDTH; col++) {
+				//Don't draw the tank bullet above the line
+				if ((position.y + row) > 35) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;
 				}
 			}
 		}
