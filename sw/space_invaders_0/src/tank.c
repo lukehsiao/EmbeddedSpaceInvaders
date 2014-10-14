@@ -20,14 +20,33 @@ void renderTank() {
 	u32 row;
 	const u32* arrayToRender;
 	arrayToRender = getTankArray();
+	point_t tempPosition = getTankPositionGlobal();
+	tempPosition.x -= TANK_MOVEMENT_SPEED;
+	for (row = 0; row < 16; row++) {
+		for (col = 0; col < TANK_MOVEMENT_SPEED; col++) {
+			if (framePointer0[(tempPosition.y+row)*640 + (tempPosition.x+col)] == GREEN) {
+				framePointer0[(tempPosition.y+row)*640 + (tempPosition.x+col)] = BLACK;
+			}
+		}
+	}
+	tempPosition.x += TANK_MOVEMENT_SPEED;
 	for (row = 0; row < 16; row++) {
 		for (col = 0; col < 32; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = GREEN;
+				framePointer0[(tempPosition.y+row)*640 + (tempPosition.x+col)] = GREEN;
 			}
-//			else {
-//				framePointer0[(getTankPositionGlobal().y+row)*640 + (getTankPositionGlobal().x+col)] = BLACK;
-//			}
+			else {
+				framePointer0[(tempPosition.y+row)*640 + (tempPosition.x+col)] = BLACK;
+			}
+		}
+	}
+
+	tempPosition.x += 32;
+	for (row = 0; row < 16; row++) {
+		for (col = 0; col < TANK_MOVEMENT_SPEED; col++) {
+			if (framePointer0[(tempPosition.y+row)*640 + (tempPosition.x+col)] == GREEN) {
+				framePointer0[(tempPosition.y+row)*640 + (tempPosition.x+col)] = BLACK;
+			}
 		}
 	}
 }
@@ -41,7 +60,9 @@ void unrenderTank() {
 	point_t position = getTankPositionGlobal();
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
 		for(col=0; col<32; col++) {
-			framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;  // frame 0 is red here.
+			if (framePointer0[(position.y + row)*640 + (position.x + col)] == GREEN) {
+				framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+			}
 		}
 	}
 }
@@ -138,6 +159,7 @@ void renderTankBullet(u8 animate) {
 	u32 col;
 	if (position.y < 480) {
 		if (calculateTankBulletHit()) {
+			unrenderTankBullet();
 			position.y = 800; //deactivate the tank bullet
 			setTankBulletPosition(position);
 		}
@@ -203,7 +225,7 @@ void fireTankBullet() {
 
 void moveTank(u32 position) {
 	point_t temp;
-	unrenderTank();
+	unrenderTank();	//Clear the dead tank
 	temp.x = position;
 	if (temp.x > (640-32)) {
 		temp.x = 0;
@@ -214,7 +236,6 @@ void moveTank(u32 position) {
 
 void moveTankLeft() {
 	point_t temp;
-	unrenderTank();
 	temp = getTankPositionGlobal();
 	temp.x = temp.x - TANK_MOVEMENT_SPEED;
 	if (temp.x > (640-32)) {
@@ -226,7 +247,6 @@ void moveTankLeft() {
 
 void moveTankRight() {
 	point_t temp;
-	unrenderTank();
 	temp = getTankPositionGlobal();
 	temp.x = temp.x + TANK_MOVEMENT_SPEED;
 	if (temp.x > (640-32)) {

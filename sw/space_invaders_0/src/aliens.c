@@ -6,7 +6,7 @@
  *  @date 10 Oct 2014
  */
 
-#include "globals.h"
+#include "stateMachines.h"
 #include "render.h"
 
 
@@ -34,62 +34,50 @@ void unrenderAliens() {
 	position = getAlienBlockPosition();
 	static u8 direction;
 	direction = getAlienDirection();
-
-	//If moving right..
-	if(direction == 1){
-//		startTiming();
-		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
-			for (col = 0; col < X_SHIFT; col++) {
-				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
-					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
-					}
-					else {
-						if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
-							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
-						}
-					}
-				}
-			}
-		}
-//		stopTiming();
-	}
-	// if X_SHIFT > 6, we'll need to add logic hear to clear the right side as well.
-
+	u32 totalWidth = 32*11;
+	u32 totalHeight = (ALIEN_HEIGHT+10)*5;
 	// If we hit the right edge
-	if(position.x + (32*11) >= getRightPad() && direction == 1) {
-		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
-			for (col = 0; col < 32*11; col++) {
-				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
-					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
-					}
-					else {
-						if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
-							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
-						}
-					}
+	if(position.x + totalWidth >= getRightPad() && direction == 1) {
+		for (row = 0; row < totalHeight; row++) {
+			for (col = 0; col < totalWidth; col++) {
+				if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+				}
+				else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
 				}
 			}
 		}
 	} // Alien Block hit left side
 	else if(position.x + getLeftPad() <= 5 && direction == 0) {
+		for (row = 0; row < totalHeight; row++) {
+			for (col = 0; col < totalWidth; col++) {
+				if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
+					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+				}
+				else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
+						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+				}
+			}
+		}
+	}
 
-		for (row = 0; row < (ALIEN_HEIGHT + 10)*5; row++) {
-			for (col = 0; col < 32*11; col++) {
+	//If moving right..
+	else if(direction == 1){
+		for (row = 0; row < totalHeight; row++) {
+			for (col = 0; col < X_SHIFT; col++) {
 				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
 					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
 						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
 					}
-					else {
-						if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE) {
+					else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
 							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
-						}
 					}
 				}
 			}
 		}
 	}
+	// if X_SHIFT > 6, we'll need to add logic here to clear the right side as well.
 
 }
 
@@ -105,12 +93,12 @@ void updateAlienLocation() {
 
 	//Right edge hit
 	if (tempAlien.x + (32*11) >= getRightPad() && direction == 1) {
-		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+		tempAlien.y = tempAlien.y + (ALIEN_HEIGHT);
 		setAlienDirection(0);
 	}
 	//left edge hit
 	else if (tempAlien.x + getLeftPad() <= 5 && direction == 0) {
-		tempAlien.y = tempAlien.y + ALIEN_HEIGHT;
+		tempAlien.y = tempAlien.y + (ALIEN_HEIGHT);
 		setAlienDirection(1);
 	}
 	else {
@@ -185,7 +173,16 @@ void killAlien(u8 alienNumber) {
 		}
 	}
 
-	//
+	setNumberAliensAlive(getNumberAliensAlive()-1);
+	//If player kills all aliens
+	xil_printf("Number of Aliens Alive: %d\n\r", getNumberAliensAlive());
+	if (getNumberAliensAlive() == 0) {
+		u32 tempScore = getScore();
+		initStateMachines();
+		setScore(tempScore);
+		renderScore();
+		return;
+	}
 
 	// Adjust leftPad and rightPad if necessary:
 	setAlienStatus(alienNumber, 0);
@@ -206,13 +203,11 @@ void killAlien(u8 alienNumber) {
 		score += 10;
 		setScore(score);
 	}
-	renderScore();
-
 	// Raise Black Death Flag!!!!
 	setAlienDeath(1);
 	// Save the point_t of the explosion
 	setAlienExplosionPosition(position);
-	setNumberAliensAlive(getNumberAliensAlive() - 1);
+	renderScore();
 }
 
 /**
@@ -256,7 +251,7 @@ void renderAliens(u8 animate) {
 
 		//Rendering each alien
 		arrayToRender = getAlienArray(alienNumber);
-		for (row = 0; row < ALIEN_HEIGHT; row++) {
+		for (row = 0; row < (ALIEN_HEIGHT); row++) {
 			for (col = 0; col < 32; col++) {
 				u8 pixelPresent = (arrayToRender[row] >> (31-col)) & 0x1;
 				if (pixelPresent) {

@@ -59,10 +59,10 @@ u8 gameOver; // 1 is gameOver. 0 game is running
 // Initializations
 /////////////////////////////////////
 void initGlobals(){
+	xil_printf("\rInitializing Space Invaders Globals\n\r================\n\r");
 	// Initialize Tank
 	setTankPositionGlobal(70);
 	tankLife = 1;
-
 
 	// Initialize Bunkers
     initBunkers();
@@ -82,7 +82,7 @@ void initGlobals(){
 	temp.y = 70;
 	setAlienBlockPosition(temp);
 	direction = 1;
-	setNumberAliensAlive(54);
+	setNumberAliensAlive(55);
 
 	// Initialize Game Variables
 	setLives(3);
@@ -111,7 +111,6 @@ void initGlobals(){
 	currentScore = 0;
 
 }
-
 
 
 /////////////////////////////////////
