@@ -7,9 +7,30 @@
  * @date 23 Sept 2014
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "render.h"			// Our rendering file.
+#include "xgpio.h"          // Provides access to PB GPIO driver.
+
+#include "platform.h"
+#include "xparameters.h"
+#include "xaxivdma.h"
+#include "xio.h"
+#include "xtmrctr.h" // axi Timer
+//#include "time.h"	//is this needed?
+#include "unistd.h"
+#include "render.h"			// Our rendering file.
+#include "xuartlite_l.h"
+#include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
+#include "xintc_l.h"        // Provides handy macros for the interrupt controller.
+
+
+
 #ifndef globals_h
 #define globals_h
-
+XTmrCtr Timer0;
+u32 maxWcet;
+u32 tempWcet;
 // Starting location in DDR where we will store the images that we display.
 #define FRAME_BUFFER_0_ADDR 0xC1000000  
 

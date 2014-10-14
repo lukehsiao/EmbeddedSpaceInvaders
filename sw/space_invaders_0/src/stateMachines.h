@@ -29,6 +29,12 @@ typedef struct task {
 
 task tasks[TASKS_NUM];
 
+/////////////////////////////////////
+// Handy Timing Functions
+/////////////////////////////////////
+void startTiming();
+void stopTiming();
+
 void initStateMachines();
 
 enum SM1_States { SM1_alive, SM1_dead, SM1_gameOver } SM1_State;

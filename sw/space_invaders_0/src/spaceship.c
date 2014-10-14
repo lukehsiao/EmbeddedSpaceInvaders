@@ -245,7 +245,7 @@ u8 hitSpaceShip(point_t bulletPosition) {
 	point_t position;
 	position = getSpaceshipPosition();
 	//If it's outside the spaceship
-	if (bulletPosition.x < position.x || bulletPosition.y < position.y) {
+	if ((bulletPosition.x+32) < (position.x+32) || bulletPosition.y < position.y) {
 		return 0;
 	}
 	else if (bulletPosition.x > (position.x+32) || bulletPosition.y > (position.y+16)) {
