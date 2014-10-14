@@ -173,7 +173,16 @@ void killAlien(u8 alienNumber) {
 		}
 	}
 
-	//
+	setNumberAliensAlive(getNumberAliensAlive()-1);
+	//If player kills all aliens
+	xil_printf("Number of Aliens Alive: %d\n\r", getNumberAliensAlive());
+	if (getNumberAliensAlive() == 0) {
+		u32 tempScore = getScore();
+		initStateMachines();
+		setScore(tempScore);
+		renderScore();
+		return;
+	}
 
 	// Adjust leftPad and rightPad if necessary:
 	setAlienStatus(alienNumber, 0);
@@ -194,20 +203,11 @@ void killAlien(u8 alienNumber) {
 		score += 10;
 		setScore(score);
 	}
-	renderScore();
 	// Raise Black Death Flag!!!!
 	setAlienDeath(1);
 	// Save the point_t of the explosion
 	setAlienExplosionPosition(position);
-	setNumberAliensAlive(getNumberAliensAlive()-1);
-
-	//If player kills all aliens
-	if (getNumberAliensAlive() == 0) {
-		u32 tempScore = getScore();
-		initStateMachines();
-		setScore(tempScore);
-		renderScore();
-	}
+	renderScore();
 }
 
 /**
