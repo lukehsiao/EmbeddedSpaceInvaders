@@ -318,10 +318,10 @@ int AlienMovementAndBullets_SM(int state) {
 			u8 random;
 			random = (char)(rand() % ALIEN_BULLET_FIRE_RATE);
 			if(random < 10){
-//				startTiming();
+				//				startTiming();
 				random = (char)(rand() % 11);
 				fireAlienBullet(random);
-//				stopTiming();
+				//				stopTiming();
 			}
 
 			if(getGameOver()){
@@ -400,6 +400,7 @@ int AlienbulletsUpdate_SM(int state) {
 int SpaceShipUpdate_SM(int state) {
 	static int i;
 	static int cycles;
+	static int waitShow;
 	static point_t savedPosition;
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 upButton = ((buttons & UP) >> 4) & 0x1;
@@ -470,11 +471,15 @@ int SpaceShipUpdate_SM(int state) {
 
 		switch(state) { // State actions
 		case SM5_alive:{
-			u8 random;
-			random = (char)(rand() % SPACESHIP_START_RATE);
-			if(random == 0){
-				startSpaceShip();
+			if(waitShow >= EXTRA_WAIT){
+				u32 showRandom;
+				showRandom = (char)(rand() % SPACESHIP_START_RATE);
+				if(showRandom == 0){
+					startSpaceShip();
+				}
+				waitShow = 0;
 			}
+			waitShow++;
 		}
 		break;
 		case SM5_dead: {
