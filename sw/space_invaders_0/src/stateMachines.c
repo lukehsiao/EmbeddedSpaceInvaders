@@ -319,6 +319,7 @@ int AlienMovementAndBullets_SM(int state) {
 			random = (char)(rand() % ALIEN_BULLET_FIRE_RATE);
 			if(random < 10){
 //				startTiming();
+				random = (char)(rand() % 11);
 				fireAlienBullet(random);
 //				stopTiming();
 			}
@@ -471,7 +472,7 @@ int SpaceShipUpdate_SM(int state) {
 		case SM5_alive:{
 			u8 random;
 			random = (char)(rand() % SPACESHIP_START_RATE);
-			if(random < 1){
+			if(random == 0){
 				startSpaceShip();
 			}
 		}
