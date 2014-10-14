@@ -175,7 +175,7 @@ void killAlien(u8 alienNumber) {
 
 	setNumberAliensAlive(getNumberAliensAlive()-1);
 	//If player kills all aliens
-	xil_printf("Number of Aliens Alive: %d\n\r", getNumberAliensAlive());
+//	xil_printf("Number of Aliens Alive: %d\n\r", getNumberAliensAlive());
 	if (getNumberAliensAlive() == 0) {
 		u32 tempScore = getScore();
 		initStateMachines();
