@@ -49,8 +49,6 @@ unsigned char taski;
 // This is invoked in response to a timer interrupt.
 // It calls all the state machines for timing.
 void timer_interrupt_handler() {
-//	unsigned long tasksPeriodGCD = 1;
-//	u32 tempWcet = 0;
 	u8 i;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
 		if (tasks[i].elapsedTime >= tasks[i].period){
