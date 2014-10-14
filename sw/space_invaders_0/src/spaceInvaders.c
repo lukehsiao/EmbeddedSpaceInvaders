@@ -30,6 +30,7 @@
 #include "xgpio.h"          // Provides access to PB GPIO driver.
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 #include "stateMachines.h"
+#include "xparameters.h"
 #define DEBUG
 
 XTmrCtr Timer0;
@@ -49,7 +50,7 @@ unsigned char taski;
 // This is invoked in response to a timer interrupt.
 // It calls all the state machines for timing.
 void timer_interrupt_handler() {
-	u32 tempWcet = 0;
+	startTiming();
 	u8 i;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
 		if (tasks[i].elapsedTime >= tasks[i].period){
@@ -94,6 +95,7 @@ void timer_interrupt_handler() {
 	//	timerFlag = 1;
 	// Clear interrupt status bit in control register
 	//	XTmrCtr_SetControlStatusReg(XPAR_AXI_TIMER_0_BASEADDR, 0, XTmrCtr_GetControlStatusReg(XPAR_AXI_TIMER_0_BASEADDR, 0));
+	stopTiming();
 }
 
 // Main interrupt handler, queries the interrupt controller to see what peripheral
@@ -209,13 +211,15 @@ int main()
 	//     u32 userInput;
 	//     u32 sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
 
-	int uTest = 100;
 	xil_printf("\n\n\rWithout interrupts\n\n\r");
 
+	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
+	XTmrCtr_SetOptions(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, XTC_CASCADE_MODE_OPTION);
 	while (1) {
-		startTiming();
+//		startTiming();
 		int n, first = 0, second = 1, next, c;
-		n = 40;
+		n = 26;
 		next = 0;
 		for ( c = 0 ; c < n ; c++ )
 		{
@@ -227,9 +231,9 @@ int main()
 				first = second;
 				second = next;
 			}
-			xil_printf("\r%d",next);
+//			xil_printf("\r%d",next);
 		}
-		stopTiming();
+//		stopTiming();
 
 		microblaze_enable_interrupts();
 
