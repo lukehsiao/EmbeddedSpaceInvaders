@@ -345,7 +345,7 @@ int AlienMovementAndBullets_SM(int state) {
 			signed long newPeriod = ALIEN_STATE_MACHINE_RATE_MAX
 					-((getAlienBlockPosition().y-ALIEN_STARTING_Y_POSITION)/ALIEN_HEIGHT)*2;
 			u8 aliensAlive = getNumberAliensAlive();
-			newPeriod = newPeriod - (((54-aliensAlive)*6)/10);
+			newPeriod = newPeriod - (((55-aliensAlive)*6)/10);
 			if(newPeriod <= 1)
 				newPeriod = 1;
 			tasks[2].period = newPeriod;
