@@ -225,7 +225,7 @@ void fireTankBullet() {
 
 void moveTank(u32 position) {
 	point_t temp;
-	//unrenderTank();
+	unrenderTank();	//Clear the dead tank
 	temp.x = position;
 	if (temp.x > (640-32)) {
 		temp.x = 0;
@@ -236,7 +236,6 @@ void moveTank(u32 position) {
 
 void moveTankLeft() {
 	point_t temp;
-	//unrenderTank();
 	temp = getTankPositionGlobal();
 	temp.x = temp.x - TANK_MOVEMENT_SPEED;
 	if (temp.x > (640-32)) {
@@ -248,7 +247,6 @@ void moveTankLeft() {
 
 void moveTankRight() {
 	point_t temp;
-	//unrenderTank();
 	temp = getTankPositionGlobal();
 	temp.x = temp.x + TANK_MOVEMENT_SPEED;
 	if (temp.x > (640-32)) {
