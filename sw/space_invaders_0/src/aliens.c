@@ -175,7 +175,7 @@ void killAlien(u8 alienNumber) {
 
 	setNumberAliensAlive(getNumberAliensAlive()-1);
 	//If player kills all aliens
-	xil_printf("Number of Aliens Alive: %d\n\r", getNumberAliensAlive());
+//	xil_printf("Number of Aliens Alive: %d\n\r", getNumberAliensAlive());
 	if (getNumberAliensAlive() == 0) {
 		u32 tempScore = getScore();
 		initStateMachines();
@@ -329,6 +329,10 @@ void updateAlienBulletPosition() {
 			}
 			bullet.position.y = bullet.position.y + ALIEN_BULLET_SPEED;
 			setAlienBullet(bullet, bulletNum);
+			if (calculateAlienBulletHit(bullet)) {
+				bullet.position.y = 800; //deactivate the bullet
+				setAlienBullet(bullet, bulletNum);
+			}
 		}
 	}
 }
@@ -350,22 +354,16 @@ void renderAlienBullet(u8 animate) {
 		bullet = getAlienBullet(bulletNum);
 		arrayToRender = getAlienBulletArray(bullet.type);
 		if (bullet.position.y < 480) { //if it's not off the screen
-			if (!calculateAlienBulletHit(bullet)) {
-				for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
-					for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
-						bulletGuise = bullet.guise;
-						u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
-						u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
-						// Only draw pixels, not the black.
-						if (pixelPresent) {
-							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = OFFWHITE;
-						}
+			for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
+				for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
+					bulletGuise = bullet.guise;
+					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
+					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
+					// Only draw pixels, not the black.
+					if (pixelPresent) {
+						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = OFFWHITE;
 					}
 				}
-			}
-			else {
-				bullet.position.y = 800; //deactivate the bullet
-				setAlienBullet(bullet, bulletNum);
 			}
 		}
 	}

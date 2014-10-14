@@ -10,7 +10,7 @@
 #define ALIENS_H_
 
 #define X_SHIFT 6           // # of pixels the Alien Block shifts horizontally.
-#define ALIEN_BULLET_FIRE_RATE 10
+#define ALIEN_BULLET_FIRE_RATE 20
 #define ALIEN_BULLET_SPEED 6   // # of pixel the alien bullets moves per update
 #define BOTTOM_BORDER 418
 #define ALIEN_EXPLOSION_SHOW_TIME 2   // # of pixel the alien bullets moves per update

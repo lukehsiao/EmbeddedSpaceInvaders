@@ -391,7 +391,7 @@ void renderGameOverText() {
 	u32 row, col;
 	const u32* arrayToRender;
 	u8 digitNum = 0;
-
+	u32 gameOverColor = RED;
 	//	G
 	arrayToRender = getGameOverArray(digitNum);
 	point_t defaultPosition;
@@ -400,7 +400,7 @@ void renderGameOverText() {
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -413,7 +413,7 @@ void renderGameOverText() {
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -426,7 +426,7 @@ void renderGameOverText() {
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 28; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -439,7 +439,7 @@ void renderGameOverText() {
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -452,7 +452,7 @@ void renderGameOverText() {
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -465,7 +465,7 @@ void renderGameOverText() {
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -478,7 +478,7 @@ void renderGameOverText() {
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -491,7 +491,7 @@ void renderGameOverText() {
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
