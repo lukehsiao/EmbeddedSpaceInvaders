@@ -52,7 +52,7 @@ u32 uteCounter;
 // It calls all the state machines for timing.
 void timer_interrupt_handler() {
 	interruptCounter++;
-	if(interruptCounter < 4300){
+//	if(interruptCounter < 4300){
 		u8 i;
 		for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
 			if (tasks[i].elapsedTime >= tasks[i].period){
@@ -91,10 +91,10 @@ void timer_interrupt_handler() {
 			}
 			tasks[i].elapsedTime += 1;
 		}
-	}
-	else{
-		xil_printf("\n\r%d", uteCounter);
-	}
+//	}
+//	else{
+//		xil_printf("\n\r%d", uteCounter);
+//	}
 
 	//	timerFlag = 1;
 	// Clear interrupt status bit in control register
