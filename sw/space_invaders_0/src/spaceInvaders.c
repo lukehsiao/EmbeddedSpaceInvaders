@@ -38,6 +38,8 @@ XTmrCtr Timer0;
 
 #define MAX_SILLY_TIMER 500000;
 unsigned char taski;
+u32 interruptCounter;
+u32 uteCounter;
 
 
 //void XTmrCtr_Start(XTmrCtr * InstancePtr, u8 TmrCtrNumber);
@@ -49,46 +51,49 @@ unsigned char taski;
 // This is invoked in response to a timer interrupt.
 // It calls all the state machines for timing.
 void timer_interrupt_handler() {
-	u32 tempWcet = 0;
-	u8 i;
-	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
-		if (tasks[i].elapsedTime >= tasks[i].period){
-			//			u32 tempWcet = 0;
-			//			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
-			//			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-			switch (i) {
-			case 0:
-				tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-				break;
-			case 1:
-				tasks[i].state = TankBulletUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-				break;
-			case 2:
-				tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-				break;
-			case 3:
-				tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-				break;
-			case 4:
-				tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-				break;
-			case 5:
-				tasks[i].state = AlienDeath_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-				break;
-			default:
-				break;
+	interruptCounter++;
+	if(interruptCounter < 4300){
+		u8 i;
+		for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
+			if (tasks[i].elapsedTime >= tasks[i].period){
+				XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
+				XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+				switch (i) {
+				case 0:
+					tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 1:
+					tasks[i].state = TankBulletUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 2:
+					tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 3:
+					tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 4:
+					tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				case 5:
+					tasks[i].state = AlienDeath_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+					break;
+				default:
+					break;
+				}
+				tasks[i].elapsedTime = 0; // Reset the elapsed time
+				XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+				tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+				uteCounter += tempWcet;
+				if(tempWcet > tasks[i].wcet)
+				{
+					tasks[i].wcet = tempWcet;
+				}
 			}
-			tasks[i].elapsedTime = 0; // Reset the elapsed time
-			//			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-			//			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-			//
-			//			if(tempWcet > tasks[i].wcet)
-			//			{
-			//				tasks[i].wcet = tempWcet;
-			//			}
+			tasks[i].elapsedTime += 1;
 		}
-		tasks[i].elapsedTime += 1;
-
+	}
+	else{
+		xil_printf("\n\r%d", uteCounter);
 	}
 
 	//	timerFlag = 1;
@@ -200,6 +205,8 @@ int main()
 
 	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
+	//	XTmrCtr_SetOptions(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, XTC_AUTO_RELOAD_OPTION);
+
 
 	// Print a sanity message if you get this far.
 	xil_printf("Woohoo! I made it through initialization.\n\r");
@@ -209,29 +216,32 @@ int main()
 	//     u32 userInput;
 	//     u32 sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
 
-	int uTest = 100;
 	xil_printf("\n\n\rWithout interrupts\n\n\r");
-
+	microblaze_enable_interrupts();
+	u32 tempWcet1;
+	//	XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+	interruptCounter = 0;
+	uteCounter = 0;
 	while (1) {
-		startTiming();
-		int n, first = 0, second = 1, next, c;
-		n = 40;
-		next = 0;
-		for ( c = 0 ; c < n ; c++ )
-		{
-			if ( c <= 1 )
-				next = c;
-			else
-			{
-				next = first + second;
-				first = second;
-				second = next;
-			}
-			xil_printf("\r%d",next);
-		}
-		stopTiming();
+		//		startTiming();
+		//		int n, first = 0, second = 1, next, c;
+		//		n = 26;
+		//		next = 0;
+		//		for ( c = 0 ; c < n ; c++ )
+		//		{
+		//			if ( c <= 1 )
+		//				next = c;
+		//			else
+		//			{
+		//				next = first + second;
+		//				first = second;
+		//				second = next;
+		//			}
+		//			xil_printf("\r%d",next);
+		//		}
+		//		stopTiming();
 
-		microblaze_enable_interrupts();
+
 
 
 

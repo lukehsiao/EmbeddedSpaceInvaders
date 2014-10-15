@@ -25,21 +25,20 @@
 // Handy Timing Functions
 /////////////////////////////////////
 void startTiming() {
-	int Status;
-	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
 	XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-	tempWcet = 0;
 }
 
 void stopTiming() {
 	XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+	//	if(tempWcet > maxWcet){
+	//		maxWcet = tempWcet;
+	//		xil_printf("\n\r maxWcet is %d cycles", maxWcet);
+	//		if(maxWcet > 100000000)
+	//			xil_printf("\n\r TIMER OVERRUN");
+	//	}
 	tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-	if(tempWcet > maxWcet){
-		maxWcet = tempWcet;
-		xil_printf("\n\r maxWcet is %d cycles", maxWcet);
-		if(maxWcet > 100000000)
-			xil_printf("\n\r TIMER OVERRUN");
+	if(tempWcet < 1000000){
+		xil_printf("\n\n\t ROLLOVER!!!");
 	}
 }
 
