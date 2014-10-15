@@ -30,22 +30,31 @@ void startTiming() {
 
 void stopTiming() {
 	XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-	//	if(tempWcet > maxWcet){
-	//		maxWcet = tempWcet;
-	//		xil_printf("\n\r maxWcet is %d cycles", maxWcet);
-	//		if(maxWcet > 100000000)
-	//			xil_printf("\n\r TIMER OVERRUN");
-	//	}
 	tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-	if(tempWcet < 1000000){
-		xil_printf("\n\n\t ROLLOVER!!!");
+	if(tempWcet > maxWcet){ // it the current timer is longer than our worst case prior
+		maxWcet = tempWcet; // save that as our worst case timer
+		xil_printf("\n\r maxWcet is %d cycles", maxWcet);
+		if(maxWcet > 1000000) // if the timer is over our clock tick period
+			xil_printf("\n\r TIMER OVERRUN"); // there was timer overrun
 	}
 }
 
 ////////////////////////////////////////
 // Initializing State Machine Variables
 ////////////////////////////////////////
+// When fuction is called it initiaizes all the SMs
+// also clears the screen
+// and initializes the game window and variables
 void initStateMachines(){
+	// tasks[taski].state holds the current state for the respective SM
+	// tasks[taski].state = -1; causes the SM to go to the first state
+	// tasks[taski].period sets the number of ticks between each SM call
+	// tasks[taski].elapsedTime keeps track of number of ticks since last SM call
+	// tasks[taski].TickFct holds the address to the SM function call
+	// tasks[taski].wcet holds worst case execution time
+	// worst case timing needs to start super low
+	// tasks[taski].bcet holds best case execution time
+	// best case timing needs to start super high
 	int taski;
 	taski=0;
 	//	0
@@ -113,6 +122,7 @@ void initStateMachines(){
 	render();      // draw initialized game
 }
 
+//
 int TankMovementAndBullet_SM(int state) {
 	static int i;
 	static int cycles;
