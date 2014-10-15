@@ -215,9 +215,10 @@ int main()
 
 	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
-	XTmrCtr_SetOptions(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, XTC_CASCADE_MODE_OPTION);
+//	XTmrCtr_SetOptions(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, XTC_CASCADE_MODE_OPTION);
+	microblaze_enable_interrupts();
 	while (1) {
-//		startTiming();
+		startTiming();
 		int n, first = 0, second = 1, next, c;
 		n = 26;
 		next = 0;
@@ -231,11 +232,11 @@ int main()
 				first = second;
 				second = next;
 			}
-//			xil_printf("\r%d",next);
+			xil_printf("\r%d",next);
 		}
-//		stopTiming();
+		stopTiming();
 
-		microblaze_enable_interrupts();
+
 
 
 
