@@ -51,54 +51,50 @@ u32 uteCounter;
 // This is invoked in response to a timer interrupt.
 // It calls all the state machines for timing.
 void timer_interrupt_handler() {
-	interruptCounter++;
-//	if(interruptCounter < 4300){
-		u8 i;
-		for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
-			if (tasks[i].elapsedTime >= tasks[i].period){
-				XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
-				XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-				switch (i) {
-				case 0:
-					tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-					break;
-				case 1:
-					tasks[i].state = TankBulletUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-					break;
-				case 2:
-					tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-					break;
-				case 3:
-					tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-					break;
-				case 4:
-					tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-					break;
-				case 5:
-					tasks[i].state = AlienDeath_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
-					break;
-				default:
-					break;
-				}
-				tasks[i].elapsedTime = 0; // Reset the elapsed time
-				XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-				tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-				uteCounter += tempWcet;
-				if(tempWcet > tasks[i].wcet)
-				{
-					tasks[i].wcet = tempWcet;
-				}
-			}
-			tasks[i].elapsedTime += 1;
-		}
-//	}
-//	else{
-//		xil_printf("\n\r%d", uteCounter);
-//	}
+	//	interruptCounter++;
 
-	//	timerFlag = 1;
-	// Clear interrupt status bit in control register
-	//	XTmrCtr_SetControlStatusReg(XPAR_AXI_TIMER_0_BASEADDR, 0, XTmrCtr_GetControlStatusReg(XPAR_AXI_TIMER_0_BASEADDR, 0));
+	//	if(interruptCounter < 4300){
+	u8 i;
+	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
+		if (tasks[i].elapsedTime >= tasks[i].period){
+			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
+			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+			switch (i) {
+			case 0:
+				tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				break;
+			case 1:
+				tasks[i].state = TankBulletUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				break;
+			case 2:
+				tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				break;
+			case 3:
+				tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				break;
+			case 4:
+				tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				break;
+			case 5:
+				tasks[i].state = AlienDeath_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				break;
+			default:
+				break;
+			}
+			tasks[i].elapsedTime = 0; // Reset the elapsed time
+			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+			if(tempWcet > tasks[i].wcet)
+			{
+				tasks[i].wcet = tempWcet;
+			}
+			if(tempWcet < tasks[i].bcet)
+			{
+				tasks[i].bcet = tempWcet;
+			}
+
+		}
+		tasks[i].elapsedTime += 1;	}	//		else{	//			xil_printf("\n\r%d", uteCounter);	//		}
 }
 
 // Main interrupt handler, queries the interrupt controller to see what peripheral
@@ -218,7 +214,6 @@ int main()
 
 	xil_printf("\n\n\rWithout interrupts\n\n\r");
 	microblaze_enable_interrupts();
-	u32 tempWcet1;
 	//	XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	interruptCounter = 0;
 	uteCounter = 0;

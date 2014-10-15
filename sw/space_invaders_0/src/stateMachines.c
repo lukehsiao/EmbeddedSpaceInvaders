@@ -55,6 +55,7 @@ void initStateMachines(){
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankMovementAndBullet_SM;
 	tasks[taski].wcet = 0;
+	tasks[taski].bcet = 100000000;
 	++taski;
 
 	//	1
@@ -64,6 +65,7 @@ void initStateMachines(){
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankBulletUpdate_SM;
 	tasks[taski].wcet = 0;
+	tasks[taski].bcet = 100000000;
 	++taski;
 
 	//	2
@@ -73,6 +75,7 @@ void initStateMachines(){
 	tasks[taski].elapsedTime = 0;
 	tasks[taski].TickFct = &AlienMovementAndBullets_SM;
 	tasks[taski].wcet = 0;
+	tasks[taski].bcet = 100000000;
 	++taski;
 
 	//	3
@@ -82,6 +85,7 @@ void initStateMachines(){
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
 	tasks[taski].wcet = 0;
+	tasks[taski].bcet = 100000000;
 	++taski;
 
 	//	4
@@ -91,6 +95,7 @@ void initStateMachines(){
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &SpaceShipUpdate_SM;
 	tasks[taski].wcet = 0;
+	tasks[taski].bcet = 100000000;
 	++taski;
 
 	//	5
@@ -100,6 +105,7 @@ void initStateMachines(){
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &AlienDeath_SM;
 	tasks[taski].wcet = 0;
+	tasks[taski].bcet = 100000000;
 	++taski;
 
 	initGlobals();
@@ -258,9 +264,45 @@ int TankMovementAndBullet_SM(int state) {
 				for(j = 0; j < 6; j++){
 					tempTotalWcet += tasks[j++].wcet;
 				}
-				xil_printf("\n\n\rTotal Wcet: %d", tempTotalWcet);
+				xil_printf("\n\n\rTotal Wcet: %d clock cycles", tempTotalWcet);
 				if(tempTotalWcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
 					xil_printf("\n\n\r\t\t\tOverrun in Total Wcet");
+
+				i = 0;
+				xil_printf("\n\n\n\n\rTankMovementAndBullet_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
+				xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
+				xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d clock cycles", tasks[i++].bcet);
+				xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
+				xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
+				xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d clock cycles\n\r", tasks[i++].bcet);
+				i = 0;
+				xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
+				xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
+				xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d ns", tasks[i++].bcet*10);
+				xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
+				xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
+				xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d ns\n\r", tasks[i++].bcet*10);
+				i = 0;
+				xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d us", tasks[i++].bcet/100);
+				xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
+				xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d us", tasks[i++].bcet/100);
+				xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
+				xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
+				xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d us\n\r", tasks[i++].bcet/100);
+				i = 0;
+				xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
+				xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
+				xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d ms", tasks[i++].bcet/100000);
+				xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
+				xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
+				xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d ms\n\r", tasks[i++].bcet/100000);
+				i = 0;
+
+				u32 tempTotalBcet = 0;
+				for(j = 0; j < 6; j++){
+					tempTotalBcet += tasks[j++].bcet;
+				}
+				xil_printf("\n\n\rTotal Bcet: %d clock cycles", tempTotalBcet);
 			}
 		}
 		break;

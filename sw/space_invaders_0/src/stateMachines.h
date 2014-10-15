@@ -25,6 +25,7 @@ typedef struct task {
 	unsigned long elapsedTime; // Time since task's previous tick
 	int (*TickFct)(int); // Function to call for task's tick
 	int wcet; //WCET of the task
+	int bcet; //WCET of the task
 } task;
 
 task tasks[TASKS_NUM];
