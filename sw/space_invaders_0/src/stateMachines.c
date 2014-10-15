@@ -2,7 +2,7 @@
  * stateMachines.c
  *
  *  Created on: Oct 9, 2014
- *      Author: superman
+ *      Author: Jeff Ravert and Luke Hsiao
  */
 #include "stateMachines.h"
 #include <stdio.h>
@@ -60,7 +60,7 @@ void initStateMachines(){
 	//	0
 	// Tank Movement
 	tasks[taski].state = -1;
-	tasks[taski].period = 1;
+	tasks[taski].period = 1; // 10ms
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankMovementAndBullet_SM;
 	tasks[taski].wcet = 0;
@@ -70,7 +70,7 @@ void initStateMachines(){
 	//	1
 	// Tank Bullet Movement
 	tasks[taski].state = -1;
-	tasks[taski].period = 5;
+	tasks[taski].period = 5; // 50ms
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &TankBulletUpdate_SM;
 	tasks[taski].wcet = 0;
@@ -80,7 +80,7 @@ void initStateMachines(){
 	//	2
 	// Aliens Movement
 	tasks[taski].state = -1;
-	tasks[taski].period = 60;
+	tasks[taski].period = 60; // 600ms but changes as aliens die and move down
 	tasks[taski].elapsedTime = 0;
 	tasks[taski].TickFct = &AlienMovementAndBullets_SM;
 	tasks[taski].wcet = 0;
@@ -90,7 +90,7 @@ void initStateMachines(){
 	//	3
 	// Aliens Bullets Movement
 	tasks[taski].state = -1;
-	tasks[taski].period = 5;
+	tasks[taski].period = 5; // 50ms
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &AlienbulletsUpdate_SM;
 	tasks[taski].wcet = 0;
@@ -100,7 +100,7 @@ void initStateMachines(){
 	//	4
 	// Spaceship Movement and creation
 	tasks[taski].state = -1;
-	tasks[taski].period = 1;
+	tasks[taski].period = 1; // 10ms
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &SpaceShipUpdate_SM;
 	tasks[taski].wcet = 0;
@@ -110,19 +110,38 @@ void initStateMachines(){
 	//	5
 	// Alien Death and Explosion
 	tasks[taski].state = -1;
-	tasks[taski].period = tasks[3].period;
+	tasks[taski].period = tasks[3].period; // set to be the same as Alien Movement
 	tasks[taski].elapsedTime = tasks[taski].period;
 	tasks[taski].TickFct = &AlienDeath_SM;
 	tasks[taski].wcet = 0;
 	tasks[taski].bcet = 100000000;
 	++taski;
-
+	
+	// setting up game
 	initGlobals();
 	blankScreen(); // erase old data
 	render();      // draw initialized game
 }
 
+// TankMovementAndBullet_SM takes care of the tank and the tank bullet
+// this SM has 3 states alive, dead, gameover
 //
+// alive: 	this state is used for when the tank hasnt been hit and isnt animating death
+// 		if gameOver is set to true the SM transitions to gameover
+// 		when user presses left the state takes a transition that calls moveTankLeft
+// 		when user presses right the state takes a transition that calls moveTankRight
+// 		when user presses center the SM makes no state change but calls fireTankBullet
+// 		when the tank life has been set to zero the SM transitions to dead
+//
+// dead:  	this state is when the tank has been hit
+// 		this state also animates the tank death using the i counter and the cycle counter
+// 		i will count up to TANK_MAP_FLIP_COUNT
+// 		cycles will count down from TANK_MAP_FLIP_CYCLES to 0
+// 		if gameOver is set to true the SM transitions to gameover
+//		the first tank death bit map is shown for 1/2 of the time
+//		the second tank death bit map is shown for the other 1/2 of the time
+//		for the latter half of the count shows the second bitmap to show the tank dead or a short time
+//		after enough cycles this state returns back to alive
 int TankMovementAndBullet_SM(int state) {
 	static int i;
 	static int cycles;
@@ -139,11 +158,11 @@ int TankMovementAndBullet_SM(int state) {
 	else{
 		switch(state) { // Transitions
 		case SM1_alive:
-			if(getGameOver()){
+			if(getGameOver()){ // game is over!!!  you loose!
 				state = SM1_gameOver;
 			}
 			else{
-				if(centerButton){
+				if(centerButton){ // user is pressing fire!!!
 					fireTankBullet();
 				}
 
@@ -151,14 +170,14 @@ int TankMovementAndBullet_SM(int state) {
 					state = SM1_dead;
 					cycles = TANK_MAP_FLIP_CYCLES;
 				}
-				else if(!rightButton && !leftButton){
+				else if(!rightButton && !leftButton){ // user isnt pressing anything
 					state = SM1_alive;
 				}
-				else if(rightButton) {
+				else if(rightButton) { // user is pressing right
 					state = SM1_alive;
 					moveTankRight();
 				}
-				else if(leftButton) {
+				else if(leftButton) { // user is pressing left
 					state = SM1_alive;
 					moveTankLeft();
 
@@ -166,26 +185,26 @@ int TankMovementAndBullet_SM(int state) {
 			}
 			break;
 		case SM1_dead:
-			if(getGameOver()){
+			if(getGameOver()){ // game is over!!!  you loose!
 				state = SM1_gameOver;
 			}
-			else if (cycles <= 0) { // it the tank is dead TANK DEATH FLAG
-				state = SM1_alive;
-				setTankLife(1);
-				cycles = TANK_MAP_FLIP_CYCLES;
-				i = 0;
-				moveTank(TANK_INIT_POSITION_X);
-				u8 lives = getLives();
-				lives--;
-				if(lives <= 0 || lives > 10){
-					lives = 0;
-					setGameOver(1);
+			else if (cycles <= 0) { 		// if the tank is dead TANK DEATH FLAG
+				state = SM1_alive; 		// go to alive
+				setTankLife(1); 		// bring the tank life back to true
+				cycles = TANK_MAP_FLIP_CYCLES; 	// reset the cycle count for next time
+				i = 0; 				// reset the count for next time
+				moveTank(TANK_INIT_POSITION_X); // reset the tank to the starting position
+				u8 lives = getLives();		// get the lives
+				lives--;			// decrament the lives
+				if(lives <= 0 || lives > 10){	// setting the bounds of lives
+					lives = 0;		// kill the lives
+					setGameOver(1);		// set the gameOver flag
 				}
-				setLives(lives);
-				if(!getGameOver())
-					renderLives();
+				setLives(lives);		// save the lives
+				if(!getGameOver())		//  
+					renderLives();		// 
 			}
-			else if (cycles <= TANK_MAP_FLIP_CYCLES/3) {
+			else if (cycles <= TANK_MAP_FLIP_CYCLES/3) { //
 
 				state = SM1_dead;
 				deathTank2();
