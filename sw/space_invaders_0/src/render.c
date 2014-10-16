@@ -19,7 +19,8 @@ void blankScreen() {
 	u32 row=0, col=0;
 	for( row=0; row<480; row++) {
 		for(col=0; col<640; col++) {
-			framePointer0[row*640 + col] = BLACK;  // frame 0 is red here.
+			framePointer0[row*640 + col] = BLACK;
+			framePointer1[row*640 + col] = BLACK;
 		}
 	}
 }
