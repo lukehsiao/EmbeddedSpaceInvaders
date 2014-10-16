@@ -17,15 +17,15 @@
  */
 
 #include <stdio.h>
-#include "platform.h"
-#include "xparameters.h"
-#include "xaxivdma.h"
-#include "xio.h"
-#include "xtmrctr.h" // axi Timer
-//#include "time.h"	//is this needed?
-#include "unistd.h"
+#include "platform.h"		// Needed to both initialize and cleanup our hardware platform
+#include "xparameters.h"	// Defines all of the base addresses we use
+#include "xaxivdma.h"		// this DMA engine transfers frames to or from the AXI Bus
+#include "xio.h"			// Basic Input Output functions to hardware
+#include "xtmrctr.h"        // axi Timer
+#include "time.h"			
+#include "unistd.h"         // Defines standard constants and types
 #include "render.h"			// Our rendering file.
-#include "xuartlite_l.h"
+#include "xuartlite_l.h"	// Allows us to read from the UART for user input
 #include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
 #include "xgpio.h"          // Provides access to PB GPIO driver.
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
@@ -94,7 +94,11 @@ void timer_interrupt_handler() {
 			}
 
 		}
-		tasks[i].elapsedTime += 1;	}	//		else{	//			xil_printf("\n\r%d", uteCounter);	//		}
+		tasks[i].elapsedTime += 1;
+	}
+	//		else{
+	//			xil_printf("\n\r%d", uteCounter);
+	//		}
 }
 
 // Main interrupt handler, queries the interrupt controller to see what peripheral
