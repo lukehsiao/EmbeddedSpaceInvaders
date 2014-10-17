@@ -16,17 +16,37 @@
 #define SPACESHIP_SCORE_COUNT 10
 #define SPACESHIP_STEADY_SCORE_CYCLES 40
 
-
+/**
+ * Draws the Spaceship and updates it's location
+ */
 void renderSpaceShip();
-void unrenderSpaceShip();
-void updateSpaceShipLocation();
+
+/**
+ * Call this to put the spaceship in motion
+ */
 void startSpaceShip();
+
+/**
+ *  Renders the number of points passed in at the location of the spaceship
+ *
+ * @param points The number of points to display
+ * @param position The top-left corner of where to draw the points.
+ */
 void renderPoints(u32 points, point_t position);
+
+/**
+ * Blanks the spot where the score is to help with flashing
+ *
+ * @param position The top-left position of where to start erasing.
+ */
 void unrenderPoints(point_t position);
+
+/**
+ * Calculates whether the spaceship was hit or not.
+ *
+ * @param bulletPosition The position to test.
+ * @return 1 = hit, 0 = not hit
+ */
 u8 hitSpaceShip(point_t bulletPosition);
-void setActivated(u8 val);
-u8 getActivated();
-void setSpaceshipScore(u32 val);
-u32 getSpaceshipScore();
 
 #endif /* SPACESHIP_H_ */

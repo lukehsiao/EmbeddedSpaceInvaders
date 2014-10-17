@@ -34,7 +34,7 @@
 
 XTmrCtr Timer0;
 
-//void print(char *str);
+void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
 unsigned char taski;
@@ -48,11 +48,12 @@ u32 uteCounter;
 //void XTmrCtr_SetResetValue(XTmrCtr * InstancePtr, u8 TmrCtrNumber,
 //			   u32 ResetValue);
 
-// This is invoked in response to a timer interrupt.
-// It calls all the state machines for timing.
+/**
+ * This is invoked in respose to a timer interrupt.
+ * It calls all the state machines.
+ */
 void timer_interrupt_handler() {
 	//	interruptCounter++;
-
 	//	if(interruptCounter < 4300){
 	u8 i;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
@@ -101,10 +102,13 @@ void timer_interrupt_handler() {
 	//		}
 }
 
-// Main interrupt handler, queries the interrupt controller to see what peripheral
-// fired the interrupt and then dispatches the corresponding interrupt handler.
-// This routine acks the interrupt at the controller level but the peripheral
-// interrupt must be ack'd by the dispatched interrupt handler.
+/**
+ * Main interrupt handler, queries the interrupt controller to see what 
+ * peripheral fired the interrupt and then dispatches the corresponding 
+ * interrupt handler.  This routine acknowledges the interrupt at the 
+ * controller level but the peripheral interrupt must be ack'd by the
+ * dispatched interrupt handler.
+ */
 void interrupt_handler_dispatcher(void* ptr) {
 	int intc_status = XIntc_GetIntrStatus(XPAR_INTC_0_BASEADDR);
 	// Check the FIT interrupt first.
@@ -115,6 +119,10 @@ void interrupt_handler_dispatcher(void* ptr) {
 }
 
 
+/**
+ * Main initializes the frame buffers, sets up the VDMA, intializes the
+ * frame buffers black, sets global variables, then waits in while(1).
+ */
 int main()
 {
 	init_platform();                   // Necessary for all programs.
@@ -212,75 +220,15 @@ int main()
 	xil_printf("Woohoo! I made it through initialization.\n\r");
 
 	initStateMachines(); //setup space invaders
-	//     u8 inputKey;
-	//     u32 userInput;
-	//     u32 sillyTimer = MAX_SILLY_TIMER;  // Just a cheap delay between frames.
-
-	xil_printf("\n\n\rWithout interrupts\n\n\r");
 	microblaze_enable_interrupts();
-	//	XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+
+    // Counters used to measure utilization and timing.
 	interruptCounter = 0;
 	uteCounter = 0;
-	while (1) {
-		//		startTiming();
-		//		int n, first = 0, second = 1, next, c;
-		//		n = 26;
-		//		next = 0;
-		//		for ( c = 0 ; c < n ; c++ )
-		//		{
-		//			if ( c <= 1 )
-		//				next = c;
-		//			else
-		//			{
-		//				next = first + second;
-		//				first = second;
-		//				second = next;
-		//			}
-		//			xil_printf("\r%d",next);
-		//		}
-		//		stopTiming();
-
-
-
-
-
-		//    	 sillyTimer--;
-		//    	 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
-		//    	 if (inputKey == '2') {
-		//    		 userInput = 0;
-		//    		 xil_printf("\n\rEnter a two-digit alien number between 00-54 to kill: ");
-		//    		 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
-		//    		 userInput = (inputKey - 48) * 10;		//-48 to compensate for the ascii input
-		//    		 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
-		//    		 userInput = userInput + (inputKey - 48);
-		//    		 if (userInput > 54) {
-		//    			 xil_printf("\n\r!!! You entered a number that was too big!");
-		//    		 }
-		//    		 else {
-		//        		 xil_printf("\n\r    Killing alien #%d", userInput);
-		//        		 parseKey('2', sillyTimer, userInput);
-		//    		 }
-		//    	 }
-		//    	 else if (inputKey == '7') {
-		//    		 userInput = 0;
-		//    		 xil_printf("\n\rEnter a bunker number between 0-3 to hit: ");
-		//    		 inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
-		//    		 userInput = (inputKey - 48);
-		//    		 if (userInput > 3) {
-		//    			 xil_printf("\n\r!!! You entered a number that was too big!");
-		//    		 }
-		//    		 else {
-		//        		 xil_printf("\n\r    Hitting bunker #%d", userInput);
-		//        		 parseKey('7', sillyTimer, userInput);
-		//    		 }
-		//    	 }
-		//    	 else {
-		//			 parseKey(inputKey, sillyTimer, userInput);
-		//    	 }
-		//    	 if (XST_FAILURE == XAxiVdma_StartParking(&videoDMAController, frameIndex,  XAXIVDMA_READ)) {
-		//        	 xil_printf("vdma parking failed\n\r");
-		//         }
-	}
+	
+	// Wait forever in while(1)
+	while (1);
+	
 	cleanup_platform();
 
 	return 0;

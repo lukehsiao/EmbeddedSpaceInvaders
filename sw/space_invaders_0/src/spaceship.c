@@ -36,35 +36,6 @@ void startSpaceShip() {
 }
 
 /**
- * Draws the Spaceship
- */
-void renderSpaceShip() {
-	u32 col;
-	u32 row;
-	point_t position;
-	const u32* arrayToRender;
-	if (getSpaceshipActivated()) {
-		updateSpaceShipLocation();
-		position = getSpaceshipPosition();
-		arrayToRender = getSpaceShipArray();
-		for (row = 0; row < 16; row++) {
-			for (col = 0; col < 32; col++) {
-				if ((arrayToRender[row] >> (31-col) & 0x1) == 1) {
-					//Slide off the screen
-					if ((position.x+col) < 640) {
-						framePointer0[(position.y+row)*640 + (position.x+col)] = RED;
-					}
-				}
-				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
-				}
-			}
-		}
-	}
-}
-
-
-/**
  * Unrenders the SpaceShip at it's current location
  */
 void unrenderSpaceShip() {
@@ -118,7 +89,38 @@ void updateSpaceShipLocation() {
 }
 
 /**
+ * Draws the Spaceship
+ */
+void renderSpaceShip() {
+	u32 col;
+	u32 row;
+	point_t position;
+	const u32* arrayToRender;
+	if (getSpaceshipActivated()) {
+		updateSpaceShipLocation();
+		position = getSpaceshipPosition();
+		arrayToRender = getSpaceShipArray();
+		for (row = 0; row < 16; row++) {
+			for (col = 0; col < 32; col++) {
+				if ((arrayToRender[row] >> (31-col) & 0x1) == 1) {
+					//Slide off the screen
+					if ((position.x+col) < 640) {
+						framePointer0[(position.y+row)*640 + (position.x+col)] = RED;
+					}
+				}
+				else {
+					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+				}
+			}
+		}
+	}
+}
+
+/**
  *  Renders the number of points passed in at the location of the spaceship
+ *
+ * @param points The number of points to display
+ * @param position The top-left corner of where to draw the points.
  */
 void renderPoints(u32 points, point_t position) {
 	u8 ones, tens, hundreds;
@@ -227,6 +229,8 @@ void renderPoints(u32 points, point_t position) {
 
 /**
  * Blanks the spot where the score is to help with flashing
+ *
+ * @param position The top-left position of where to start erasing.
  */
 void unrenderPoints(point_t position) {
 	u32 row, col;
@@ -239,6 +243,8 @@ void unrenderPoints(point_t position) {
 
 /**
  * Calculates whether the spaceship was hit or not.
+ *
+ * @param bulletPosition The position to test.
  * @return 1 = hit, 0 = not hit
  */
 u8 hitSpaceShip(point_t bulletPosition) {
