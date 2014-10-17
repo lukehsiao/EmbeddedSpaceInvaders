@@ -77,7 +77,8 @@ void unrenderAliens() {
 			}
 		}
 	}
-	// if X_SHIFT > 6, we'll need to add logic here to clear the right side as well.
+	// if X_SHIFT > 6, we'll need to add logic here to clear the right side as well when moving left.
+	// Currently, the gap on the right side of the bitmaps themselves takes care of it sufficiently.
 
 }
 
@@ -110,7 +111,7 @@ void updateAlienLocation() {
 		}
 	}
 	setAlienBlockPosition(tempAlien);
-	// Check if aliens are too low
+	// If aliens get below the bottom bunkers, end the game.
 	if ((getAlienBlockPosition().y+((lowestLiveRow*(ALIEN_HEIGHT+10))+ALIEN_HEIGHT)) > BOTTOM_BORDER) {
 		setGameOver(1);
 		blankScreen();
@@ -126,7 +127,7 @@ void adjustPadding() {
 	u32 col, alienNumber;
 	u8 flag;
 	flag = 0;
-	// Iterate over all the columns
+	// Iterate over all the columns from left to right until a live alien is found.
 	for(col = 0; col < 11; col++) {
 		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
 			if (getAlienStatus(alienNumber) == 1) {
@@ -137,7 +138,7 @@ void adjustPadding() {
 	}
 
 	rightside:
-	// Iterate over all the Right to left
+	// Iterate over all the right to left until a live alien is found.
 	for(col = 10; col >= 0; col--) {
 		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
 			if (getAlienStatus(alienNumber) == 1) {
@@ -165,17 +166,16 @@ void killAlien(u8 alienNumber) {
 	for (row = 0; row < ALIEN_HEIGHT; row++) {
 		for (col = 0; col < 32; col++) {
 			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;
+				framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;	// We use OFFWHITE so it is not erased by the alien block's render
 			}
 			else {
 				framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
 			}
 		}
 	}
-
+	// Decrement the number of aliens alive variable.
 	setNumberAliensAlive(getNumberAliensAlive()-1);
 	//If player kills all aliens
-//	xil_printf("Number of Aliens Alive: %d\n\r", getNumberAliensAlive());
 	if (getNumberAliensAlive() == 0) {
 		u32 tempScore = getScore();
 		initStateMachines();
