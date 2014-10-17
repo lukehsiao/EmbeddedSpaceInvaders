@@ -865,12 +865,10 @@ u32 getTankPixel(u32 row, u32 col) {
 
 
 /**
- * This function returns the color of the pixel to draw assuming we're
- * already looking inside the specified bunker. Note that this is note
- * very efficient, and may be optimized in the future.
+ * This function returns a u32 representing 1 row of of one block
+ * within the bunker. 
  *
- * @param row The row number of the pixel within the given bunker
- * @param col The column number of the pixel within the given bunker
+ * @param row The row number to draw
  * @param bunkerNumber	number of the bunker (0-3)
  * @param blockNumber	number of the block(0-11)
  * @return The pixels present in the given row
@@ -1055,28 +1053,28 @@ const u32* getAlienBulletArray(u8 bulletNum) {
 }
 
 /**
- * returns the array to print for the first half of the word.
+ * returns the array to print for the first half of the word "score".
  */
 const u32* getScoreText1() {
 	return SCORE1;
 }
 
 /**
- * returns the array to print for the first half of the word.
+ * returns the array to print for the second half of the word "score".
  */
 const u32* getScoreText2() {
 	return SCORE2;
 }
 
 /**
- * returns the array to print for the first half of the word.
+ * returns the array to print for the first half of the word "lives".
  */
 const u32* getLivesText1() {
 	return LIVES1;
 }
 
 /**
- * returns the array to print for the first half of the word.
+ * returns the array to print for the second half of the word "lives".
  */
 const u32* getLivesText2() {
 	return LIVES2;
@@ -1122,7 +1120,6 @@ const u32* getSpaceShipArray() {
 /**
  * Returns the tank's normal bitmap
  */
-
 const u32* getTankArray() {
 	return TANK;
 }
@@ -1148,7 +1145,12 @@ const u32* getDeadAlienArray() {
 	return ALIEN_EXPLODE;
 }
 
-const u32* getGameOverArray(u8 digit) {
+/**
+ * Returns a pointer to a letter of the word "GAME OVER"
+ *
+ * @param letterNum The number of the letter to return (e.g. 0=G, 1 = A)
+ */
+const u32* getGameOverArray(u8 letterNum) {
 	switch (digit) {
 		case 0:
 			return G;
