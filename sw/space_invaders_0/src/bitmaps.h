@@ -25,23 +25,100 @@
 #define TANK_BULLET_HEIGHT 10
 #define GAME_OVER_HEIGHT 32
 
+/**
+ * This function returns the color of the pixel to draw assuming we're
+ * already looking inside the small tank array.
+ *
+ * @param row The row number of the pixel within the tank
+ * @param col The column number of the pixel within the tank
+ * @return the color value to draw at that pixel
+ */
 u32 getTankPixel(u32 row, u32 col);
+
+/**
+ * This function returns a u32 representing 1 row of of one block
+ * within the bunker. 
+ *
+ * @param row The row number to draw
+ * @param bunkerNumber	number of the bunker (0-3)
+ * @param blockNumber	number of the block(0-11)
+ * @return The pixels present in the given row
+ */
 u32 getBunkerPixel(u32 row, u8 bunkerNumber, u8 blockNumber);
+
+/**
+ * This function calculates which alien array to return based on alien
+ * number.
+ *
+ * @param alienNumber the number of the alien to display
+ * @return a pointer to the 32x16 bit array of bitmap data.
+ */
 const u32* getAlienArray(u32 alienNumber);
+
+/**
+ * This function calculates which alien Bullet array to return based on Bullet
+ * number.
+ *
+ * @param bulletNumber the number of the bullet to display
+ * @return a pointer to the 32x10 bit array of bitmap data.
+ */
 const u32* getAlienBulletArray(u8 bulletNum);
 
+/**
+ * returns the array to print for the first half of the word "score".
+ */
 const u32* getScoreText1();
+
+/**
+ * returns the array to print for the second half of the word "score".
+ */
 const u32* getScoreText2();
+
+/**
+ * returns the array to print for the first half of the word "lives".
+ */
 const u32* getLivesText1();
+
+/**
+ * returns the array to print for the second half of the word "lives".
+ */
 const u32* getLivesText2();
+
+/**
+ * Returns the bitmap for the specified digit
+ */
 const u32* getDigitArray(u8 digit);
+
+/**
+ * Returns the UFO Array
+ */
 const u32* getSpaceShipArray();
 
+/**
+ * Returns the tank's normal bitmap
+ */
 const u32* getTankArray();
+
+/**
+ * Returns the tank's death bitmap 1
+ */
 const u32* getDeathTankArray1();
+
+/**
+ * Returns the tank's death bitmap 1
+ */
 const u32* getDeathTankArray2();
+
+/**
+ * Returns the alien death bitmap
+ */
 const u32* getDeadAlienArray();
 
-const u32* getGameOverArray(u8 digit);
+/**
+ * Returns a pointer to a letter of the word "GAME OVER"
+ *
+ * @param letterNum The number of the letter to return (e.g. 0=G, 1 = A)
+ */
+const u32* getGameOverArray(u8 letterNum);
 
 #endif
