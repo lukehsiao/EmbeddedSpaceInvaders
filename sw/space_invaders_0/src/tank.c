@@ -29,6 +29,9 @@ void renderTank() {
 			}
 		}
 	}
+	
+	// Draw extra black around the edges of the tank so unrenderTank() doesn't
+	// need to be called.	
 	tempPosition.x += TANK_MOVEMENT_SPEED;
 	for (row = 0; row < 16; row++) {
 		for (col = 0; col < 32; col++) {
@@ -53,7 +56,7 @@ void renderTank() {
 
 
 /**
- * Writes BLACK to the box that the tank is currently in
+ * Writes BLACK to the box that the tank is currently in.
  */
 void unrenderTank() {
 	u32 row, col;
@@ -113,7 +116,7 @@ void deathTank2() {
 //////////////////////////////////////////////////////////////////
 
 /**
- *  Erases the tank at it's current position
+ *  Erases the tank bullet at it's current position
  */
 void unrenderTankBullet() {
 	point_t position = getTankBulletPosition();
@@ -220,6 +223,10 @@ void fireTankBullet() {
 	//renderTank();	//to compensate for automatic single shift.
 }
 
+/**
+ * Moves the tank to the x-coordinate position
+ * @param position The x coordinate where to place the tank.
+ */
 void moveTank(u32 position) {
 	point_t temp;
 	unrenderTank();	//Clear the dead tank
@@ -231,6 +238,9 @@ void moveTank(u32 position) {
 	renderTank();
 }
 
+/**
+ * Moves the tank left.
+ */
 void moveTankLeft() {
 	point_t temp;
 	temp = getTankPositionGlobal();
@@ -242,6 +252,9 @@ void moveTankLeft() {
 	renderTank();
 }
 
+/**
+ * Moves the tank right.
+ */
 void moveTankRight() {
 	point_t temp;
 	temp = getTankPositionGlobal();
@@ -254,7 +267,8 @@ void moveTankRight() {
 }
 
 /**
- * Calculates whether the tank bullet hit the bunkers.
+ * Calculates whether the tank bullet hit the bunkers, an alien, or
+ * the spaceship.
  *
  * @return 1=hit, 0=no hit
  */
