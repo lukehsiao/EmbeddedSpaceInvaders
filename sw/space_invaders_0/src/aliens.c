@@ -9,8 +9,6 @@
 #include "stateMachines.h"
 #include "render.h"
 
-
-
 extern u32* framePointer0;
 extern u32* framePointer1;
 
@@ -121,7 +119,8 @@ void updateAlienLocation() {
 
 /**
  * If the killed alien is on an edge column, traverses up to see if the
- * column is empty and adjusts the global variables.
+ * column is empty and adjusts the global variables so the edge-to-edge
+ * movement is possible.
  */
 void adjustPadding() {
 	u32 col, alienNumber;
@@ -152,7 +151,8 @@ void adjustPadding() {
 
 
 /**
- * Draws the death guise for the alien at the specified number
+ * Draws the initial death guise for the alien at the specified number and
+ * updates it's status.
  */
 void killAlien(u8 alienNumber) {
 	point_t position = getAlienBlockPosition();
@@ -313,7 +313,7 @@ void unrenderAlienBullet() {
 }
 
 /**
- *  Updates the alien bullet locations
+ *  Updates the alien bullet locations and checks if any of them hit an object
  */
 void updateAlienBulletPosition() {
 	unrenderAlienBullet();
@@ -338,7 +338,9 @@ void updateAlienBulletPosition() {
 }
 
 /**
- *  Draws all the alien bullets.
+ *  Draws all the alien bullets. We use OFFWHITE to eliminate the flashing of the bullets
+ *  when they are flying inside the alien block.
+ *
  *  @param animate 1=update position, 0=refresh only
  */
 void renderAlienBullet(u8 animate) {
@@ -369,6 +371,10 @@ void renderAlienBullet(u8 animate) {
 	}
 }
 
+//////////////////////////////////////////////////////////////////
+// Functions for Calculating Intersections
+//////////////////////////////////////////////////////////////////
+
 /**
  * Calculates whether the bullet hit the tank or the bunkers.  This
  * will update global flags so that we can transition to death animations
@@ -392,7 +398,7 @@ u8 calculateAlienBulletHit(alienBullet bullet) {
 }
 
 /**
- * Calculates whether an alienBullet hit a tank
+ * Calculates whether a tank bullet hit an alien
  *
  * @param position The position to test
  * @return The number of the alien hit, 0xFF if none.
