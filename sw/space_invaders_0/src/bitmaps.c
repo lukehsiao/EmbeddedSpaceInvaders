@@ -1151,7 +1151,7 @@ const u32* getDeadAlienArray() {
  * @param letterNum The number of the letter to return (e.g. 0=G, 1 = A)
  */
 const u32* getGameOverArray(u8 letterNum) {
-	switch (digit) {
+	switch (letterNum) {
 		case 0:
 			return G;
 		case 1:
