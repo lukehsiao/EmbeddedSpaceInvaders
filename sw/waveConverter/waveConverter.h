@@ -10,17 +10,16 @@
 #define waveConverter_h
 
 #define u32 unsigned int
+#define u16 unsigned short
+#define u8  unsigned char
+
 #define TRUE 1
 #define FALSE 0
 
 // Hex values of chunks as little-endian
-#define RIFFHEADER          0x46464952
-#define WAVRIFF             0x54651475
-#define FORMAT              0x20746d66
-#define LABELED_TEXT        0x478747C6
-#define INSTRUMENTATION     0x478747C6
-#define SAMPLE              0x6C706D73
-#define FACT                0x47361666
-#define DATA                0x61746164
+#define RIFFHEADER          0x46464952 // "FFIR"
+#define WAVRIFF             0x45564157 // "EVAW"
+#define FORMAT              0x20746D66 // "tmf "
+#define DATA                0x61746164 // "atad"
     
 #endif  /* waveConverter_h */
