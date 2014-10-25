@@ -111,8 +111,8 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 
-                fprintf(output, "int %s_numberOfSamples = %d\n",soundName,numSamples);
-                fprintf(output, "int %s_sampleRate = %d\n",soundName,sampleRate);
+                fprintf(output, "int %s_numberOfSamples = %d;\n",soundName,numSamples);
+                fprintf(output, "int %s_sampleRate = %d;\n",soundName,sampleRate);
                 
             }
         }        
