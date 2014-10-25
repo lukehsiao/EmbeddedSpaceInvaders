@@ -7,7 +7,7 @@
  */
 
 
-int invaderKilled_soundData[] = {
+int alienKilled_soundData[] = {
     128,128,128,128,128,128,128,
     128,128,128,128,128,128,128,128,128,128,
     128,128,128,128,128,128,128,128,128,128,
@@ -346,5 +346,5 @@ int invaderKilled_soundData[] = {
     151,138,96,112,124,152,142,105,112,125,
     154,133,102,116,126,154,145,108,111,115,
     141,150,110,116,122,133,158,115,111,128};
-int invaderKilled_numberOfSamples = 3377
-int invaderKilled_sampleRate = 11025
+int alienKilled_numberOfSamples = 3377
+int alienKilled_sampleRate = 11025
