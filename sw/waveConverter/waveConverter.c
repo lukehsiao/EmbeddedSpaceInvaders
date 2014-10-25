@@ -4,11 +4,7 @@
  *  C Source file containing the data as an int array
  *  This means that we will need to extern the variables
  *
-<<<<<<< HEAD
  *  Note this only supports non-compressed wav files of 8-bit samples
-=======
- *  Note this only supports non-compressed wav files
->>>>>>> 66f588297fffdadfb7027848b54b021e8a3c0e47
  *  author: Luke Hsiao & Jeff Ravert
  *  25 October 2014
  */
@@ -56,13 +52,13 @@ int main(int argc, char *argv[]) {
             printf("Could not open %s\n", argv[1]);
         }
         else {
-            output = fopen("spaceInvadersSounds.c", "w+");
+            output = fopen("spaceInvadersSounds.c", "a+");
 
             if (output == 0) {
                 printf("Error opening output: Check spaceInvadersSounds.c");
             }
             else {
-                writeHeader();
+                // writeHeader();
                 // Parse the WAV file here
                 while(!isDataChunk) {
                     fread(&(chunkID), sizeof(int), 1, input);  
