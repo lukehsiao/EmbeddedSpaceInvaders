@@ -4,7 +4,7 @@
  *  C Source file containing the data as an int array
  *  This means that we will need to extern the variables
  *
- *  Note this only supports non-compressed wav files
+ *  Note this only supports non-compressed wav files of 8-bit samples
  *  author: Luke Hsiao & Jeff Ravert
  *  25 October 2014
  */
