@@ -87,9 +87,6 @@ int main(int argc, char *argv[]) {
                             // Parse Data
                             int i;
                             for (i = numSamples; i > 1; i--) {
-                                if (i % 10 == 0) {
-                                   fprintf(output, "\n    ", tempData); 
-                                }
                                 fread(&(tempData), sizeof(u8), 1, input);
                                 fprintf(output, "%d,", tempData);
                             }
