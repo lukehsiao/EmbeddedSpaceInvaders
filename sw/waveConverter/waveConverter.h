@@ -21,5 +21,5 @@
 #define WAVRIFF             0x45564157 // "EVAW"
 #define FORMAT              0x20746D66 // "tmf "
 #define DATA                0x61746164 // "atad"
-    
+
 #endif  /* waveConverter_h */

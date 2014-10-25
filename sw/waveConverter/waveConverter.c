@@ -4,7 +4,11 @@
  *  C Source file containing the data as an int array
  *  This means that we will need to extern the variables
  *
+<<<<<<< HEAD
  *  Note this only supports non-compressed wav files of 8-bit samples
+=======
+ *  Note this only supports non-compressed wav files
+>>>>>>> 66f588297fffdadfb7027848b54b021e8a3c0e47
  *  author: Luke Hsiao & Jeff Ravert
  *  25 October 2014
  */
@@ -12,6 +16,7 @@
 #include <stdio.h>
 //#include <libsndfile.h>
 #include "waveConverter.h"
+
 
 FILE* input;
 FILE* output;
@@ -42,6 +47,7 @@ int main(int argc, char *argv[]) {
         // argv[1] should be filename to open
         input = fopen(argv[1], "rb");
 
+
         // argv[2] is the name of the sound (e.g. alienSound1)
         char* soundName = argv[2];
 
@@ -51,6 +57,7 @@ int main(int argc, char *argv[]) {
         }
         else {
             output = fopen("spaceInvadersSounds.c", "w+");
+
             if (output == 0) {
                 printf("Error opening output: Check spaceInvadersSounds.c");
             }
@@ -97,7 +104,6 @@ int main(int argc, char *argv[]) {
                             if (chunkID == DATA) {
                                 isDataChunk = TRUE;
                             }
-                            
                             break;
                         default:
                             // Do nothing
@@ -109,8 +115,6 @@ int main(int argc, char *argv[]) {
                 fprintf(output, "int %s_sampleRate = %d\n",soundName,sampleRate);
                 
             }
-        }
-        
-        
+        }        
     }
 } /* End of MAIN */
