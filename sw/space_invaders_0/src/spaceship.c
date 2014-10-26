@@ -15,27 +15,6 @@ extern u32* framePointer0;
 static u8 direction; // 1 = right, 0 = left
 
 /**
- * Call this to put the spaceship in motion
- */
-void startSpaceShip() {
-	point_t position;
-	if (getSpaceshipActivated() != 1) {
-		unrenderSpaceShip();
-		setSpaceshipActivated(1);
-		direction = (direction ^ 0x1) & 0x1;		// choose opposite direction
-		position.y = 35;
-		if (direction == 1) {
-			position.x = 0;
-		}
-		else {
-			position.x = 640-32;
-		}
-		setSpaceshipPosition(position);
-		renderSpaceShip();
-	}
-}
-
-/**
  * Unrenders the SpaceShip at it's current location
  */
 void unrenderSpaceShip() {
@@ -62,6 +41,27 @@ void unrenderSpaceShip() {
 		}
 	}
 
+}
+
+/**
+ * Call this to put the spaceship in motion
+ */
+void startSpaceShip() {
+	point_t position;
+	if (getSpaceshipActivated() != 1) {
+		unrenderSpaceShip();
+		setSpaceshipActivated(1);
+		direction = (direction ^ 0x1) & 0x1;		// choose opposite direction
+		position.y = 35;
+		if (direction == 1) {
+			position.x = 0;
+		}
+		else {
+			position.x = 640-32;
+		}
+		setSpaceshipPosition(position);
+		renderSpaceShip();
+	}
 }
 
 /**

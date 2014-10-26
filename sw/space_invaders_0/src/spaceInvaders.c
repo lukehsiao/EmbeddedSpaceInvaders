@@ -38,7 +38,7 @@ unsigned char taski;
 void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
-unsigned char taski;
+extern task tasks[];
 u32 interruptCounter;
 u32 uteCounter;
 
