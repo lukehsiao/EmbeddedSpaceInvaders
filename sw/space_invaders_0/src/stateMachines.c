@@ -21,6 +21,8 @@
 #include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 
+task tasks[TASKS_NUM];
+
 /////////////////////////////////////
 // Handy Timing Functions
 /////////////////////////////////////
@@ -38,6 +40,8 @@ void stopTiming() {
 			xil_printf("\n\r TIMER OVERRUN"); // there was timer overrun
 	}
 }
+
+
 
 ////////////////////////////////////////
 // Initializing State Machine Variables
@@ -488,6 +492,7 @@ int SpaceShipUpdate_SM(int state) {
 				if(upButton){
 					u32 tempScore = ((rand() % 7)+1) * 50;
 					setSpaceshipScore(tempScore);
+					xil_printf("\n\r %d cycles", XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID));
 				}
 				state = SM5_dead;
 				cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
