@@ -33,6 +33,7 @@
 #define DEBUG
 
 XTmrCtr Timer0;
+unsigned char taski;
 
 void print(char *str);
 
@@ -233,4 +234,3 @@ int main()
 
 	return 0;
 }
-
