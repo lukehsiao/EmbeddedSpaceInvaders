@@ -41,6 +41,8 @@ void stopTiming() {
 	}
 }
 
+
+
 ////////////////////////////////////////
 // Initializing State Machine Variables
 ////////////////////////////////////////
@@ -490,6 +492,7 @@ int SpaceShipUpdate_SM(int state) {
 				if(upButton){
 					u32 tempScore = ((rand() % 7)+1) * 50;
 					setSpaceshipScore(tempScore);
+					xil_printf("\n\r %d cycles", XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID));
 				}
 				state = SM5_dead;
 				cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
