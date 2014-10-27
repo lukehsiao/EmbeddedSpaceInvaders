@@ -50,7 +50,10 @@ int main()
 	init_platform();
 	XAC97_HardReset(XPAR_AXI_AC97_0_BASEADDR);
 	XAC97_AwaitCodecReady(XPAR_AXI_AC97_0_BASEADDR);
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_ExtendedAudioStat, 1);
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_PCM_DAC_Rate, AC97_PCM_RATE_11025_HZ);
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, AC97_VOL_MID);
+
 	int i = 0;
 	int j = 0;
 	while(1){
@@ -62,14 +65,14 @@ int main()
 			}
 			XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample | (sample<<16));
 			j++;
-			if(j == 4){
+//			if(j == 4){
 				j=0;
 				i++;
 
 				if(i > numberOfSamples*4){
 					i = 0;
 				}
-			}
+//			}
 		}
 	}
 	cleanup_platform();
