@@ -43,7 +43,9 @@ void unrenderAliens() {
 					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
 				}
 				else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
+					if (framePointer0[(position.y + row)*640 + (position.x + col)] != GREEN) {
 						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
@@ -86,8 +88,6 @@ void unrenderAliens() {
  * rows when they hit the edge of the screen.
  */
 void updateAlienLocation() {
-
-	int i;
 	int soundNum;
 	int sample=0;
 	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){//for(i = 0; i < NUM_FIFO_SAMPLES_FILL; i++){
