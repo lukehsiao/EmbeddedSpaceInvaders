@@ -32,8 +32,7 @@ u32 numSamples;
 u32 sampleRate;
 u8 tempData;
 u16 bitsPerSample;
-short signedTempData;
-u16 unsignedData;
+
 
 int main(int argc, char *argv[]) {
 
@@ -92,17 +91,12 @@ int main(int argc, char *argv[]) {
 							signedTempData = 0;
                             int i;
                             for (i = numSamples; i > 1; i--) {
-                                fread(&(signedTempData), sizeof(short), 1, input);
-                                // Shift to positive only
-                                signedTempData = signedTempData / 4;
-                                unsignedData = signedTempData + 32767;                                
-                                fprintf(output, "%d,", unsignedData);
+                                fread(&(tempData), sizeof(short), 1, input);
+                              
+                                fprintf(output, "%d,", tempData);
                             }
-                            fread(&(signedTempData), sizeof(short), 1, input); 
-                             // Shift to positive only
-                            signedTempData /= 2;
-                            unsignedData = signedTempData + 32767;                                
-                            fprintf(output, "%d,", unsignedData);
+                            fread(&(tempData), sizeof(short), 1, input);                               
+                            fprintf(output, "%d,", tempData);
 
                    
                             if (chunkID == DATA) {
