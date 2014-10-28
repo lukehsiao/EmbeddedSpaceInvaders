@@ -30,6 +30,9 @@
 #include "xgpio.h"          // Provides access to PB GPIO driver.
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 #include "stateMachines.h"
+#include "spaceInvadersSounds.h"
+#include "xac97_l.h"
+
 #define DEBUG
 
 XTmrCtr Timer0;
@@ -39,18 +42,9 @@ void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
 unsigned char taski;
-u32 interruptCounter;
-u32 uteCounter;
-
-
-//void XTmrCtr_Start(XTmrCtr * InstancePtr, u8 TmrCtrNumber);
-//void XTmrCtr_Stop(XTmrCtr * InstancePtr, u8 TmrCtrNumber);
-//u32 XTmrCtr_GetValue(XTmrCtr * InstancePtr, u8 TmrCtrNumber);
-//void XTmrCtr_SetResetValue(XTmrCtr * InstancePtr, u8 TmrCtrNumber,
-//			   u32 ResetValue);
 
 /**
- * This is invoked in respose to a timer interrupt.
+ * This is invoked in response to a timer interrupt.
  * It calls all the state machines.
  */
 void timer_interrupt_handler() {
@@ -103,6 +97,25 @@ void timer_interrupt_handler() {
 	//		}
 }
 
+
+void AC97_interrupt_handler() {
+	int i;
+	int soundNum;
+	int sample=0;
+	for(i = 0; i < NUM_FIFO_SAMPLES_FILL; i++){
+		sample=0;
+		for(soundNum = 0; soundNum < SOUND_NUM; soundNum++){
+			sample += getCurrentSample(soundNum);
+		}
+		int totalActive = getTotalActive();
+		if(totalActive > 0){
+			sample = sample / getTotalActive();
+		}
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample | (sample<<16));
+	}
+	XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_AXI_AC97_0_INTERRUPT_MASK);
+}
+
 /**
  * Main interrupt handler, queries the interrupt controller to see what 
  * peripheral fired the interrupt and then dispatches the corresponding 
@@ -113,10 +126,15 @@ void timer_interrupt_handler() {
 void interrupt_handler_dispatcher(void* ptr) {
 	int intc_status = XIntc_GetIntrStatus(XPAR_INTC_0_BASEADDR);
 	// Check the FIT interrupt first.
+	if (intc_status & XPAR_AXI_AC97_0_INTERRUPT_MASK){
+		AC97_interrupt_handler();
+	}
+
 	if (intc_status & XPAR_FIT_TIMER_0_INTERRUPT_MASK){
 		XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_FIT_TIMER_0_INTERRUPT_MASK);
 		timer_interrupt_handler();
 	}
+
 }
 
 
@@ -208,28 +226,39 @@ int main()
 
 	microblaze_register_handler(interrupt_handler_dispatcher, NULL);
 	XIntc_EnableIntr(XPAR_INTC_0_BASEADDR,
-			(XPAR_FIT_TIMER_0_INTERRUPT_MASK | XPAR_PUSH_BUTTONS_5BITS_IP2INTC_IRPT_MASK));
+			(XPAR_FIT_TIMER_0_INTERRUPT_MASK
+					| XPAR_PUSH_BUTTONS_5BITS_IP2INTC_IRPT_MASK
+					| XPAR_AXI_AC97_0_INTERRUPT_MASK));
 	XIntc_MasterEnable(XPAR_INTC_0_BASEADDR);
 
 
 	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
-	//	XTmrCtr_SetOptions(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, XTC_AUTO_RELOAD_OPTION);
 
+	XAC97_HardReset(XPAR_AXI_AC97_0_BASEADDR);
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_ExtendedAudioStat, 1);
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_PCM_DAC_Rate, AC97_PCM_RATE_11025_HZ);
+	XAC97_mSetControl(XPAR_AXI_AC97_0_BASEADDR,AC97_ENABLE_IN_FIFO_INTERRUPT);
+	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 0);
+	}
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, AC97_VOL_MID);
 
 	// Print a sanity message if you get this far.
 	xil_printf("Woohoo! I made it through initialization.\n\r");
 
 	initStateMachines(); //setup space invaders
 	microblaze_enable_interrupts();
+	initSounds();
+	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 0);
+	}
 
-    // Counters used to measure utilization and timing.
-	interruptCounter = 0;
-	uteCounter = 0;
-	
 	// Wait forever in while(1)
-	while (1);
-	
+	while (1){
+
+	}
+
 	cleanup_platform();
 
 	return 0;

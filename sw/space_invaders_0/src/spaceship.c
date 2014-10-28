@@ -9,6 +9,7 @@
 #include "globals.h"
 #include <stdlib.h>
 #include "render.h"
+#include "spaceInvadersSounds.h"
 
 extern u32* framePointer0;
 
@@ -71,12 +72,18 @@ void updateSpaceShipLocation() {
 	unrenderSpaceShip();
 	point_t position;
 	position = getSpaceshipPosition();
+
+	// Start sound for spaceship
+	setActive(SPACESHIP_MOVE_NUM, ACTIVE);
+
 	// If moving right
 	if (direction == 1) {
 		position.x += SPACESHIP_SPEED;
 		setSpaceshipPosition(position);
 		if (position.x > 640) {
 			setSpaceshipActivated(0);
+			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
+			setCurrentSampleNum(SPACESHIP_MOVE_NUM, 0);
 		}
 	}
 	else {
@@ -84,6 +91,8 @@ void updateSpaceShipLocation() {
 		setSpaceshipPosition(position);
 		if ((position.x+32) > 640) { //if it's off the screen to the left
 			setSpaceshipActivated(0);
+			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
+			setCurrentSampleNum(SPACESHIP_MOVE_NUM, 0);
 		}
 	}
 }
