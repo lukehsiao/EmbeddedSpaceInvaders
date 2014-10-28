@@ -418,7 +418,7 @@ int AlienMovementAndBullets_SM(int state) {
 			signed long newPeriod = ALIEN_STATE_MACHINE_RATE_MAX
 					-((getAlienBlockPosition().y-ALIEN_STARTING_Y_POSITION)/ALIEN_HEIGHT)*2;
 			u8 aliensAlive = getNumberAliensAlive();
-			newPeriod = newPeriod - (((55-aliensAlive)*6)/10);
+			newPeriod = newPeriod - (((55-aliensAlive)*4)/10);
 			if(newPeriod <= 1)
 				newPeriod = 1;
 			tasks[2].period = newPeriod;
@@ -476,6 +476,7 @@ int SpaceShipUpdate_SM(int state) {
 	static point_t savedPosition;
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 upButton = ((buttons & UP) >> 4) & 0x1;
+	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
 	if(state == -1)
 	{
 		state = SM5_alive;
@@ -486,7 +487,7 @@ int SpaceShipUpdate_SM(int state) {
 			if(getGameOver()){
 				state = SM5_gameOver;
 			}
-			else if(upButton || getSpaceshipDied()) { // Space Ship is dead (up can be pressed for spaceship Death testing
+			else if(getSpaceshipDied()) { // Space Ship is dead (up can be pressed for spaceship Death testing
 				if(upButton){
 					u32 tempScore = ((rand() % 7)+1) * 50;
 					setSpaceshipScore(tempScore);
@@ -543,6 +544,15 @@ int SpaceShipUpdate_SM(int state) {
 		} // Transitions
 
 		switch(state) { // State actions
+		if(upButton && downButton){
+			midVol();
+		}
+		else if(downButton){
+			decreaseVol();
+		}
+		else if(upButton){
+			increaseVol();
+		}
 		case SM5_alive:{
 			if(waitShow >= EXTRA_WAIT){
 				u32 showRandom;

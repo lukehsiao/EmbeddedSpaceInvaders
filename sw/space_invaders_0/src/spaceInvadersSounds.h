@@ -27,7 +27,7 @@
 #define TRUE		1
 #define FALSE		0
 
-#define NUM_FIFO_SAMPLES_FILL 250
+#define VOL_ADJUST 4
 
 typedef struct
 {
@@ -50,5 +50,10 @@ int* getArrayAddress(int soundNum);
 void deactivateOthers(int soundNum);
 int getCurrentSample(int soundNum);
 int getTotalActive();
+void fillFIFO();
+void increaseVol();
+void decreaseVol();
+void midVol();
+
 
 #endif /* SPACEINVADERSSOUNDS_H_ */
