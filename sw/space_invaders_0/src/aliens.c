@@ -57,7 +57,9 @@ void unrenderAliens() {
 					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
 				}
 				else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
+					if (framePointer0[(position.y + row)*640 + (position.x + col)] != GREEN) {
 						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
