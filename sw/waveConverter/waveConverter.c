@@ -33,6 +33,7 @@ u32 sampleRate;
 u8 tempData;
 u16 bitsPerSample;
 short signedTempData;
+u16 unsignedData;
 
 int main(int argc, char *argv[]) {
 
@@ -78,7 +79,9 @@ int main(int argc, char *argv[]) {
                             fread(&(bitsPerSample), sizeof(u16), 3, input);
                             fread(&(bitsPerSample), sizeof(u16), 1, input);
                             printf("    Bits per Sample: %d\n", bitsPerSample);
-                            break;                            
+                            break;                 
+                            
+                                       
                         // Extract actual data
                         case DATA:
                             fprintf(output, "int %s_soundData[] = {", soundName);
@@ -90,10 +93,16 @@ int main(int argc, char *argv[]) {
                             int i;
                             for (i = numSamples; i > 1; i--) {
                                 fread(&(signedTempData), sizeof(short), 1, input);
-                                fprintf(output, "%d,", signedTempData);
+                                // Shift to positive only
+                                signedTempData = signedTempData / 4;
+                                unsignedData = signedTempData + 32767;                                
+                                fprintf(output, "%d,", unsignedData);
                             }
                             fread(&(signedTempData), sizeof(short), 1, input); 
-                            fprintf(output, "%d};\n", signedTempData);
+                             // Shift to positive only
+                            signedTempData /= 2;
+                            unsignedData = signedTempData + 32767;                                
+                            fprintf(output, "%d,", unsignedData);
 
                    
                             if (chunkID == DATA) {
