@@ -87,6 +87,20 @@ void unrenderAliens() {
  */
 void updateAlienLocation() {
 
+	int i;
+	int soundNum;
+	int sample=0;
+	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){//for(i = 0; i < NUM_FIFO_SAMPLES_FILL; i++){
+		sample=0;
+		for(soundNum = 0; soundNum < SOUND_NUM; soundNum++){
+			sample += getCurrentSample(soundNum);
+		}
+		int totalActive = getTotalActive();
+		if(totalActive > 0){
+			sample = sample / getTotalActive();
+		}
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample | (sample<<16));
+	}
 	// Trigger Alien Move Sound
 	static int alienMoveSoundNumber = 1;
 	alienMoveSoundNumber++;
@@ -251,6 +265,11 @@ void renderAliens(u8 animate) {
 
 	const u32* arrayToRender;
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
+
+		// Fill the Audio FIFO halfway through our aliens
+		if(alienNumber == 27)
+			fillFIFO();
+
 		//algorithm to adjust x and y for drawing
 		if (alienNumber != 0) {
 			position.x = position.x + 32;
