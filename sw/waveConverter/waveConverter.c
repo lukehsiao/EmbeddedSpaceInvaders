@@ -88,15 +88,14 @@ int main(int argc, char *argv[]) {
                             fread(&(numSamples), sizeof(int), 1, input);
                             printf("    Number of Samples: %d\n", numSamples);
                             // Parse Data
-							signedTempData = 0;
+							tempData = 0;
                             int i;
                             for (i = numSamples; i > 1; i--) {
                                 fread(&(tempData), sizeof(short), 1, input);
-                              
                                 fprintf(output, "%d,", tempData);
                             }
                             fread(&(tempData), sizeof(short), 1, input);                               
-                            fprintf(output, "%d,", tempData);
+                            fprintf(output, "%d};\n", tempData);
 
                    
                             if (chunkID == DATA) {
