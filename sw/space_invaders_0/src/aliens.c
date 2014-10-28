@@ -438,6 +438,9 @@ u8 hitAlien(point_t position) {
 				// If it's within the alien's block
 				if ((position.x < (alienPosition.x + 26)) && (position.x > alienPosition.x)) {
 					if ((position.y < (alienPosition.y + ALIEN_HEIGHT)) && (position.y > alienPosition.y)) {
+						// Start sound for alien death
+						setActive(ALIEN_DEATH_NUM, ACTIVE);
+
 						killAlien(alienNumber);
 						return alienNumber;
 					}
