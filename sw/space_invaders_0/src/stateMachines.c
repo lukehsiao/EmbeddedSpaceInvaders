@@ -21,7 +21,6 @@
 #include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 
-task tasks[TASKS_NUM];
 
 /////////////////////////////////////
 // Handy Timing Functions
@@ -40,7 +39,6 @@ void stopTiming() {
 			xil_printf("\n\r TIMER OVERRUN"); // there was timer overrun
 	}
 }
-
 
 
 ////////////////////////////////////////

@@ -28,6 +28,7 @@ typedef struct task {
 	int bcet; //WCET of the task
 } task;
 
+task tasks[TASKS_NUM];
 
 /////////////////////////////////////
 // Handy Timing Functions
