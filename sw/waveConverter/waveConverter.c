@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
                             fread(&(numSamples), sizeof(int), 1, input);
                             printf("    Number of Samples: %d\n", numSamples);
                             // Parse Data
-							signedSampleData = 0;
+							signedTempData = 0;
                             int i;
                             for (i = numSamples; i > 1; i--) {
                                 fread(&(signedTempData), sizeof(short), 1, input);
