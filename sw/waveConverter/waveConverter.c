@@ -80,16 +80,13 @@ int main(int argc, char *argv[]) {
                             break;                            
                         // Extract actual data
                         case DATA:
-                            fprintf(output, "int %s_soundData[] = {\n    ", soundName);
+                            fprintf(output, "int %s_soundData[] = {", soundName);
                             // Store number of samples
                             fread(&(numSamples), sizeof(int), 1, input);
                             printf("    Number of Samples: %d\n", numSamples);
                             // Parse Data
                             int i;
                             for (i = numSamples; i > 1; i--) {
-                                if (i % 10 == 0) {
-                                   fprintf(output, "\n    ", tempData); 
-                                }
                                 fread(&(tempData), sizeof(u8), 1, input);
                                 fprintf(output, "%d,", tempData);
                             }
