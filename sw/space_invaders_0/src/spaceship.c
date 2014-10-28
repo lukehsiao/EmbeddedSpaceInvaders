@@ -267,6 +267,9 @@ u8 hitSpaceShip(point_t bulletPosition) {
 		return 0;
 	}
 	else {
+		// Start sound for spaceship
+		setActive(SPACESHIP_DEATH_NUM, ACTIVE);
+
 		// Otherwise, it must be in the spaceship.
 		setSpaceshipActivated(0);
 		setSpaceshipDied(1);
