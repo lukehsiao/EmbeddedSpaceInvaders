@@ -10,28 +10,24 @@
 #ifndef SPACEINVADERSSOUNDS_H_
 #define SPACEINVADERSSOUNDS_H_
 
-#define SOUND_NUM 8
+#define SOUND_NUM 9
+#define SPACESHIP_MOVE_NUM 	0 // Lowest Priority
+#define ALIEN_MOVE1_NUM 	1
+#define ALIEN_MOVE2_NUM 	2
+#define ALIEN_MOVE3_NUM 	3
+#define ALIEN_MOVE4_NUM 	4
+#define TANK_FIRE_NUM 		5
+#define ALIEN_DEATH_NUM 	6
+#define SPACESHIP_DEATH_NUM 7
+#define TANK_DEATH_NUM 		8 // Highest Priority
 
-extern int alienDeath_soundData[];
-extern int alienDeath_numberOfSamples;
-extern int alienDeath_sampleRate;
+#define INACTIVE 	0
+#define ACTIVE 		1
 
+#define TRUE		1
+#define FALSE		0
 
-extern int spaceship_soundData[];
-extern int spaceship_numberOfSamples;
-extern int spaceship_sampleRate;
-
-extern int tankDeath_soundData[];
-extern int tankDeath_numberOfSamples;
-extern int tankDeath_sampleRate;
-
-extern int tankShot_soundData[];
-extern int tankShot_numberOfSamples;
-extern int tankShot_sampleRate;
-
-extern int shoot_soundData[];
-extern int shoot_sampleRate;
-extern int shoot_numberOfSamples;
+#define NUM_FIFO_SAMPLES_FILL 250
 
 typedef struct
 {
@@ -42,6 +38,17 @@ typedef struct
 	int *arrayAddress;
 } soundData;
 
-soundData sounds[SOUND_NUM];
+void initSounds();
+void updateSampleRate(int soundNum);
+int getActive(int soundNum);
+void setActive(int soundNum, int active);
+int getSampleRate(int soundNum);
+int getCurrentSampleNum(int soundNum);
+void setCurrentSampleNum(int soundNum, int sample);
+int getSize(int soundNum);
+int* getArrayAddress(int soundNum);
+void deactivateOthers(int soundNum);
+int getCurrentSample(int soundNum);
+int getTotalActive();
 
 #endif /* SPACEINVADERSSOUNDS_H_ */

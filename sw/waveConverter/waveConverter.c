@@ -32,6 +32,7 @@ u32 numSamples;
 u32 sampleRate;
 u8 tempData;
 u16 bitsPerSample;
+short signedTempData;
 
 int main(int argc, char *argv[]) {
 
@@ -85,13 +86,14 @@ int main(int argc, char *argv[]) {
                             fread(&(numSamples), sizeof(int), 1, input);
                             printf("    Number of Samples: %d\n", numSamples);
                             // Parse Data
+							signedSampleData = 0;
                             int i;
                             for (i = numSamples; i > 1; i--) {
-                                fread(&(tempData), sizeof(u8), 1, input);
-                                fprintf(output, "%d,", tempData);
+                                fread(&(signedTempData), sizeof(short), 1, input);
+                                fprintf(output, "%d,", signedTempData);
                             }
-                            fread(&(tempData), sizeof(u8), 1, input); 
-                            fprintf(output, "%d};\n", tempData);
+                            fread(&(signedTempData), sizeof(short), 1, input); 
+                            fprintf(output, "%d};\n", signedTempData);
 
                    
                             if (chunkID == DATA) {

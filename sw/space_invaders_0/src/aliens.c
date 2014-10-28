@@ -8,6 +8,7 @@
 
 #include "stateMachines.h"
 #include "render.h"
+#include "spaceInvadersSounds.h"
 
 extern u32* framePointer0;
 extern u32* framePointer1;
@@ -85,6 +86,16 @@ void unrenderAliens() {
  * rows when they hit the edge of the screen.
  */
 void updateAlienLocation() {
+
+	// Trigger Alien Move Sound
+	static int alienMoveSoundNumber = 1;
+	alienMoveSoundNumber++;
+	setActive(alienMoveSoundNumber, ACTIVE);
+	setCurrentSampleNum(alienMoveSoundNumber, 0);
+	if (alienMoveSoundNumber == 4) {
+		alienMoveSoundNumber = 0;
+	}
+
 	unrenderAliens();
 	u8 direction = getAlienDirection();
 	// Update Location each call

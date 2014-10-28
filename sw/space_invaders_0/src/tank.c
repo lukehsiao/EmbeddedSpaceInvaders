@@ -8,6 +8,7 @@
 
 #include "globals.h"
 #include "render.h"
+#include "spaceInvadersSounds.h"
 
 extern u32* framePointer0;
 u8 tankLife; // 1 is alive. 0 is dead
@@ -194,6 +195,9 @@ u8 hitTank(point_t position) {
 		return 0;
 	}
 	else {
+		// Trigger Tank Death Sound
+		setActive(TANK_DEATH_NUM, ACTIVE);
+
 		// Otherwise, it must be in the tank.
 		tankLife = 0;
 		return 1;
@@ -218,9 +222,12 @@ void fireTankBullet() {
 		tankBullet.y = tankPosition.y - TANK_BULLET_HEIGHT;
 		tankBullet.x = tankPosition.x + 15;	//center on turret
 		setTankBulletPosition(tankBullet);
+
+		// Trigger Tank Bullet Sound
+		setActive(TANK_FIRE_NUM, ACTIVE);
+		setCurrentSampleNum(TANK_FIRE_NUM, 0);
 	}
 	renderTankBullet(0);
-	//renderTank();	//to compensate for automatic single shift.
 }
 
 /**

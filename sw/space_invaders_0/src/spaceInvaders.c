@@ -44,7 +44,7 @@ void print(char *str);
 unsigned char taski;
 
 /**
- * This is invoked in respose to a timer interrupt.
+ * This is invoked in response to a timer interrupt.
  * It calls all the state machines.
  */
 void timer_interrupt_handler() {
@@ -97,19 +97,21 @@ void timer_interrupt_handler() {
 	//		}
 }
 
-int i;
+
 void AC97_interrupt_handler() {
-	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
-		int sample = alienDeath_soundData[i];
-		int numberOfSamples = alienDeath_numberOfSamples;
-		if(i >= numberOfSamples){
-			sample = 0;
+	int i;
+	int soundNum;
+	int sample=0;
+	for(i = 0; i < NUM_FIFO_SAMPLES_FILL; i++){
+		sample=0;
+		for(soundNum = 0; soundNum < SOUND_NUM; soundNum++){
+			sample += getCurrentSample(soundNum);
+		}
+		int totalActive = getTotalActive();
+		if(totalActive > 0){
+			sample = sample / getTotalActive();
 		}
 		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample | (sample<<16));
-		i++;
-		if(i > numberOfSamples*8){
-			i = 0;
-		}
 	}
 	XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_AXI_AC97_0_INTERRUPT_MASK);
 }
@@ -124,14 +126,15 @@ void AC97_interrupt_handler() {
 void interrupt_handler_dispatcher(void* ptr) {
 	int intc_status = XIntc_GetIntrStatus(XPAR_INTC_0_BASEADDR);
 	// Check the FIT interrupt first.
+	if (intc_status & XPAR_AXI_AC97_0_INTERRUPT_MASK){
+		AC97_interrupt_handler();
+	}
+
 	if (intc_status & XPAR_FIT_TIMER_0_INTERRUPT_MASK){
 		XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_FIT_TIMER_0_INTERRUPT_MASK);
 		timer_interrupt_handler();
 	}
 
-	if (intc_status & XPAR_AXI_AC97_0_INTERRUPT_MASK){
-		AC97_interrupt_handler();
-	}
 }
 
 
@@ -246,9 +249,15 @@ int main()
 
 	initStateMachines(); //setup space invaders
 	microblaze_enable_interrupts();
+	initSounds();
+	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 0);
+	}
 
 	// Wait forever in while(1)
-	while (1);
+	while (1){
+
+	}
 
 	cleanup_platform();
 
