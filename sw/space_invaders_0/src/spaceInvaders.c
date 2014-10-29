@@ -233,8 +233,8 @@ int main()
 	xil_printf("Woohoo! I made it through initialization.\n\r");
 
 	initStateMachines(); //setup space invaders
+	initSounds();		// setup space invader sounds
 	microblaze_enable_interrupts();
-	initSounds();
 	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
 		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 0);
 	}
