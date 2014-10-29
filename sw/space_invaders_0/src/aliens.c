@@ -267,7 +267,7 @@ void renderAliens(u8 animate) {
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
 
 		// Fill the Audio FIFO halfway through our aliens
-		if(alienNumber == 27)
+		if(alienNumber%5 == 0)
 			fillFIFO();
 
 		//algorithm to adjust x and y for drawing
@@ -457,6 +457,9 @@ u8 hitAlien(point_t position) {
 				// If it's within the alien's block
 				if ((position.x < (alienPosition.x + 26)) && (position.x > alienPosition.x)) {
 					if ((position.y < (alienPosition.y + ALIEN_HEIGHT)) && (position.y > alienPosition.y)) {
+						// Start sound for alien death
+						setActive(ALIEN_DEATH_NUM, ACTIVE);
+
 						killAlien(alienNumber);
 						return alienNumber;
 					}

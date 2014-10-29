@@ -16,27 +16,6 @@ extern u32* framePointer0;
 static u8 direction; // 1 = right, 0 = left
 
 /**
- * Call this to put the spaceship in motion
- */
-void startSpaceShip() {
-	point_t position;
-	if (getSpaceshipActivated() != 1) {
-		unrenderSpaceShip();
-		setSpaceshipActivated(1);
-		direction = (direction ^ 0x1) & 0x1;		// choose opposite direction
-		position.y = 35;
-		if (direction == 1) {
-			position.x = 0;
-		}
-		else {
-			position.x = 640-32;
-		}
-		setSpaceshipPosition(position);
-		renderSpaceShip();
-	}
-}
-
-/**
  * Unrenders the SpaceShip at it's current location
  */
 void unrenderSpaceShip() {
@@ -66,6 +45,27 @@ void unrenderSpaceShip() {
 }
 
 /**
+ * Call this to put the spaceship in motion
+ */
+void startSpaceShip() {
+	point_t position;
+	if (getSpaceshipActivated() != 1) {
+		unrenderSpaceShip();
+		setSpaceshipActivated(1);
+		direction = (direction ^ 0x1) & 0x1;		// choose opposite direction
+		position.y = 35;
+		if (direction == 1) {
+			position.x = 0;
+		}
+		else {
+			position.x = 640-32;
+		}
+		setSpaceshipPosition(position);
+		renderSpaceShip();
+	}
+}
+
+/**
  * Updates the SpaceShip's location
  */
 void updateSpaceShipLocation() {
@@ -73,16 +73,12 @@ void updateSpaceShipLocation() {
 	point_t position;
 	position = getSpaceshipPosition();
 
-	// Start sound for spaceship
-	setActive(SPACESHIP_MOVE_NUM, ACTIVE);
-
 	// If moving right
 	if (direction == 1) {
 		position.x += SPACESHIP_SPEED;
 		setSpaceshipPosition(position);
 		if (position.x > 640) {
 			setSpaceshipActivated(0);
-			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
 			setCurrentSampleNum(SPACESHIP_MOVE_NUM, 0);
 		}
 	}
@@ -91,7 +87,6 @@ void updateSpaceShipLocation() {
 		setSpaceshipPosition(position);
 		if ((position.x+32) > 640) { //if it's off the screen to the left
 			setSpaceshipActivated(0);
-			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
 			setCurrentSampleNum(SPACESHIP_MOVE_NUM, 0);
 		}
 	}
@@ -106,6 +101,7 @@ void renderSpaceShip() {
 	point_t position;
 	const u32* arrayToRender;
 	if (getSpaceshipActivated()) {
+		setActive(SPACESHIP_MOVE_NUM, ACTIVE);
 		updateSpaceShipLocation();
 		position = getSpaceshipPosition();
 		arrayToRender = getSpaceShipArray();
