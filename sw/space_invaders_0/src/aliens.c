@@ -268,9 +268,9 @@ void renderAliens(u8 animate) {
 	const u32* arrayToRender;
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
 
-		// Fill the Audio FIFO halfway through our aliens
-		if(alienNumber%5 == 0)
-			fillFIFO();
+//		// Fill the Audio FIFO halfway through our aliens
+//		if(alienNumber%5 == 0)
+//			fillFIFO();
 
 		//algorithm to adjust x and y for drawing
 		if (alienNumber != 0) {
