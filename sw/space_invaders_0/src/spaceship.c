@@ -264,6 +264,8 @@ u8 hitSpaceShip(point_t bulletPosition) {
 	}
 	else {
 		// Otherwise, it must be in the spaceship.
+		// Trigger Tank Death Sound
+		setActive(SPACESHIP_DEATH_NUM, ACTIVE);
 		setSpaceshipActivated(0);
 		setSpaceshipDied(1);
 		unrenderPoints(position);
