@@ -433,6 +433,20 @@ int AlienMovementAndBullets_SM(int state) {
 }
 
 int AlienbulletsUpdate_SM(int state) {
+	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
+	u32 upButton = ((buttons & UP) >> 4) & 0x1;
+	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
+
+	if(upButton && downButton){
+		midVol();
+	}
+	else if(downButton){
+		decreaseVol();
+	}
+	else if(upButton){
+		increaseVol();
+	}
+
 	if(state == -1)
 	{
 		state = SM4_bullets;
@@ -474,9 +488,6 @@ int SpaceShipUpdate_SM(int state) {
 	static int cycles;
 	static int waitShow;
 	static point_t savedPosition;
-	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
-	u32 upButton = ((buttons & UP) >> 4) & 0x1;
-	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
 	if(state == -1)
 	{
 		state = SM5_alive;
@@ -488,11 +499,6 @@ int SpaceShipUpdate_SM(int state) {
 				state = SM5_gameOver;
 			}
 			else if(getSpaceshipDied()) { // Space Ship is dead (up can be pressed for spaceship Death testing
-				if(upButton){
-					u32 tempScore = ((rand() % 7)+1) * 50;
-					setSpaceshipScore(tempScore);
-					xil_printf("\n\r %d cycles", XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID));
-				}
 				state = SM5_dead;
 				cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
 				i = 0;
@@ -501,8 +507,9 @@ int SpaceShipUpdate_SM(int state) {
 			}
 			else {
 				state = SM5_alive;
-				if(!getGameOver())
+				if(!getGameOver()){
 					renderSpaceShip();
+				}
 			}
 			break;
 		case SM5_dead:
@@ -544,15 +551,6 @@ int SpaceShipUpdate_SM(int state) {
 		} // Transitions
 
 		switch(state) { // State actions
-		if(upButton && downButton){
-			midVol();
-		}
-		else if(downButton){
-			decreaseVol();
-		}
-		else if(upButton){
-			increaseVol();
-		}
 		case SM5_alive:{
 			if(waitShow >= EXTRA_WAIT){
 				u32 showRandom;
@@ -566,7 +564,7 @@ int SpaceShipUpdate_SM(int state) {
 		}
 		break;
 		case SM5_dead: {
-
+			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
 		}
 		break;
 		default: // ADD default behaviour below

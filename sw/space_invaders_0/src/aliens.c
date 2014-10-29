@@ -269,7 +269,7 @@ void renderAliens(u8 animate) {
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
 
 		// Fill the Audio FIFO halfway through our aliens
-		if(alienNumber == 27)
+		if(alienNumber%5 == 0)
 			fillFIFO();
 
 		//algorithm to adjust x and y for drawing

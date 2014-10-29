@@ -73,16 +73,12 @@ void updateSpaceShipLocation() {
 	point_t position;
 	position = getSpaceshipPosition();
 
-	// Start sound for spaceship
-	setActive(SPACESHIP_MOVE_NUM, ACTIVE);
-
 	// If moving right
 	if (direction == 1) {
 		position.x += SPACESHIP_SPEED;
 		setSpaceshipPosition(position);
 		if (position.x > 640) {
 			setSpaceshipActivated(0);
-			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
 			setCurrentSampleNum(SPACESHIP_MOVE_NUM, 0);
 		}
 	}
@@ -91,7 +87,6 @@ void updateSpaceShipLocation() {
 		setSpaceshipPosition(position);
 		if ((position.x+32) > 640) { //if it's off the screen to the left
 			setSpaceshipActivated(0);
-			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
 			setCurrentSampleNum(SPACESHIP_MOVE_NUM, 0);
 		}
 	}
@@ -106,6 +101,7 @@ void renderSpaceShip() {
 	point_t position;
 	const u32* arrayToRender;
 	if (getSpaceshipActivated()) {
+		setActive(SPACESHIP_MOVE_NUM, ACTIVE);
 		updateSpaceShipLocation();
 		position = getSpaceshipPosition();
 		arrayToRender = getSpaceShipArray();
@@ -267,9 +263,6 @@ u8 hitSpaceShip(point_t bulletPosition) {
 		return 0;
 	}
 	else {
-		// Start sound for spaceship
-		setActive(SPACESHIP_DEATH_NUM, ACTIVE);
-
 		// Otherwise, it must be in the spaceship.
 		setSpaceshipActivated(0);
 		setSpaceshipDied(1);

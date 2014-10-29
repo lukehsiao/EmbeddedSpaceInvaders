@@ -140,6 +140,9 @@ int getActive(int soundNum){
 
 void setActive(int soundNum, int active){
 	sounds[soundNum].active = active;
+	if(!active){
+		sounds[soundNum].currentSample = 0;
+	}
 }
 
 int getSampleRate(int soundNum){
@@ -171,19 +174,21 @@ void deactivateOthers(int soundNum){
 
 int getCurrentSample(int soundNum){
 	int sample;
-	if(getActive(soundNum)){
-		int* sound = getArrayAddress(soundNum);
-		int currentSampleNum = getCurrentSampleNum(soundNum);
-		sample = sound[currentSampleNum];
-		currentSampleNum++;
-		if(currentSampleNum >= getSize(soundNum)){
-			setActive(soundNum, INACTIVE);
-			currentSampleNum = 0;
-		}
-		setCurrentSampleNum(soundNum,currentSampleNum);
+	if(!getActive(soundNum)){
+		sample = 0;
+		setActive(soundNum, INACTIVE);
 	}
 	else{
-		sample = 0;
+		int currentSampleNum = getCurrentSampleNum(soundNum);
+		if(currentSampleNum >= getSize(soundNum)){
+			setActive(soundNum, INACTIVE);
+		}
+		else {
+			int* sound = getArrayAddress(soundNum);
+			sample = sound[currentSampleNum];
+			currentSampleNum++;
+			setCurrentSampleNum(soundNum,currentSampleNum);
+		}
 	}
 	return sample;
 }
@@ -207,29 +212,32 @@ void fillFIFO(){
 		for(soundNum = 0; soundNum < SOUND_NUM; soundNum++){
 			sample += getCurrentSample(soundNum);
 		}
-		int totalActive = getTotalActive();
-		if(totalActive > 0){
-			sample = sample / getTotalActive();
-		}
-		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample | (sample<<16));
+		//		int totalActive = getTotalActive();
+		//		if(totalActive > 1){
+		//			sample = sample / getTotalActive();
+		//		}
+		sample = sample | (sample<<16);
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample);
 	}
 }
 
 void increaseVol(){
-	volumeAttenuation += VOL_ADJUST;
-	if(volumeAttenuation > AC97_VOL_MUTE)
-		volumeAttenuation = AC97_VOL_MUTE;
-	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
+	// This should be -= until it caps at 0x0000
+	volumeAttenuation -= VOL_ADJUST;
+	if(volumeAttenuation < AC97_RIGHT_VOL_ATTN_0_DB)
+		volumeAttenuation = AC97_RIGHT_VOL_ATTN_0_DB;
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, (volumeAttenuation) | (volumeAttenuation << 8));
 }
 
 void decreaseVol(){
-	volumeAttenuation -= VOL_ADJUST;
-	if(volumeAttenuation > AC97_VOL_MAX)
-		volumeAttenuation = AC97_VOL_MAX;
-	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
+	// This should be += until it caps at 0x1f1f
+	volumeAttenuation += VOL_ADJUST;
+	if(volumeAttenuation > AC97_RIGHT_VOL_ATTN_46_0_DB)
+		volumeAttenuation = AC97_RIGHT_VOL_ATTN_46_0_DB;
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, (volumeAttenuation) | (volumeAttenuation << 8));
 }
 
 void midVol(){
-	volumeAttenuation = AC97_VOL_MID;
+	volumeAttenuation = AC97_VOL_MID & 0xFF;
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
 }

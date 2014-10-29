@@ -27,7 +27,7 @@
 #define TRUE		1
 #define FALSE		0
 
-#define VOL_ADJUST 4
+#define VOL_ADJUST 1
 
 typedef struct
 {
