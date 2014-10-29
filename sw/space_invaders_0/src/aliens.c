@@ -43,7 +43,9 @@ void unrenderAliens() {
 					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
 				}
 				else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
+					if (framePointer0[(position.y + row)*640 + (position.x + col)] != GREEN) {
 						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
@@ -55,7 +57,9 @@ void unrenderAliens() {
 					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
 				}
 				else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
+					if (framePointer0[(position.y + row)*640 + (position.x + col)] != GREEN) {
 						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					}
 				}
 			}
 		}
@@ -86,7 +90,19 @@ void unrenderAliens() {
  * rows when they hit the edge of the screen.
  */
 void updateAlienLocation() {
-
+	int soundNum;
+	int sample=0;
+	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){//for(i = 0; i < NUM_FIFO_SAMPLES_FILL; i++){
+		sample=0;
+		for(soundNum = 0; soundNum < SOUND_NUM; soundNum++){
+			sample += getCurrentSample(soundNum);
+		}
+		int totalActive = getTotalActive();
+		if(totalActive > 0){
+			sample = sample / getTotalActive();
+		}
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample | (sample<<16));
+	}
 	// Trigger Alien Move Sound
 	static int alienMoveSoundNumber = 1;
 	alienMoveSoundNumber++;
@@ -251,6 +267,11 @@ void renderAliens(u8 animate) {
 
 	const u32* arrayToRender;
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
+
+		// Fill the Audio FIFO halfway through our aliens
+		if(alienNumber%5 == 0)
+			fillFIFO();
+
 		//algorithm to adjust x and y for drawing
 		if (alienNumber != 0) {
 			position.x = position.x + 32;
@@ -438,6 +459,9 @@ u8 hitAlien(point_t position) {
 				// If it's within the alien's block
 				if ((position.x < (alienPosition.x + 26)) && (position.x > alienPosition.x)) {
 					if ((position.y < (alienPosition.y + ALIEN_HEIGHT)) && (position.y > alienPosition.y)) {
+						// Start sound for alien death
+						setActive(ALIEN_DEATH_NUM, ACTIVE);
+
 						killAlien(alienNumber);
 						return alienNumber;
 					}

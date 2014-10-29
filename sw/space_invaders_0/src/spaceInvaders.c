@@ -47,8 +47,7 @@ unsigned char taski;
  * This is invoked in response to a timer interrupt.
  * It calls all the state machines.
  */
-void timer_interrupt_handler() {
-	//	interruptCounter++;
+void timer_interrupt_handler() {	//	interruptCounter++;
 	//	if(interruptCounter < 4300){
 	u8 i;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
@@ -97,22 +96,8 @@ void timer_interrupt_handler() {
 	//		}
 }
 
-
 void AC97_interrupt_handler() {
-	int i;
-	int soundNum;
-	int sample=0;
-	for(i = 0; i < NUM_FIFO_SAMPLES_FILL; i++){
-		sample=0;
-		for(soundNum = 0; soundNum < SOUND_NUM; soundNum++){
-			sample += getCurrentSample(soundNum);
-		}
-		int totalActive = getTotalActive();
-		if(totalActive > 0){
-			sample = sample / getTotalActive();
-		}
-		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample | (sample<<16));
-	}
+	fillFIFO();
 	XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_AXI_AC97_0_INTERRUPT_MASK);
 }
 
@@ -248,8 +233,8 @@ int main()
 	xil_printf("Woohoo! I made it through initialization.\n\r");
 
 	initStateMachines(); //setup space invaders
+	initSounds();		// setup space invader sounds
 	microblaze_enable_interrupts();
-	initSounds();
 	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
 		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 0);
 	}

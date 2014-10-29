@@ -418,7 +418,7 @@ int AlienMovementAndBullets_SM(int state) {
 			signed long newPeriod = ALIEN_STATE_MACHINE_RATE_MAX
 					-((getAlienBlockPosition().y-ALIEN_STARTING_Y_POSITION)/ALIEN_HEIGHT)*2;
 			u8 aliensAlive = getNumberAliensAlive();
-			newPeriod = newPeriod - (((55-aliensAlive)*6)/10);
+			newPeriod = newPeriod - (((55-aliensAlive)*4)/10);
 			if(newPeriod <= 1)
 				newPeriod = 1;
 			tasks[2].period = newPeriod;
@@ -433,6 +433,20 @@ int AlienMovementAndBullets_SM(int state) {
 }
 
 int AlienbulletsUpdate_SM(int state) {
+	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
+	u32 upButton = ((buttons & UP) >> 4) & 0x1;
+	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
+
+	if(upButton && downButton){
+		midVol();
+	}
+	else if(downButton){
+		decreaseVol();
+	}
+	else if(upButton){
+		increaseVol();
+	}
+
 	if(state == -1)
 	{
 		state = SM4_bullets;
@@ -474,8 +488,6 @@ int SpaceShipUpdate_SM(int state) {
 	static int cycles;
 	static int waitShow;
 	static point_t savedPosition;
-	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
-	u32 upButton = ((buttons & UP) >> 4) & 0x1;
 	if(state == -1)
 	{
 		state = SM5_alive;
@@ -486,12 +498,7 @@ int SpaceShipUpdate_SM(int state) {
 			if(getGameOver()){
 				state = SM5_gameOver;
 			}
-			else if(upButton || getSpaceshipDied()) { // Space Ship is dead (up can be pressed for spaceship Death testing
-				if(upButton){
-					u32 tempScore = ((rand() % 7)+1) * 50;
-					setSpaceshipScore(tempScore);
-					xil_printf("\n\r %d cycles", XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID));
-				}
+			else if(getSpaceshipDied()) { // Space Ship is dead (up can be pressed for spaceship Death testing
 				state = SM5_dead;
 				cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
 				i = 0;
@@ -500,8 +507,9 @@ int SpaceShipUpdate_SM(int state) {
 			}
 			else {
 				state = SM5_alive;
-				if(!getGameOver())
+				if(!getGameOver()){
 					renderSpaceShip();
+				}
 			}
 			break;
 		case SM5_dead:
@@ -556,7 +564,7 @@ int SpaceShipUpdate_SM(int state) {
 		}
 		break;
 		case SM5_dead: {
-
+			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
 		}
 		break;
 		default: // ADD default behaviour below
