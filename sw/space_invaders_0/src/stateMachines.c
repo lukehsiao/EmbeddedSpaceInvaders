@@ -21,6 +21,36 @@
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 #include "spaceInvadersSounds.h"
 
+// Allocate memory for the state machines
+task tasks[TASKS_NUM];
+
+/**
+ * Returns the a task
+ * @param taskNum the number of the task to get
+ * @return the task
+ */
+task getTask(u8 taskNum) {
+	return tasks[taskNum];
+}
+
+/**
+ * Sets the state of a task
+ * @param taskNum the task to modify
+ * @param newState the value to set the state to
+ */
+void setState(u8 taskNum, int newState) {
+	tasks[taskNum].state = newState;
+}
+
+/**
+ * Sets the elapsed time of the task
+ * @param taskNum the task to modify
+ * @param newTime the value to set elapsed time to
+ */
+void setElapsedTime(u8 taskNum, unsigned long newTime) {
+	tasks[taskNum].elapsedTime = newTime;
+}
+
 #ifdef TIMING
 /////////////////////////////////////
 // Handy Timing Functions
@@ -40,6 +70,8 @@ void stopTiming() {
 	}
 }
 #endif
+
+
 
 ////////////////////////////////////////
 // Initializing State Machine Variables

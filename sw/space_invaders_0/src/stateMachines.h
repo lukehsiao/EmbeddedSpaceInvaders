@@ -28,7 +28,6 @@ typedef struct task {
 	int bcet; //WCET of the task
 } task;
 
-task tasks[TASKS_NUM];
 
 /////////////////////////////////////
 // Handy Timing Functions
@@ -55,6 +54,11 @@ int SpaceShipUpdate_SM();
 
 enum SM6_States { SM6_noDeath, SM6_death, SM6_gameOver } SM6_State;
 int AlienDeath_SM();
+
+task getTask(u8 taskNum);
+void setState(u8 taskNum, int newState);
+void setElapsedTime(u8 taskNum, unsigned long newTime);
+
 
 
 #endif /* STATEMACHINES_H_ */

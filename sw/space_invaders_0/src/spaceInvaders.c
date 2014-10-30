@@ -36,7 +36,6 @@
 #define DEBUG
 
 XTmrCtr Timer0;
-unsigned char taski;
 
 void print(char *str);
 
@@ -49,33 +48,35 @@ void print(char *str);
 void timer_interrupt_handler() {	//	interruptCounter++;
 	//	if(interruptCounter < 4300){
 	u8 i;
+	task tempTask;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
-		if (tasks[i].elapsedTime >= tasks[i].period){
+		tempTask = getTask(i);
+		if (tempTask.elapsedTime >= tempTask.period){
 //			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
 //			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			switch (i) {
 			case 0:
-				tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				setState(i, TankMovementAndBullet_SM(tempTask.state));
 				break;
 			case 1:
-				tasks[i].state = TankBulletUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				setState(i, TankBulletUpdate_SM(tempTask.state));
 				break;
 			case 2:
-				tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				setState(i, AlienMovementAndBullets_SM(tempTask.state));
 				break;
 			case 3:
-				tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				setState(i, AlienbulletsUpdate_SM(tempTask.state));
 				break;
 			case 4:
-				tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				setState(i, SpaceShipUpdate_SM(tempTask.state));
 				break;
 			case 5:
-				tasks[i].state = AlienDeath_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				setState(i, AlienDeath_SM(tempTask.state));
 				break;
 			default:
 				break;
 			}
-			tasks[i].elapsedTime = 0; // Reset the elapsed time
+			setElapsedTime(i, 0); // Reset the elapsed time
 //			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 //			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 //			if(tempWcet > tasks[i].wcet)
@@ -88,7 +89,7 @@ void timer_interrupt_handler() {	//	interruptCounter++;
 //			}
 
 		}
-		tasks[i].elapsedTime += 1;
+		setElapsedTime(i, tempTask.elapsedTime + 1);
 	}
 	//		else{
 	//			xil_printf("\n\r%d", uteCounter);
