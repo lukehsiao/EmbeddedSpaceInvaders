@@ -56,4 +56,20 @@ void decreaseVol();
 void midVol();
 
 
+extern int alienMove1_soundData[];
+extern int alienMove1_sampleRate;
+extern int alienMove1_numberOfSamples;
+
+extern int alienMove2_soundData[];
+extern int alienMove2_sampleRate;
+extern int alienMove2_numberOfSamples;
+
+extern int alienMove3_soundData[];
+extern int alienMove3_sampleRate;
+extern int alienMove3_numberOfSamples;
+
+extern int alienMove4_soundData[];
+extern int alienMove4_sampleRate;
+extern int alienMove4_numberOfSamples;
+
 #endif /* SPACEINVADERSSOUNDS_H_ */

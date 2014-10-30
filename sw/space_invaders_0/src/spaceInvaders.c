@@ -41,10 +41,9 @@ unsigned char taski;
 void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
-unsigned char taski;
 
 /**
- * This is invoked in response to a timer interrupt.
+ * This is invoked in respose to a timer interrupt.
  * It calls all the state machines.
  */
 void timer_interrupt_handler() {	//	interruptCounter++;
@@ -220,12 +219,13 @@ int main()
 	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
 
+	//Initialize the AC'97
 	XAC97_HardReset(XPAR_AXI_AC97_0_BASEADDR);
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_ExtendedAudioStat, 1);
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_PCM_DAC_Rate, AC97_PCM_RATE_11025_HZ);
 	XAC97_mSetControl(XPAR_AXI_AC97_0_BASEADDR,AC97_ENABLE_IN_FIFO_INTERRUPT);
 	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
-		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 0);
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 127);
 	}
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, AC97_VOL_MID);
 

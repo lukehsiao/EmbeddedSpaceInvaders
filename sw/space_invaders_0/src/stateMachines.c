@@ -547,7 +547,7 @@ int SpaceShipUpdate_SM(int state) {
 			break;
 
 		default:
-			state = SM5_alive;
+			state = SM5_gameOver;
 		} // Transitions
 
 		switch(state) { // State actions
@@ -555,7 +555,7 @@ int SpaceShipUpdate_SM(int state) {
 			if(waitShow >= EXTRA_WAIT){
 				u32 showRandom;
 				showRandom = (char)(rand() % SPACESHIP_START_RATE);
-				if(showRandom == 0){
+				if((showRandom == 0) && (!getGameOver())){
 					startSpaceShip();
 				}
 				waitShow = 0;
