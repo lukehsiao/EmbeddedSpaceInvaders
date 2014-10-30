@@ -78,6 +78,8 @@ void updateSpaceShipLocation() {
 		position.x += SPACESHIP_SPEED;
 		setSpaceshipPosition(position);
 		if (position.x > 640) {
+			// Trigger Tank Death Sound
+			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
 			setSpaceshipActivated(0);
 			setCurrentSampleNum(SPACESHIP_MOVE_NUM, 0);
 		}
@@ -86,6 +88,7 @@ void updateSpaceShipLocation() {
 		position.x -= SPACESHIP_SPEED;
 		setSpaceshipPosition(position);
 		if ((position.x+32) > 640) { //if it's off the screen to the left
+			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
 			setSpaceshipActivated(0);
 			setCurrentSampleNum(SPACESHIP_MOVE_NUM, 0);
 		}
