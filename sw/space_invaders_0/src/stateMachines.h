@@ -1,8 +1,8 @@
-/*
- * stateMachines.h
+/**
+ * This file contains all of the prototypes for state machines.
  *
- *  Created on: Oct 9, 2014
- *      Author: superman
+ * author: Luke Hsiao & Jeff Ravert
+ * 25 October 2014
  */
 
 #ifndef STATEMACHINES_H_
