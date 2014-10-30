@@ -10,6 +10,7 @@
 
 #include "xgpio.h"          // Provides access to PB GPIO driver
 #include "globals.h"
+
 #define UP 		0x10
 #define DOWN 	0x04
 #define LEFT	0x08

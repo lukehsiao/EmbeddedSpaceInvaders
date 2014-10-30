@@ -5,21 +5,10 @@
  *      Author: Jeff Ravert and Luke Hsiao
  */
 #include "stateMachines.h"
-#include <stdio.h>
 #include <stdlib.h>
-#include "render.h"			// Our rendering file.
-#include "xgpio.h"          // Provides access to PB GPIO driver.
-#include "platform.h"
-#include "xparameters.h"
-#include "xaxivdma.h"
-#include "xio.h"
-#include "xtmrctr.h" // axi Timer
-#include "unistd.h"
-#include "render.h"			// Our rendering file.
-#include "xuartlite_l.h"
-#include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 #include "spaceInvadersSounds.h"
+#include "render.h"			// Our rendering file.
 
 // Allocate memory for the state machines
 task tasks[TASKS_NUM];
