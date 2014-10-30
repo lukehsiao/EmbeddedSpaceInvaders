@@ -82,7 +82,6 @@ void unrenderAliens() {
 	}
 	// if X_SHIFT > 6, we'll need to add logic here to clear the right side as well when moving left.
 	// Currently, the gap on the right side of the bitmaps themselves takes care of it sufficiently.
-
 }
 
 /**
@@ -90,9 +89,6 @@ void unrenderAliens() {
  * rows when they hit the edge of the screen.
  */
 void updateAlienLocation() {
-	int soundNum;
-	int sample=0;
-
 	// Trigger Alien Move Sound
 	static int alienMoveSoundNumber = 1;
 	alienMoveSoundNumber++;
@@ -257,11 +253,6 @@ void renderAliens(u8 animate) {
 
 	const u32* arrayToRender;
 	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
-
-//		// Fill the Audio FIFO halfway through our aliens
-//		if(alienNumber%5 == 0)
-//			fillFIFO();
-
 		//algorithm to adjust x and y for drawing
 		if (alienNumber != 0) {
 			position.x = position.x + 32;
@@ -296,7 +287,6 @@ void renderAliens(u8 animate) {
 		}
 	}
 }
-
 
 //////////////////////////////////////////////////////////////////
 // Functions for Rendering Alien Bullets

@@ -51,8 +51,8 @@ void timer_interrupt_handler() {	//	interruptCounter++;
 	u8 i;
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
 		if (tasks[i].elapsedTime >= tasks[i].period){
-			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
-			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+//			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
+//			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 			switch (i) {
 			case 0:
 				tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
@@ -76,16 +76,16 @@ void timer_interrupt_handler() {	//	interruptCounter++;
 				break;
 			}
 			tasks[i].elapsedTime = 0; // Reset the elapsed time
-			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-			if(tempWcet > tasks[i].wcet)
-			{
-				tasks[i].wcet = tempWcet;
-			}
-			if(tempWcet < tasks[i].bcet)
-			{
-				tasks[i].bcet = tempWcet;
-			}
+//			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+//			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+//			if(tempWcet > tasks[i].wcet)
+//			{
+//				tasks[i].wcet = tempWcet;
+//			}
+//			if(tempWcet < tasks[i].bcet)
+//			{
+//				tasks[i].bcet = tempWcet;
+//			}
 
 		}
 		tasks[i].elapsedTime += 1;

@@ -21,7 +21,7 @@
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 #include "spaceInvadersSounds.h"
 
-
+#ifdef TIMING
 /////////////////////////////////////
 // Handy Timing Functions
 /////////////////////////////////////
@@ -39,7 +39,7 @@ void stopTiming() {
 			xil_printf("\n\r TIMER OVERRUN"); // there was timer overrun
 	}
 }
-
+#endif
 
 ////////////////////////////////////////
 // Initializing State Machine Variables

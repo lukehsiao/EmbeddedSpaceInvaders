@@ -1,16 +1,14 @@
-/*
- * spaceInvadersSounds.h
+/**
+ * This file contains all of the definitions and function prototypes
+ * for accessing the sounds of Space Invaders
  *
  *  Created on: Oct 25, 2014
- *      Author: superman
+ *      Author: Jeff Ravert & Luke Hsiao
  */
-
-#include "xac97_l.h"
-
 #ifndef SPACEINVADERSSOUNDS_H_
 #define SPACEINVADERSSOUNDS_H_
 
-#define SOUND_NUM 9
+#define SOUND_NUM 9		// Total Number of Sounds
 #define SPACESHIP_MOVE_NUM 	0 // Lowest Priority
 #define ALIEN_MOVE1_NUM 	1
 #define ALIEN_MOVE2_NUM 	2
@@ -20,14 +18,10 @@
 #define ALIEN_DEATH_NUM 	6
 #define SPACESHIP_DEATH_NUM 7
 #define TANK_DEATH_NUM 		8 // Highest Priority
+#define VOL_ADJUST 1
 
 #define INACTIVE 	0
 #define ACTIVE 		1
-
-#define TRUE		1
-#define FALSE		0
-
-#define VOL_ADJUST 1
 
 typedef struct
 {
@@ -54,22 +48,5 @@ void fillFIFO();
 void increaseVol();
 void decreaseVol();
 void midVol();
-
-
-extern int alienMove1_soundData[];
-extern int alienMove1_sampleRate;
-extern int alienMove1_numberOfSamples;
-
-extern int alienMove2_soundData[];
-extern int alienMove2_sampleRate;
-extern int alienMove2_numberOfSamples;
-
-extern int alienMove3_soundData[];
-extern int alienMove3_sampleRate;
-extern int alienMove3_numberOfSamples;
-
-extern int alienMove4_soundData[];
-extern int alienMove4_sampleRate;
-extern int alienMove4_numberOfSamples;
 
 #endif /* SPACEINVADERSSOUNDS_H_ */

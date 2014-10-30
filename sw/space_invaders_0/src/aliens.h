@@ -9,11 +9,11 @@
 #ifndef ALIENS_H_
 #define ALIENS_H_
 
-#define X_SHIFT 6           // # of pixels the Alien Block shifts horizontally.
-#define ALIEN_BULLET_FIRE_RATE 40
-#define ALIEN_BULLET_SPEED 6   // # of pixel the alien bullets moves per update
-#define BOTTOM_BORDER 418      // The lowest Y position the aliens can go before game over happens
-#define ALIEN_EXPLOSION_SHOW_TIME 2   // # of pixel the alien bullets moves per update
+#define X_SHIFT 6           			// # of pixels the Alien Block shifts horizontally.
+#define ALIEN_BULLET_FIRE_RATE 40		// Increase to have aliens fire less often
+#define ALIEN_BULLET_SPEED 6   			// # of pixel the alien bullets moves per update
+#define BOTTOM_BORDER 418      			// The lowest Y position the aliens can go before game over happens
+#define ALIEN_EXPLOSION_SHOW_TIME 2   	// # of pixel the alien bullets moves per update
 #define ALIEN_STATE_MACHINE_RATE_MAX 60 // this is the slowest that the Aliens SM will be called
 #define ALIEN_STARTING_Y_POSITION 70
 
