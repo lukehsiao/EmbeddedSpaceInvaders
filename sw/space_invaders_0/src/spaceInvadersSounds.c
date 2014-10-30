@@ -50,58 +50,58 @@ void initSounds(){
 	sounds[SPACESHIP_MOVE_NUM].active = INACTIVE;
 	sounds[SPACESHIP_MOVE_NUM].sampleRate = spaceshipMove_sampleRate;
 	sounds[SPACESHIP_MOVE_NUM].currentSample = 0;
-	sounds[SPACESHIP_MOVE_NUM].size = spaceshipMove_numberOfSamples;
+	sounds[SPACESHIP_MOVE_NUM].size = spaceshipMove_numberOfSamples/2;
 	sounds[SPACESHIP_MOVE_NUM].arrayAddress = spaceshipMove_soundData;
 
 	sounds[ALIEN_MOVE1_NUM].active = INACTIVE;
 	sounds[ALIEN_MOVE1_NUM].sampleRate = alienMove1_sampleRate;
 	sounds[ALIEN_MOVE1_NUM].currentSample = 0;
-	sounds[ALIEN_MOVE1_NUM].size = alienMove1_numberOfSamples;
+	sounds[ALIEN_MOVE1_NUM].size = alienMove1_numberOfSamples/2;
 	sounds[ALIEN_MOVE1_NUM].arrayAddress = alienMove1_soundData;
 
 	sounds[ALIEN_MOVE2_NUM].active = INACTIVE;
 	sounds[ALIEN_MOVE2_NUM].sampleRate = alienMove2_sampleRate;
 	sounds[ALIEN_MOVE2_NUM].currentSample = 0;
-	sounds[ALIEN_MOVE2_NUM].size = alienMove2_numberOfSamples;
+	sounds[ALIEN_MOVE2_NUM].size = alienMove2_numberOfSamples/2;
 	sounds[ALIEN_MOVE2_NUM].arrayAddress = alienMove2_soundData;
 
 	sounds[ALIEN_MOVE3_NUM].active = INACTIVE;
 	sounds[ALIEN_MOVE3_NUM].sampleRate = alienMove3_sampleRate;
 	sounds[ALIEN_MOVE3_NUM].currentSample = 0;
-	sounds[ALIEN_MOVE3_NUM].size = alienMove3_numberOfSamples;
+	sounds[ALIEN_MOVE3_NUM].size = alienMove3_numberOfSamples/2;
 	sounds[ALIEN_MOVE3_NUM].arrayAddress = alienMove3_soundData;
 
 	sounds[ALIEN_MOVE4_NUM].active = INACTIVE;
 	sounds[ALIEN_MOVE4_NUM].sampleRate = alienMove4_sampleRate;
 	sounds[ALIEN_MOVE4_NUM].currentSample = 0;
-	sounds[ALIEN_MOVE4_NUM].size = alienMove4_numberOfSamples;
+	sounds[ALIEN_MOVE4_NUM].size = alienMove4_numberOfSamples/2;
 	sounds[ALIEN_MOVE4_NUM].arrayAddress = alienMove4_soundData;
 
 	sounds[TANK_FIRE_NUM].active = INACTIVE;
 	sounds[TANK_FIRE_NUM].sampleRate = tankFire_sampleRate;
 	sounds[TANK_FIRE_NUM].currentSample = 0;
-	sounds[TANK_FIRE_NUM].size = tankFire_numberOfSamples;
+	sounds[TANK_FIRE_NUM].size = tankFire_numberOfSamples/2;
 	sounds[TANK_FIRE_NUM].arrayAddress = tankFire_soundData;
 
 	sounds[ALIEN_DEATH_NUM].active = INACTIVE;
 	sounds[ALIEN_DEATH_NUM].sampleRate = alienDeath_sampleRate;
 	sounds[ALIEN_DEATH_NUM].currentSample = 0;
-	sounds[ALIEN_DEATH_NUM].size = alienDeath_numberOfSamples;
+	sounds[ALIEN_DEATH_NUM].size = alienDeath_numberOfSamples/2;
 	sounds[ALIEN_DEATH_NUM].arrayAddress = alienDeath_soundData;
 
 	sounds[SPACESHIP_DEATH_NUM].active = INACTIVE;
 	sounds[SPACESHIP_DEATH_NUM].sampleRate = spaceshipDeath_sampleRate;
 	sounds[SPACESHIP_DEATH_NUM].currentSample = 0;
-	sounds[SPACESHIP_DEATH_NUM].size = spaceshipDeath_numberOfSamples;
+	sounds[SPACESHIP_DEATH_NUM].size = spaceshipDeath_numberOfSamples/2;
 	sounds[SPACESHIP_DEATH_NUM].arrayAddress = spaceshipDeath_soundData;
 
 	sounds[TANK_DEATH_NUM].active = INACTIVE;
 	sounds[TANK_DEATH_NUM].sampleRate = tankDeath_sampleRate;
 	sounds[TANK_DEATH_NUM].currentSample = 0;
-	sounds[TANK_DEATH_NUM].size = tankDeath_numberOfSamples;
+	sounds[TANK_DEATH_NUM].size = tankDeath_numberOfSamples/2;
 	sounds[TANK_DEATH_NUM].arrayAddress = tankDeath_soundData;
 
-	volumeAttenuation=0;
+	volumeAttenuation = AC97_VOL_MID & 0xFF;
 }
 
 void updateSampleRate(int soundNum){
@@ -178,7 +178,7 @@ int getCurrentSample(int soundNum){
 	}
 	else{
 		int currentSampleNum = getCurrentSampleNum(soundNum);
-		if(currentSampleNum >= (getSize(soundNum)-100)){
+		if(currentSampleNum >= (getSize(soundNum))){
 			setActive(soundNum, INACTIVE);
 			sample = 127;
 		}
@@ -203,22 +203,47 @@ int getTotalActive(){
 	return num;
 }
 
-void fillFIFO(){
+
+u16 mixedAudioSignals() {
+	u32 mixed;
 	int soundNum;
-	int sample=127;
+	mixed = getCurrentSample(0);
+	for (soundNum = 1; soundNum < SOUND_NUM; soundNum++) {
+		u16 currentSample = getCurrentSample(soundNum);
+		mixed = (mixed + currentSample)/1;
+	}
+	// Digital Audio Signal Mixing Algorithm here:
 
-	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
-		sample=0;
-		for(soundNum = 0; soundNum < SOUND_NUM; soundNum++){
-			sample = sample + (getCurrentSample(soundNum));
+	return (u16)mixed;
+}
+
+u16 getHighPrioritySound() {
+	u16 result;
+	int soundNum = 0;
+	u16 currentSample;
+	result = 128; // baseline silence if none are active.
+	for (soundNum = 0; soundNum < SOUND_NUM; soundNum++) {
+		currentSample = getCurrentSample(soundNum);
+		if (getActive(soundNum) == TRUE) {
+			result = currentSample;	// will save the highest priority sound that is active, and advance all of them
 		}
+	}
+	return result;
+}
 
-//		int totalActive = getTotalActive();
-
-//		if(totalActive > 1){
-//			sample = sample / getTotalActive();
-//		}
-		sample = sample | (sample<<16);
+void fillFIFO(){
+	u32 sample;
+	u16 soundData;
+//	int FIFO_FILL = 200;
+//	int i;
+//	for (i = 0; i < FIFO_FILL; i++) {
+//		sample = getHighPrioritySound();
+//		sample = sample | (sample<<16);
+//		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample);
+//	}
+	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
+		soundData = mixedAudioSignals();
+		sample = soundData | (soundData<<16);
 		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample);
 	}
 }
@@ -243,3 +268,4 @@ void midVol(){
 	volumeAttenuation = AC97_VOL_MID & 0xFF;
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
 }
+
