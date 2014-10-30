@@ -268,3 +268,4 @@ void midVol(){
 	volumeAttenuation = AC97_VOL_MID & 0xFF;
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
 }
+

@@ -41,10 +41,9 @@ unsigned char taski;
 void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
-unsigned char taski;
 
 /**
- * This is invoked in response to a timer interrupt.
+ * This is invoked in respose to a timer interrupt.
  * It calls all the state machines.
  */
 void timer_interrupt_handler() {	//	interruptCounter++;
