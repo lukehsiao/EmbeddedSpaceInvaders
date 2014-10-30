@@ -56,7 +56,7 @@ int SpaceShipUpdate_SM();
 enum SM6_States { SM6_noDeath, SM6_death, SM6_gameOver } SM6_State;
 int AlienDeath_SM();
 
-task getTask(u8 taskNum);
+task* getTasks();
 void setState(u8 taskNum, int newState);
 void setElapsedTime(u8 taskNum, unsigned long newTime);
 

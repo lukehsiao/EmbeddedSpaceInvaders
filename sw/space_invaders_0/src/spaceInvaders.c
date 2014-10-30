@@ -42,58 +42,48 @@ void print(char *str);
 #define MAX_SILLY_TIMER 500000;
 
 /**
- * This is invoked in respose to a timer interrupt.
+ * This is invoked in response to a timer interrupt.
  * It calls all the state machines.
  */
 void timer_interrupt_handler() {	//	interruptCounter++;
-	//	if(interruptCounter < 4300){
 	u8 i;
-	task tempTask;
+	task* tempTask;
+	tempTask = getTasks();
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
-		tempTask = getTask(i);
-		if (tempTask.elapsedTime >= tempTask.period){
-//			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
-//			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+		if (tempTask[i].elapsedTime >= tempTask[i].period){
+			int newState;
 			switch (i) {
 			case 0:
-				setState(i, TankMovementAndBullet_SM(tempTask.state));
+				newState = TankMovementAndBullet_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 1:
-				setState(i, TankBulletUpdate_SM(tempTask.state));
+				newState =  TankBulletUpdate_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 2:
-				setState(i, AlienMovementAndBullets_SM(tempTask.state));
+				newState = AlienMovementAndBullets_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 3:
-				setState(i, AlienbulletsUpdate_SM(tempTask.state));
+				newState = AlienbulletsUpdate_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 4:
-				setState(i, SpaceShipUpdate_SM(tempTask.state));
+				newState = SpaceShipUpdate_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 5:
-				setState(i, AlienDeath_SM(tempTask.state));
+				newState = AlienDeath_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			default:
 				break;
 			}
 			setElapsedTime(i, 0); // Reset the elapsed time
-//			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-//			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-//			if(tempWcet > tasks[i].wcet)
-//			{
-//				tasks[i].wcet = tempWcet;
-//			}
-//			if(tempWcet < tasks[i].bcet)
-//			{
-//				tasks[i].bcet = tempWcet;
-//			}
-
 		}
-		setElapsedTime(i, tempTask.elapsedTime + 1);
+		setElapsedTime(i, (tempTask[i].elapsedTime + 1));
 	}
-	//		else{
-	//			xil_printf("\n\r%d", uteCounter);
-	//		}
 }
 
 void AC97_interrupt_handler() {

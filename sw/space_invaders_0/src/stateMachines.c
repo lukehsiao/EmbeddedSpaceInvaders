@@ -18,8 +18,8 @@ task tasks[TASKS_NUM];
  * @param taskNum the number of the task to get
  * @return the task
  */
-task getTask(u8 taskNum) {
-	return tasks[taskNum];
+task* getTasks() {
+	return tasks;
 }
 
 /**
@@ -29,6 +29,7 @@ task getTask(u8 taskNum) {
  */
 void setState(u8 taskNum, int newState) {
 	tasks[taskNum].state = newState;
+	return;
 }
 
 /**
@@ -38,6 +39,7 @@ void setState(u8 taskNum, int newState) {
  */
 void setElapsedTime(u8 taskNum, unsigned long newTime) {
 	tasks[taskNum].elapsedTime = newTime;
+	return;
 }
 
 #ifdef TIMING
