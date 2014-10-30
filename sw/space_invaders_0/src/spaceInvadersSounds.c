@@ -242,7 +242,7 @@ u16 mixedAudioSignals() {
 	mixed = getCurrentSample(0);
 	for (soundNum = 1; soundNum < SOUND_NUM; soundNum++) {
 		u16 currentSample = getCurrentSample(soundNum);
-		mixed = (mixed + currentSample)/1;
+		mixed = mixed + currentSample;
 	}
 	return (u16)mixed;
 }
@@ -255,7 +255,7 @@ void fillFIFO(){
 	u16 soundData;
 	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
 		soundData = mixedAudioSignals(); // Mixing all active sounds
-		soundData = soundData * 4;	// boost volume
+		soundData = soundData * 10;	// boost volume for better SNR
 		sample = soundData | (soundData<<16); // Shifting to put in Left and Right
 		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, sample); // Writing to the FIFO
 	}
@@ -266,10 +266,9 @@ void fillFIFO(){
  */
 void increaseVol(){
 	volumeAttenuation -= VOL_ADJUST;
-	if(volumeAttenuation < AC97_RIGHT_VOL_ATTN_0_DB) // Right is the right 8 bits, Left is the next 8 Bits
-		volumeAttenuation = AC97_RIGHT_VOL_ATTN_0_DB; // Setting Bounds on the volume
-	volumeAttenuation = (volumeAttenuation) | (volumeAttenuation << 8); // Shifting to put in Right and left Volume
-	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
+	if(volumeAttenuation < AC97_RIGHT_VOL_ATTN_19_0_DB) // Right is the right 8 bits, Left is the next 8 Bits
+		volumeAttenuation = AC97_RIGHT_VOL_ATTN_19_0_DB; // Setting Bounds on the volume
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, (volumeAttenuation) | (volumeAttenuation << 8));
 }
 
 /**
@@ -280,15 +279,14 @@ void decreaseVol(){
 	volumeAttenuation += VOL_ADJUST;
 	if(volumeAttenuation > AC97_RIGHT_VOL_ATTN_46_0_DB)
 		volumeAttenuation = AC97_RIGHT_VOL_ATTN_46_0_DB;
-	volumeAttenuation = (volumeAttenuation) | (volumeAttenuation << 8); // Shifting to put in Right and left Volume
-	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, (volumeAttenuation) | (volumeAttenuation << 8));
 }
 
 /**
  * Sets the volume to the AC'97's mid range.
  */
 void midVol(){
-	volumeAttenuation = AC97_VOL_MID & 0xFF; // Needs masking because volumeAttenuation only keeps track of one channel volume
+	volumeAttenuation = AC97_RIGHT_VOL_ATTN_31_0_DB;
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
 }
 
