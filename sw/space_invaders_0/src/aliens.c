@@ -15,7 +15,7 @@ extern u32* framePointer1;
 
 u32 findFiringAlien(u32 randomCol);
 
-u32 lowestLiveRow = 4;
+u32 lowestLiveRow = STARTING_LOWEST_ALIEN_ALIVE_ROW;
 
 //////////////////////////////////////////////////////////////////
 // Functions for Rendering Aliens
@@ -33,32 +33,32 @@ void unrenderAliens() {
 	position = getAlienBlockPosition();
 	static u8 direction;
 	direction = getAlienDirection();
-	u32 totalWidth = 32*11;
-	u32 totalHeight = (ALIEN_HEIGHT+10)*5;
+	u32 totalWidth = ALIEN_ARRAY_WIDTH*MAX_ALIEN_NUMBER_IN_ROW;
+	u32 totalHeight = (ALIEN_HEIGHT+ALIEN_RIGHT_SIDE_BLANK)*MAX_ALIEN_NUMBER_IN_COLUMN;
 	// If we hit the right edge
 	if(position.x + totalWidth >= getRightPad() && direction == 1) {
 		for (row = 0; row < totalHeight; row++) {
 			for (col = 0; col < totalWidth; col++) {
-				if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
-					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+				if (framePointer1[(position.y + row)*RIGHT_SIDE + (position.x + col)] == GREEN) {
+					framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = GREEN;
 				}
-				else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
-					if (framePointer0[(position.y + row)*640 + (position.x + col)] != GREEN) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+				else if (framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] != OFFWHITE){
+					if (framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] != GREEN) {
+						framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = BLACK;
 					}
 				}
 			}
 		}
 	} // Alien Block hit left side
-	else if(position.x + getLeftPad() <= 5 && direction == 0) {
+	else if(position.x + getLeftPad() <= MAX_ALIEN_NUMBER_IN_COLUMN && direction == 0) {
 		for (row = 0; row < totalHeight; row++) {
 			for (col = 0; col < totalWidth; col++) {
-				if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
-					framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+				if (framePointer1[(position.y + row)*RIGHT_SIDE + (position.x + col)] == GREEN) {
+					framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = GREEN;
 				}
-				else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
-					if (framePointer0[(position.y + row)*640 + (position.x + col)] != GREEN) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+				else if (framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] != OFFWHITE){
+					if (framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] != GREEN) {
+						framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = BLACK;
 					}
 				}
 			}
@@ -69,12 +69,12 @@ void unrenderAliens() {
 	else if(direction == 1){
 		for (row = 0; row < totalHeight; row++) {
 			for (col = 0; col < X_SHIFT; col++) {
-				if (framePointer0[(position.y + row)*640 + (position.x+col)] != GREEN) {
-					if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
-						framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+				if (framePointer0[(position.y + row)*RIGHT_SIDE + (position.x+col)] != GREEN) {
+					if (framePointer1[(position.y + row)*RIGHT_SIDE + (position.x + col)] == GREEN) {
+						framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = GREEN;
 					}
-					else if (framePointer0[(position.y + row)*640 + (position.x + col)] != OFFWHITE){
-							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+					else if (framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] != OFFWHITE){
+							framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = BLACK;
 					}
 				}
 			}
@@ -90,11 +90,11 @@ void unrenderAliens() {
  */
 void updateAlienLocation() {
 	// Trigger Alien Move Sound
-	static int alienMoveSoundNumber = 1;
+	static int alienMoveSoundNumber = STARTING_ALIEN_SOUND_NUMBER;
 	alienMoveSoundNumber++;
 	setActive(alienMoveSoundNumber, ACTIVE);
 	setCurrentSampleNum(alienMoveSoundNumber, 0);
-	if (alienMoveSoundNumber == 4) {
+	if (alienMoveSoundNumber == MAX_ALIEN_SOUND_NUMBER) {
 		alienMoveSoundNumber = 0;
 	}
 
@@ -104,17 +104,17 @@ void updateAlienLocation() {
 	point_t tempAlien = getAlienBlockPosition();
 
 	//Right edge hit
-	if (tempAlien.x + (32*11) >= getRightPad() && direction == 1) {
+	if (tempAlien.x + (ALIEN_ARRAY_WIDTH*MAX_ALIEN_NUMBER_IN_ROW) >= getRightPad() && direction == 1) {
 		tempAlien.y = tempAlien.y + (ALIEN_HEIGHT);
-		setAlienDirection(0);
+		setAlienDirection(ALIEN_DIRECTION_LEFT);
 	}
 	//left edge hit
-	else if (tempAlien.x + getLeftPad() <= 5 && direction == 0) {
+	else if (tempAlien.x + getLeftPad() <= MAX_ALIEN_NUMBER_IN_COLUMN && direction == 0) {
 		tempAlien.y = tempAlien.y + (ALIEN_HEIGHT);
-		setAlienDirection(1);
+		setAlienDirection(ALIEN_DIRECTION_RIGHT);
 	}
 	else {
-		if(direction == 1){
+		if(direction == ALIEN_DIRECTION_RIGHT){
 			tempAlien.x = tempAlien.x + X_SHIFT;
 		}
 		else {
@@ -123,8 +123,8 @@ void updateAlienLocation() {
 	}
 	setAlienBlockPosition(tempAlien);
 	// If aliens get below the bottom bunkers, end the game.
-	if ((getAlienBlockPosition().y+((lowestLiveRow*(ALIEN_HEIGHT+10))+ALIEN_HEIGHT)) > BOTTOM_BORDER) {
-		setGameOver(1);
+	if ((getAlienBlockPosition().y+((lowestLiveRow*(ALIEN_HEIGHT+ALIEN_RIGHT_SIDE_BLANK))+ALIEN_HEIGHT)) > BOTTOM_BORDER) {
+		setGameOver(GAME_OVER);
 		blankScreen();
 		renderGameOverText();
 	}
@@ -140,10 +140,10 @@ void adjustPadding() {
 	u8 flag;
 	flag = 0;
 	// Iterate over all the columns from left to right until a live alien is found.
-	for(col = 0; col < 11; col++) {
-		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
-			if (getAlienStatus(alienNumber) == 1) {
-				setLeftCol(alienNumber % 11);
+	for(col = 0; col < MAX_ALIEN_NUMBER_IN_ROW; col++) {
+		for (alienNumber = col; alienNumber < MAX_ALIEN_NUMBER; alienNumber += MAX_ALIEN_NUMBER_IN_ROW) {
+			if (getAlienStatus(alienNumber) == ALIVE) {
+				setLeftCol(alienNumber % MAX_ALIEN_NUMBER_IN_ROW);
 				goto rightside;
 			}
 		}
@@ -151,10 +151,10 @@ void adjustPadding() {
 
 	rightside:
 	// Iterate over all the right to left until a live alien is found.
-	for(col = 10; col >= 0; col--) {
-		for (alienNumber = col; alienNumber < 55; alienNumber += 11) {
-			if (getAlienStatus(alienNumber) == 1) {
-				setRightCol(alienNumber % 11);
+	for(col = ALIEN_RIGHT_SIDE_BLANK; col >= 0; col--) {
+		for (alienNumber = col; alienNumber < MAX_ALIEN_NUMBER; alienNumber += MAX_ALIEN_NUMBER_IN_ROW) {
+			if (getAlienStatus(alienNumber) == ALIVE) {
+				setRightCol(alienNumber % MAX_ALIEN_NUMBER_IN_ROW);
 				return;
 			}
 		}
@@ -172,24 +172,24 @@ void killAlien(u8 alienNumber) {
 	u32 col;
 	u32 row;
 	//Adjust X and Y location
-	position.y = position.y + (alienNumber/11)*(ALIEN_HEIGHT + 10);
-	position.x = position.x + (alienNumber%11)*32;
+	position.y = position.y + (alienNumber/MAX_ALIEN_NUMBER_IN_ROW)*(ALIEN_HEIGHT + ALIEN_RIGHT_SIDE_BLANK);
+	position.x = position.x + (alienNumber%MAX_ALIEN_NUMBER_IN_ROW)*ALIEN_ARRAY_WIDTH;
 	const u32* arrayToRender;
 	arrayToRender = getDeadAlienArray();
 	for (row = 0; row < ALIEN_HEIGHT; row++) {
-		for (col = 0; col < 32; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(position.y + row)*640 + (position.x + col)] = OFFWHITE;	// We use OFFWHITE so it is not erased by the alien block's render
+		for (col = 0; col < ALIEN_ARRAY_WIDTH; col++) {
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == 1) {
+				framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = OFFWHITE;	// We use OFFWHITE so it is not erased by the alien block's render
 			}
 			else {
-				framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+				framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = BLACK;
 			}
 		}
 	}
 	// Decrement the number of aliens alive variable.
 	setNumberAliensAlive(getNumberAliensAlive()-1);
 	//If player kills all aliens
-	if (getNumberAliensAlive() == 0) {
+	if (getNumberAliensAlive() == DEAD) {
 		u32 tempScore = getScore();
 		initStateMachines();
 		setScore(tempScore);
@@ -198,22 +198,22 @@ void killAlien(u8 alienNumber) {
 	}
 
 	// Adjust leftPad and rightPad if necessary:
-	setAlienStatus(alienNumber, 0);
+	setAlienStatus(alienNumber, DEAD);
 	adjustPadding();
 
 	//Adjust score
 	u32 score;
 	score = getScore();
-	if (alienNumber < 11) {	//40pts
-		score += 40;
+	if (alienNumber < MAX_ALIEN_NUMBER_IN_ROW) {	//40pts
+		score += TOP_ROW_SCORE;
 		setScore(score);
 	}
-	else if (alienNumber < 33) {
-		score += 20;
+	else if (alienNumber < MAX_ROW_THREE_ALIEN_NUMBER) {
+		score += MIDDLE_ROW_SCORE;
 		setScore(score);
 	}
-	else if (alienNumber < 55) {
-		score += 10;
+	else if (alienNumber < MAX_ALIEN_NUMBER) {
+		score += ALIEN_RIGHT_SIDE_BLANK;
 		setScore(score);
 	}
 	// Raise Black Death Flag!!!!
@@ -229,9 +229,9 @@ void killAlien(u8 alienNumber) {
 void unrenderDeadAlien(point_t position) {
 	u32 row, col;
 	for (row = 0; row < ALIEN_HEIGHT; row++) {
-		for (col = 0; col < 32; col++) {
-			if (framePointer0[(position.y + row)*640 + (position.x + col)] == OFFWHITE) {
-				framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+		for (col = 0; col < ALIEN_ARRAY_WIDTH; col++) {
+			if (framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] == OFFWHITE) {
+				framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = BLACK;
 			}
 		}
 	}
@@ -252,12 +252,12 @@ void renderAliens(u8 animate) {
 	point_t position = getAlienBlockPosition();
 
 	const u32* arrayToRender;
-	for (alienNumber = 0; alienNumber < 55; alienNumber++) {
+	for (alienNumber = 0; alienNumber < MAX_ALIEN_NUMBER; alienNumber++) {
 		//algorithm to adjust x and y for drawing
 		if (alienNumber != 0) {
-			position.x = position.x + 32;
-			if (alienNumber % 11 == 0) {	//if end of row is reached, increment
-				position.y = position.y + (ALIEN_HEIGHT + 10);
+			position.x = position.x + ALIEN_ARRAY_WIDTH;
+			if (alienNumber % MAX_ALIEN_NUMBER_IN_ROW == 0) {	//if end of row is reached, increment
+				position.y = position.y + (ALIEN_HEIGHT + ALIEN_RIGHT_SIDE_BLANK);
 				position.x = getAlienBlockPosition().x;
 			}
 		}
@@ -265,25 +265,25 @@ void renderAliens(u8 animate) {
 		//Rendering each alien
 		arrayToRender = getAlienArray(alienNumber);
 		for (row = 0; row < (ALIEN_HEIGHT); row++) {
-			for (col = 0; col < 32; col++) {
-				u8 pixelPresent = (arrayToRender[row] >> (31-col)) & 0x1;
+			for (col = 0; col < ALIEN_ARRAY_WIDTH; col++) {
+				u8 pixelPresent = (arrayToRender[row] >> (LEFT_BIT-col)) & 0x1;
 				if (pixelPresent) {
-					framePointer0[(position.y + row)*640 + (position.x + col)] = WHITE;
+					framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = WHITE;
 				}
 				else {
-					if (framePointer0[(position.y + row)*640 + (position.x + col)] == WHITE) {
-						if (framePointer1[(position.y + row)*640 + (position.x + col)] == GREEN) {
-							framePointer0[(position.y + row)*640 + (position.x + col)] = GREEN;
+					if (framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] == WHITE) {
+						if (framePointer1[(position.y + row)*RIGHT_SIDE + (position.x + col)] == GREEN) {
+							framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = GREEN;
 						}
 						else {
-							framePointer0[(position.y + row)*640 + (position.x + col)] = BLACK;
+							framePointer0[(position.y + row)*RIGHT_SIDE + (position.x + col)] = BLACK;
 						}
 					}
 				}
 			}
 		}
-		if (getAlienStatus(alienNumber) == 1) {
-			lowestLiveRow = alienNumber/11;
+		if (getAlienStatus(alienNumber) == ALIVE) {
+			lowestLiveRow = alienNumber/MAX_ALIEN_NUMBER_IN_ROW;
 		}
 	}
 }
@@ -300,22 +300,22 @@ void unrenderAlienBullet() {
 	u32 row, col, bulletGuise;
 	const u32* arrayToRender;
 
-	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
+	for (bulletNum = 0; bulletNum < MAX_BULLET_NUM; bulletNum++) {
 		bullet = getAlienBullet(bulletNum);
 		arrayToRender = getAlienBulletArray(bullet.type);
-		if (bullet.position.y < 480) { //if it's not off the screen
+		if (bullet.position.y < BOTTOM) { //if it's not off the screen
 			for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
 				for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
 					bulletGuise = bullet.guise;
 					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
-					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
+					u8 pixelPresent = (arrayToRender[row] >> (LEFT_BIT-tempCol)) & 0x1;
 					// Only blank pixels, not the surrounding.
 					if (pixelPresent) {
-						if (framePointer1[(bullet.position.y + row)*640 + (bullet.position.x + col)] == GREEN) {
-							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = GREEN;
+						if (framePointer1[(bullet.position.y + row)*RIGHT_SIDE + (bullet.position.x + col)] == GREEN) {
+							framePointer0[(bullet.position.y + row)*RIGHT_SIDE + (bullet.position.x + col)] = GREEN;
 						}
-						else if (framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] != WHITE) {
-							framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = BLACK;
+						else if (framePointer0[(bullet.position.y + row)*RIGHT_SIDE + (bullet.position.x + col)] != WHITE) {
+							framePointer0[(bullet.position.y + row)*RIGHT_SIDE + (bullet.position.x + col)] = BLACK;
 						}
 					}
 				}
@@ -332,17 +332,17 @@ void updateAlienBulletPosition() {
 	alienBullet bullet;
 	u8 bulletNum;
 
-	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
+	for (bulletNum = 0; bulletNum < MAX_BULLET_NUM; bulletNum++) {
 		bullet = getAlienBullet(bulletNum);
-		if (bullet.position.y < 480) { //if it's not off the screen
+		if (bullet.position.y < BOTTOM) { //if it's not off the screen
 			bullet.guise = bullet.guise++;
-			if (bullet.guise > 2) {
+			if (bullet.guise > NUM_BULLET_GUISE) {
 				bullet.guise = 0;
 			}
 			bullet.position.y = bullet.position.y + ALIEN_BULLET_SPEED;
 			setAlienBullet(bullet, bulletNum);
 			if (calculateAlienBulletHit(bullet)) {
-				bullet.position.y = 800; //deactivate the bullet
+				bullet.position.y = OFF_THE_SCREEN; //deactivate the bullet
 				setAlienBullet(bullet, bulletNum);
 			}
 		}
@@ -364,18 +364,18 @@ void renderAlienBullet(u8 animate) {
 	u32 row, col, bulletGuise;
 	const u32* arrayToRender;
 
-	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
+	for (bulletNum = 0; bulletNum < MAX_BULLET_NUM; bulletNum++) {
 		bullet = getAlienBullet(bulletNum);
 		arrayToRender = getAlienBulletArray(bullet.type);
-		if (bullet.position.y < 480) { //if it's not off the screen
+		if (bullet.position.y < BOTTOM) { //if it's not off the screen
 			for (row = 0; row < ALIEN_BULLET_HEIGHT; row++) {
 				for (col = 0; col < ALIEN_BULLET_WIDTH; col++) {
 					bulletGuise = bullet.guise;
 					u32 tempCol = col + (bullet.guise * ALIEN_BULLET_WIDTH);	// to mask the guise in the bitmap
-					u8 pixelPresent = (arrayToRender[row] >> (31-tempCol)) & 0x1;
+					u8 pixelPresent = (arrayToRender[row] >> (LEFT_BIT-tempCol)) & 0x1;
 					// Only draw pixels, not the black.
 					if (pixelPresent) {
-						framePointer0[(bullet.position.y + row)*640 + (bullet.position.x + col)] = OFFWHITE;
+						framePointer0[(bullet.position.y + row)*RIGHT_SIDE + (bullet.position.x + col)] = OFFWHITE;
 					}
 				}
 			}
@@ -398,11 +398,11 @@ u8 calculateAlienBulletHit(alienBullet bullet) {
 	u32 bunkerNum;
 	u8 result;
 	bullet.position.y += ALIEN_BULLET_HEIGHT;
-	bullet.position.x += ALIEN_BULLET_WIDTH/2;
-	for (bunkerNum = 0; bunkerNum < 4; bunkerNum++){
+	bullet.position.x += ALIEN_BULLET_WIDTH/FIND_MIDDLE_BULLET;
+	for (bunkerNum = 0; bunkerNum < MAX_BULLET_NUM; bunkerNum++){
 		result = hitBunker(bullet.position, bunkerNum);
-		if (result != 0xFF) {
-			return 1;
+		if (result != BUNKER_DEAD) {
+			return ALIVE;
 		}
 	}
 
@@ -413,7 +413,7 @@ u8 calculateAlienBulletHit(alienBullet bullet) {
  * Calculates whether a tank bullet hit an alien
  *
  * @param position The position to test
- * @return The number of the alien hit, 0xFF if none.
+ * @return The number of the alien hit, BUNKER_DEAD if none.
  */
 u8 hitAlien(point_t position) {
 	point_t alienBlockPosition;
@@ -421,23 +421,23 @@ u8 hitAlien(point_t position) {
 	signed int alienNumber;	//so we can start from 54 and subtract w/o overflowing
 
 	//If it's outside the alien block
-	if (position.x < (alienBlockPosition.x + getLeftPad()) || position.y > (alienBlockPosition.y + 5*(ALIEN_HEIGHT+10))) {
-		return 0xFF;
+	if (position.x < (alienBlockPosition.x + getLeftPad()) || position.y > (alienBlockPosition.y + ALIEN_ROWS*(ALIEN_HEIGHT+ALIEN_RIGHT_SIDE_BLANK))) {
+		return BUNKER_DEAD;
 	}
-	else if (position.x > (alienBlockPosition.x + 11*32) || position.y < alienBlockPosition.y) {
-		return 0xFF;
+	else if (position.x > (alienBlockPosition.x + MAX_ALIEN_NUMBER_IN_ROW*ALIEN_ARRAY_WIDTH) || position.y < alienBlockPosition.y) {
+		return BUNKER_DEAD;
 	}
 	else {
 		//Calculate which alien it hit, if any
-		for (alienNumber = 55; alienNumber >= 0; alienNumber--) {
+		for (alienNumber = MAX_ALIEN_NUMBER; alienNumber >= 0; alienNumber--) {
 			//If the alien is alive
-			if (getAlienStatus(alienNumber) == 1) {
+			if (getAlienStatus(alienNumber) == ALIVE) {
 				point_t alienPosition;
-				alienPosition.x = alienBlockPosition.x + ((alienNumber % 11)*32);
-				alienPosition.y = alienBlockPosition.y + ((alienNumber/11)*(ALIEN_HEIGHT+10));
+				alienPosition.x = alienBlockPosition.x + ((alienNumber % MAX_ALIEN_NUMBER_IN_ROW)*ALIEN_ARRAY_WIDTH);
+				alienPosition.y = alienBlockPosition.y + ((alienNumber/MAX_ALIEN_NUMBER_IN_ROW)*(ALIEN_HEIGHT+ALIEN_RIGHT_SIDE_BLANK));
 
 				// If it's within the alien's block
-				if ((position.x < (alienPosition.x + 26)) && (position.x > alienPosition.x)) {
+				if ((position.x < (alienPosition.x + ALIEN_ACTUAL_WIDTH)) && (position.x > alienPosition.x)) {
 					if ((position.y < (alienPosition.y + ALIEN_HEIGHT)) && (position.y > alienPosition.y)) {
 						// Start sound for alien death
 						setActive(ALIEN_DEATH_NUM, ACTIVE);
@@ -449,7 +449,7 @@ u8 hitAlien(point_t position) {
 			}
 		}
 		//No aliens hit
-		return 0xFF;
+		return BUNKER_DEAD;
 	}
 }
 
@@ -468,22 +468,22 @@ u32 findFiringAlien(u32 randomCol) {
 	//Check up the column first
 	int row, col;	// chose a signed int in this case rather than a u32 so it wouldn't wrap.
 	col = randomCol;
-	for (row = 4; row >= 0; row--) {
-		alienNumber = 11*row + col;
-		if (getAlienStatus(alienNumber) == 1) {
+	for (row = ALIEN_ROWS-1; row >= 0; row--) {
+		alienNumber = MAX_ALIEN_NUMBER_IN_ROW*row + col;
+		if (getAlienStatus(alienNumber) == ALIVE) {
 			return alienNumber;
 		}
 	}
 	//If no alien is alive in that row
 	u32 check;
-	for (check = 0; check < 11; check++) {
+	for (check = 0; check < MAX_ALIEN_NUMBER_IN_ROW; check++) {
 		col++;	//check next column
-		if (col > 10) {
+		if (col > ALIEN_RIGHT_SIDE_BLANK) {
 			col = 0;
 		}
-		for (row = 4; row >= 0; row--) {
-			alienNumber = 11*row + col;
-			if (getAlienStatus(alienNumber) == 1) {
+		for (row = ALIEN_ROWS-1; row >= 0; row--) {
+			alienNumber = MAX_ALIEN_NUMBER_IN_ROW*row + col;
+			if (getAlienStatus(alienNumber) == ALIVE) {
 				return alienNumber;
 			}
 		}
@@ -502,24 +502,24 @@ void fireAlienBullet(u32 randomCol) {
 	point_t position;
 	u32 alienNumber;
 
-	for (bulletNum = 0; bulletNum < 4; bulletNum++) {
+	for (bulletNum = 0; bulletNum < MAX_BULLET_NUM; bulletNum++) {
 		bullet = getAlienBullet(bulletNum);
-		if (bullet.position.y >= 480) {	//if a bullet is available
+		if (bullet.position.y >= BOTTOM) {	//if a bullet is available
 			//find random bottom row alien and fire from his location
 			alienNumber = findFiringAlien(randomCol);
-			position.x = getAlienBlockPosition().x + ((alienNumber%11)*32) + 9; //8 to center bullet
-			position.y = getAlienBlockPosition().y + (alienNumber/11)*(ALIEN_HEIGHT+10) + (ALIEN_HEIGHT);
+			position.x = getAlienBlockPosition().x + ((alienNumber%MAX_ALIEN_NUMBER_IN_ROW)*ALIEN_ARRAY_WIDTH) + 9; //8 to center bullet
+			position.y = getAlienBlockPosition().y + (alienNumber/MAX_ALIEN_NUMBER_IN_ROW)*(ALIEN_HEIGHT+ALIEN_RIGHT_SIDE_BLANK) + (ALIEN_HEIGHT);
 			bullet.position = position;
 			//If it's low enough on the screen
-			if ((bullet.position.y + ALIEN_BULLET_HEIGHT) > 379) {
+			if ((bullet.position.y + ALIEN_BULLET_HEIGHT) > BULLET_NEAR_BUNKERS) {
 				calculateAlienBulletHit(bullet);
 			}
-			bullet.type = (randomCol % 2) & 0x1;
+			bullet.type = (randomCol % NUM_BULLET_GUISE) & 0x1;
 			bullet.guise = 0;
 			setAlienBullet(bullet, bulletNum);
 			if(!getGameOver()){ // these were causing a flash of Aliens after the game ends
-				renderAlienBullet(0);
-				renderAliens(0); //redraw aliens to mask overlap
+				renderAlienBullet(DEAD);
+				renderAliens(WITHOUT_MOVING); //redraw aliens to mask overlap
 			}
 			return;
 		}
