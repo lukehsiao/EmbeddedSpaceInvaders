@@ -17,6 +17,14 @@
 #define TANK_MAP_FLIP_COUNT 12		// how long one cycle is for the tank death bitmap flipping
 #define TANK_MAP_FLIP_CYCLES 10 	// # of times the 2 bitmaps will show
 
+#define TANK_STARTING_POSITION 70
+
+#define STARTING_TANK_POSITION_X 20
+#define STARTING_TANK_POSITION_Y 440
+
+#define ON 1
+#define OFF 0
+
 /**
  * Draws the tank in it's current position
  */

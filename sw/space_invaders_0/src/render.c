@@ -17,10 +17,10 @@ extern u32* framePointer1;
  */
 void blankScreen() {
 	u32 row=0, col=0;
-	for( row=0; row<480; row++) {
-		for(col=0; col<640; col++) {
-			framePointer0[row*640 + col] = BLACK;
-			framePointer1[row*640 + col] = BLACK;
+	for( row=0; row<BOTTOM; row++) {
+		for(col=0; col<RIGHT_SIDE; col++) {
+			framePointer0[row*RIGHT_SIDE + col] = BLACK;
+			framePointer1[row*RIGHT_SIDE + col] = BLACK;
 		}
 	}
 }
@@ -31,10 +31,10 @@ void blankScreen() {
 void renderBottomLine() {
 	u32 col;
 	u32 row;
-	row = 479;
-	for(col=0; col<640; col++) {
-		framePointer0[row*640 + col] = GREEN;
-		framePointer1[row*640 + col] = GREEN;
+	row = BOTTOM - 1;
+	for(col=0; col<RIGHT_SIDE; col++) {
+		framePointer0[row*RIGHT_SIDE + col] = GREEN;
+		framePointer1[row*RIGHT_SIDE + col] = GREEN;
 	}
 }
 
@@ -50,22 +50,22 @@ void renderScoreText() {
 	const u32* arrayToRender;
 	arrayToRender = getScoreText1();
 	point_t defaultPosition;
-	defaultPosition.x = 5;
-	defaultPosition.y = 11;
+	defaultPosition.x = DEFAULT_SCORE_POSITION_X;
+	defaultPosition.y = DEFAULT_SCORE_POSITION_Y;
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
-		for(col = 0; col < 32; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+		for(col = 0; col < ALIEN_ARRAY_WIDTH; col++) {
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
 			}
 		}
 	}
 
 	arrayToRender = getScoreText2();
-	defaultPosition.x = 5+32;
+	defaultPosition.x = 5+ALIEN_ARRAY_WIDTH;
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
-		for(col = 0; col < 32; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+		for(col = 0; col < ALIEN_ARRAY_WIDTH; col++) {
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
 			}
 		}
 	}
@@ -79,142 +79,142 @@ void renderScore() {
 	u8 ones, tens, hundreds, thousands;
 	//This code assumes that the score will never exceed 9999
 
-	ones = score % 10;
-	tens = (score / 10) % 10;
-	hundreds = (score / 100) % 10;
-	thousands = (score / 1000) % 10;
+	ones = score % NUMBER_MOD;
+	tens = (score / NUMBER_MOD) % NUMBER_MOD;
+	hundreds = (score / HUNDRED) % NUMBER_MOD;
+	thousands = (score / THOUSAND) % NUMBER_MOD;
 
 	u32 row, col;
 	const u32* arrayToRender;
 	point_t position;
-	position.x = 80;
-	position.y = 11;
-	if (score < 10) {
+	position.x = STARTING_SCORE_POSITION_X;
+	position.y = STARTING_SCORE_POSITION_Y;
+	if (score < NUMBER_MOD) {
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
 	}
-	else if (score < 100) {
+	else if (score < HUNDRED) {
 		arrayToRender = getDigitArray(tens);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		position.x += SCORE_WIDTH;
 
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
 	}
-	else if (score < 1000) {
+	else if (score < THOUSAND) {
 		arrayToRender = getDigitArray(hundreds);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		position.x += SCORE_WIDTH;
 
 		arrayToRender = getDigitArray(tens);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		position.x += SCORE_WIDTH;
 
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
 	}
-	else if (score < 10000) {
+	else if (score < TEN_THOUSAND) {
 		arrayToRender = getDigitArray(thousands);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		position.x += SCORE_WIDTH;
 
 		arrayToRender = getDigitArray(hundreds);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		position.x += SCORE_WIDTH;
 
 		arrayToRender = getDigitArray(tens);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
-		position.x += 12;
+		position.x += SCORE_WIDTH;
 
 		arrayToRender = getDigitArray(ones);
 		for(row = 0; row < ALIEN_HEIGHT; row++) {
-			for(col = 0; col < 10; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+			for(col = 0; col < SCORE_WIDTH; col++) {
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 				else {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 				}
 			}
 		}
@@ -229,22 +229,22 @@ void renderLivesText() {
 	const u32* arrayToRender;
 	arrayToRender = getLivesText1();
 	point_t defaultPosition;
-	defaultPosition.x = 350;
-	defaultPosition.y = 11;
+	defaultPosition.x = STARTING_LIVES_TEXT_POSITION_X;
+	defaultPosition.y = STARTING_LIVES_TEXT_POSITION_Y;
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
-		for(col = 0; col < 32; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+		for(col = 0; col < LIVES_TEST_WIDTH; col++) {
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
 			}
 		}
 	}
 
 	arrayToRender = getLivesText2();
-	defaultPosition.x += 32;
+	defaultPosition.x += LIVES_TEST_WIDTH;
 	for(row = 0; row < ALIEN_HEIGHT; row++) {
-		for(col = 0; col < 32; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
+		for(col = 0; col < LIVES_TEST_WIDTH; col++) {
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = WHITE;  // frame 0 is red here.
 			}
 		}
 	}
@@ -263,7 +263,7 @@ void unrenderLives() {
 	// Same Algorithm as Render Tank
 	for (row = 0; row < 16; row++) {
 		for (col = 0; col < (32+10)*(lives); col++) {
-			framePointer0[(position.y+row)*640 + (position.x+col)] = BLACK;
+			framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = BLACK;
 		}
 	}
 }
@@ -275,8 +275,8 @@ void renderLives() {
 	unrenderLives();
 	int lives = getLives();
 	point_t position;
-	position.x = 420;
-	position.y = 5;
+	position.x = STARTING_LIVES_POSITION_X;
+	position.y = STARTING_LIVES_POSITION_Y;
 	const u32* arrayToRender;
 	arrayToRender = getTankArray();
 	u32 col;
@@ -285,12 +285,12 @@ void renderLives() {
 		// Same Algorithm as Render Tank
 		for (row = 0; row < 16; row++) {
 			for (col = 0; col < 32; col++) {
-				if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-					framePointer0[(position.y+row)*640 + (position.x+col)] = GREEN;
+				if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+					framePointer0[(position.y+row)*RIGHT_SIDE + (position.x+col)] = GREEN;
 				}
 			}
 		}
-		position.x += 42;
+		position.x += LIVES_TEST_WIDTH;
 	}
 }
 
@@ -330,7 +330,7 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 		unrenderTank();
 		temp = getTankPositionGlobal();
 		temp.x = temp.x - 4;
-		if (temp.x > (640-32)) {
+		if (temp.x > (RIGHT_SIDE-32)) {
 			temp.x = 0;
 		}
 		setTankPositionGlobal(temp.x);
@@ -340,8 +340,8 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 		unrenderTank();
 		temp = getTankPositionGlobal();
 		temp.x = temp.x + 4;
-		if (temp.x > (640-32)) {
-			temp.x = (640-32);
+		if (temp.x > (RIGHT_SIDE-32)) {
+			temp.x = (RIGHT_SIDE-32);
 		}
 		setTankPositionGlobal(temp.x);
 		renderTank();
@@ -370,7 +370,7 @@ void parseKey(u8 keyPressed, u32 timerSeed, u32 userInput) {
 		renderAlienBullet(1);
 		break;
 	case '7':
-		for (blockNumber = 0; blockNumber < 12; blockNumber++) {
+		for (blockNumber = 0; blockNumber < (BLOCK_ELEVEN + 1); blockNumber++) {
 			erosionState = getBlockState(userInput, blockNumber);
 			if (erosionState < 4) {
 				setBlockState(userInput, blockNumber, erosionState+1);
@@ -400,8 +400,8 @@ void renderGameOverText() {
 	defaultPosition.y = 218;
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -413,8 +413,8 @@ void renderGameOverText() {
 	defaultPosition.y = 218;
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -426,8 +426,8 @@ void renderGameOverText() {
 	defaultPosition.y = 218;
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 28; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -439,8 +439,8 @@ void renderGameOverText() {
 	defaultPosition.y = 218;
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -452,8 +452,8 @@ void renderGameOverText() {
 	defaultPosition.y = 218;
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -465,8 +465,8 @@ void renderGameOverText() {
 	defaultPosition.y = 218;
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -478,8 +478,8 @@ void renderGameOverText() {
 	defaultPosition.y = 218;
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}
@@ -491,8 +491,8 @@ void renderGameOverText() {
 	defaultPosition.y = 218;
 	for(row = 0; row < GAME_OVER_HEIGHT; row++) {
 		for(col = 0; col < 20; col++) {
-			if (((arrayToRender[row] >> (31-col)) & 0x1) == 1) {
-				framePointer0[(defaultPosition.y+row)*640 + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
+			if (((arrayToRender[row] >> (LEFT_BIT-col)) & 0x1) == TRUE) {
+				framePointer0[(defaultPosition.y+row)*RIGHT_SIDE + (defaultPosition.x+col)] = gameOverColor;  // frame 0 is red here.
 			}
 		}
 	}

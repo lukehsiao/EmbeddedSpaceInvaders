@@ -26,6 +26,21 @@
 #define TRUE		1
 #define FALSE		0
 
+#define LEFT_BIT 31
+
+#define STARTING_LIVES 3
+#define STARTING_SCORE 0
+#define GAME_NOT_OVER 0
+#define GAME_OVER 1
+#define BOARDER 32
+#define TOP 0
+#define BOTTOM 480
+#define LEFT_SIDE 0
+#define RIGHT_SIDE 640
+
+#define ALIVE 1
+#define DEAD 0
+
 // Color Definitions
 #define GREEN 		0x0000FF00
 #define WHITE 		0x00FFFFFF

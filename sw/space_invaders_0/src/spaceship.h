@@ -16,6 +16,9 @@
 #define SPACESHIP_SCORE_COUNT 10
 #define SPACESHIP_STEADY_SCORE_CYCLES 40
 
+#define STARTING_SPACESHIP_POSITION_X 5
+#define STARTING_SPACESHIP_POSITION_Y 35
+
 /**
  * Draws the Spaceship and updates it's location
  */

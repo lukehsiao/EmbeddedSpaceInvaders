@@ -17,6 +17,79 @@
 #define ALIEN_STATE_MACHINE_RATE_MAX 60 // this is the slowest that the Aliens SM will be called
 #define ALIEN_STARTING_Y_POSITION 70
 
+#define ALIEN_ARRAY_WIDTH 32
+#define ALIEN_ACTUAL_WIDTH 26
+
+#define ALIEN_GUISE_0 0
+#define ALIEN_GUISE_1 1
+#define ALIEN_ROWS 5
+#define ALL_ALIENS_ALIVE 0xFFFF
+
+#define MAX_ALIEN_NUMBER_IN_ROW 11
+#define MAX_ALIEN_NUMBER_IN_COLUMN 5
+
+#define MAX_ROW_ONE_ALIEN_NUMBER 11
+#define MAX_ROW_TWO_ALIEN_NUMBER 22
+#define MAX_ROW_THREE_ALIEN_NUMBER 33
+#define MAX_ROW_FOUR_ALIEN_NUMBER 44
+#define MAX_ROW_FIVE_ALIEN_NUMBER 55
+
+#define MAX_ALIEN_NUMBER 55
+
+#define ROW_ONE 0
+#define ROW_TWO 1
+#define ROW_THREE 2
+#define ROW_FOUR 3
+#define ROW_FIVE 4
+
+#define BULLET_ZERO 0
+#define BULLET_ONE 1
+#define BULLET_TWO 2
+#define BULLET_THREE 3
+
+#define BULLET_GUISE_ZERO 0
+#define BULLET_GUISE_ONE 1
+
+#define ALIEN_RIGHT_SIDE_BLANK 10
+
+
+#define MOST_SIGIFICANT_BIT 15
+
+
+#define STARTING_LEFT_MOST_COLUMN 0
+#define STARTING_RIGHT_MOST_COLUMN 10
+#define STARTING_LEFT_PAD 0
+#define STARTING_RIGHT_PAD 640
+#define STARTING_ALIEN_BLOCK_X 160
+#define STARTING_ALIEN_BLOCK_Y 70
+#define STARTING_ALIEN_SOUND_NUMBER 1
+#define STARTING_LOWEST_ALIEN_ALIVE_ROW 4
+#define MAX_ALIEN_SOUND_NUMBER 4
+#define ALIEN_DIRECTION_RIGHT 1
+#define ALIEN_DIRECTION_LEFT 0
+#define MAX_NUMBER_ALIENS_ALIVE 55
+
+
+#define MAX_BULLET_NUM 4
+#define NUM_BULLET_GUISE 2
+#define OFF_THE_SCREEN 8888
+
+#define TOP_ROW_SCORE 40
+#define MIDDLE_ROW_SCORE 20
+#define BOTTOM_ROW_SCORE 10
+#define NUMBER_MOD 10
+#define SCORE_WIDTH 10
+#define HUNDRED 100
+#define THOUSAND 1000
+#define TEN_THOUSAND 10000
+
+#define FIND_MIDDLE_BULLET 2
+#define BULLET_NEAR_BUNKERS 379
+
+#define WITHOUT_MOVING 0
+#define WITH_MOVING 1
+
+
 /**
  * Deletes only the necessary pixels when the aliens are moving right or left.
  * Then, blanks the entire block when the aliens drop a row.

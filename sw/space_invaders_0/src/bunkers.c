@@ -23,11 +23,11 @@ void renderBunker(u8 bunkerNumber){
 	u32 rowsPixels;
 	u8 pixelPresent;
 	bunkerPosition = getBunkerPosition(bunkerNumber);
-	for (blockNum = 0; blockNum < 4; blockNum++) {
+	for (blockNum = 0; blockNum < BLOCK_FOUR; blockNum++) {
 		for (row = 0; row < BLOCK_WIDTH; row++) {
 			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum);
 			for (col = 0; col < BLOCK_WIDTH; col++) {
-				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				pixelPresent = (rowsPixels >> (LEFT_BIT - col)) & 0x1;
 				if (pixelPresent) {
 					if (framePointer0[(bunkerPosition.y + row)*RIGHT_SIDE + (bunkerPosition.x+(blockNum*BLOCK_WIDTH))+col] != WHITE) {
 						framePointer0[(bunkerPosition.y + row)*RIGHT_SIDE + (bunkerPosition.x+(blockNum*BLOCK_WIDTH))+col] = GREEN;
@@ -43,43 +43,43 @@ void renderBunker(u8 bunkerNumber){
 			}
 		}
 	}
-	for (blockNum = 4; blockNum < 8; blockNum++) {
+	for (blockNum = BLOCK_FOUR; blockNum < BLOCK_EIGHT; blockNum++) {
 		for (row = 0; row < BLOCK_WIDTH; row++) {
 			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum);
 			for (col = 0; col < BLOCK_WIDTH; col++) {
-				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				pixelPresent = (rowsPixels >> (LEFT_BIT - col)) & 0x1;
 				if (pixelPresent) {
-					if (framePointer0[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-4)*BLOCK_WIDTH))+col] != WHITE) {
-						framePointer0[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-4)*BLOCK_WIDTH))+col] = GREEN;
-						framePointer1[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-4)*BLOCK_WIDTH))+col] = GREEN;
+					if (framePointer0[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_FOUR)*BLOCK_WIDTH))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_FOUR)*BLOCK_WIDTH))+col] = GREEN;
+						framePointer1[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_FOUR)*BLOCK_WIDTH))+col] = GREEN;
 					}
 				}
 				else {
-					if (framePointer0[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-4)*BLOCK_WIDTH))+col] != WHITE) {
-						framePointer0[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-4)*BLOCK_WIDTH))+col] = BLACK;
-						framePointer1[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-4)*BLOCK_WIDTH))+col] = BLACK;
+					if (framePointer0[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_FOUR)*BLOCK_WIDTH))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_FOUR)*BLOCK_WIDTH))+col] = BLACK;
+						framePointer1[(bunkerPosition.y + BLOCK_WIDTH + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_FOUR)*BLOCK_WIDTH))+col] = BLACK;
 					}
 				}
 			}
 		}
 	}
-	for (blockNum = 8; blockNum < (NUMBER_BOTTOM_RIGHT_BLOCK + 1); blockNum++) {
+	for (blockNum = BLOCK_EIGHT; blockNum < (NUMBER_BOTTOM_RIGHT_BLOCK + 1); blockNum++) {
 		for (row = 0; row < BLOCK_WIDTH; row++) {
 			rowsPixels = getBunkerPixel(row, bunkerNumber, blockNum);
 			for (col = 0; col < BLOCK_WIDTH; col++) {
-				pixelPresent = (rowsPixels >> (31 - col)) & 0x1;
+				pixelPresent = (rowsPixels >> (LEFT_BIT - col)) & 0x1;
 				if (pixelPresent) {
-					if (framePointer0[(bunkerPosition.y + 24 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-8)*BLOCK_WIDTH))+col] != WHITE) {
-						framePointer0[(bunkerPosition.y + 24 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-8)*BLOCK_WIDTH))+col] = GREEN;
-						framePointer1[(bunkerPosition.y + 24 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-8)*BLOCK_WIDTH))+col] = GREEN;
+					if (framePointer0[(bunkerPosition.y + BLOCK_WIDTH*2 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_EIGHT)*BLOCK_WIDTH))+col] != WHITE) {
+						framePointer0[(bunkerPosition.y + BLOCK_WIDTH*2 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_EIGHT)*BLOCK_WIDTH))+col] = GREEN;
+						framePointer1[(bunkerPosition.y + BLOCK_WIDTH*2 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_EIGHT)*BLOCK_WIDTH))+col] = GREEN;
 					}
 				}
 				else {
-					u32 alienPresent = (framePointer0[(bunkerPosition.y + 24 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-8)*BLOCK_WIDTH))+col] == WHITE);
-					u32 bulletPresent = (framePointer0[(bunkerPosition.y + 24 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-8)*BLOCK_WIDTH))+col] == OFFWHITE);
+					u32 alienPresent = (framePointer0[(bunkerPosition.y + BLOCK_WIDTH*2 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_EIGHT)*BLOCK_WIDTH))+col] == WHITE);
+					u32 bulletPresent = (framePointer0[(bunkerPosition.y + BLOCK_WIDTH*2 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_EIGHT)*BLOCK_WIDTH))+col] == OFFWHITE);
 					if (!alienPresent && !bulletPresent) {
-						framePointer0[(bunkerPosition.y + 24 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-8)*BLOCK_WIDTH))+col] = BLACK;
-						framePointer1[(bunkerPosition.y + 24 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-8)*BLOCK_WIDTH))+col] = BLACK;
+						framePointer0[(bunkerPosition.y + BLOCK_WIDTH*2 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_EIGHT)*BLOCK_WIDTH))+col] = BLACK;
+						framePointer1[(bunkerPosition.y + BLOCK_WIDTH*2 + row)*RIGHT_SIDE + (bunkerPosition.x+((blockNum-BLOCK_EIGHT)*BLOCK_WIDTH))+col] = BLACK;
 					}
 				}
 			}
@@ -100,19 +100,19 @@ u8 hitBunker(point_t position, u8 bunkerNumber) {
 	u8 currentBlockState;
 	// If it's not within the bunker itself
 	if (position.x < bunkerPosition.x || position.y < bunkerPosition.y) {
-		return 0xFF;
+		return BUNKER_DEAD;
 	}
-	else if (position.x > (bunkerPosition.x + 48) || position.y > (bunkerPosition.y + 36)) {
-		return 0xFF;
+	else if (position.x > (bunkerPosition.x + BLOCK_WIDTH*4) || position.y > (bunkerPosition.y + BLOCK_WIDTH*3)) {
+		return BUNKER_DEAD;
 	}
 
 	u32 blockNum;
 
 	//Check top row intersections
-	for (blockNum = 0; blockNum < 4; blockNum++) {
+	for (blockNum = 0; blockNum < BLOCK_FOUR; blockNum++) {
 		// If the block is alive
 		currentBlockState = getBlockState(bunkerNumber, blockNum);
-		if (currentBlockState < 4) {
+		if (currentBlockState < DEAD_BLOCK) {
 			//If it's within the horizontal range
 			if (position.x >= (bunkerPosition.x+(blockNum)*BLOCK_WIDTH) && position.x <= (bunkerPosition.x + (BLOCK_WIDTH*(blockNum+1)))) {
 				//If it's also within the vertical range
@@ -127,13 +127,13 @@ u8 hitBunker(point_t position, u8 bunkerNumber) {
 	}
 
 	//Check Middle row intersections
-	for (blockNum = 4; blockNum < 8; blockNum++) {
+	for (blockNum = BLOCK_FOUR; blockNum < BLOCK_EIGHT; blockNum++) {
 		currentBlockState = getBlockState(bunkerNumber, blockNum);
-		if (currentBlockState < 4) {
+		if (currentBlockState < DEAD_BLOCK) {
 			//If it's within the horizontal range
-			if (position.x >= (bunkerPosition.x+(blockNum-4)*BLOCK_WIDTH) && position.x <= (bunkerPosition.x + (BLOCK_WIDTH*(blockNum-3)))) {
+			if (position.x >= (bunkerPosition.x+(blockNum-BLOCK_FOUR)*BLOCK_WIDTH) && position.x <= (bunkerPosition.x + (BLOCK_WIDTH*(blockNum-BLOCK_THREE)))) {
 				//If it's also within the vertical range
-				if (position.y > (bunkerPosition.y+BLOCK_WIDTH) && position.y < (bunkerPosition.y + 24)) {
+				if (position.y > (bunkerPosition.y+BLOCK_WIDTH) && position.y < (bunkerPosition.y + BLOCK_WIDTH*2)) {
 					currentBlockState++;
 					setBlockState(bunkerNumber, blockNum, currentBlockState);
 					renderBunker(bunkerNumber);
@@ -144,14 +144,14 @@ u8 hitBunker(point_t position, u8 bunkerNumber) {
 	}
 
 	//Check Bottom row intersections
-	for (blockNum = 8; blockNum < (NUMBER_BOTTOM_RIGHT_BLOCK + 1); blockNum++) {
+	for (blockNum = BLOCK_EIGHT; blockNum < (NUMBER_BOTTOM_RIGHT_BLOCK + 1); blockNum++) {
 		// If the block is alive
 		currentBlockState = getBlockState(bunkerNumber, blockNum);
-		if (currentBlockState < 4) {
+		if (currentBlockState < DEAD_BLOCK) {
 			//If it's within the horizontal range
-			if (position.x >= (bunkerPosition.x+(blockNum-8)*BLOCK_WIDTH) && position.x <= (bunkerPosition.x + (BLOCK_WIDTH*(blockNum-7)))) {
+			if (position.x >= (bunkerPosition.x+(blockNum-BLOCK_EIGHT)*BLOCK_WIDTH) && position.x <= (bunkerPosition.x + (BLOCK_WIDTH*(blockNum-BLOCK_SEVEN)))) {
 				//If it's also within the vertical range
-				if (position.y > (bunkerPosition.y+24) && position.y < (bunkerPosition.y + 36)) {
+				if (position.y > (bunkerPosition.y+BLOCK_WIDTH*2) && position.y < (bunkerPosition.y + BLOCK_WIDTH*3)) {
 					currentBlockState++;
 					setBlockState(bunkerNumber, blockNum, currentBlockState);
 					renderBunker(bunkerNumber);
