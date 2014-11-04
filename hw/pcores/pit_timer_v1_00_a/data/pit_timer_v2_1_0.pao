@@ -1,10 +1,10 @@
 ##############################################################################
-## Filename:          C:/RH/Lab/hw/pcores/pit_timer_0_v1_00_a/data/pit_timer_0_v2_1_0.pao
+## Filename:          C:/RH/Lab/hw/pcores/pit_timer_v1_00_a/data/pit_timer_v2_1_0.pao
 ## Description:       Peripheral Analysis Order
-## Date:              Mon Nov 03 18:01:23 2014 (by Create and Import Peripheral Wizard)
+## Date:              Tue Nov 04 13:14:38 2014 (by Create and Import Peripheral Wizard)
 ##############################################################################
 
 lib proc_common_v3_00_a  all 
 lib axi_lite_ipif_v1_01_a  all 
-lib pit_timer_0_v1_00_a user_logic vhdl
-lib pit_timer_0_v1_00_a pit_timer_0 vhdl
+lib pit_timer_v1_00_a user_logic vhdl
+lib pit_timer_v1_00_a pit_timer vhdl

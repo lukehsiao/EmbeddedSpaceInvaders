@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
--- pit_timer_0.vhd - entity/architecture pair
+-- pit_timer.vhd - entity/architecture pair
 ------------------------------------------------------------------------------
 -- IMPORTANT:
 -- DO NOT MODIFY THIS FILE EXCEPT IN THE DESIGNATED SECTIONS.
@@ -32,10 +32,10 @@
 -- ***************************************************************************
 --
 ------------------------------------------------------------------------------
--- Filename:          pit_timer_0.vhd
+-- Filename:          pit_timer.vhd
 -- Version:           1.00.a
 -- Description:       Top level design, instantiates library components and user logic.
--- Date:              Mon Nov 03 18:01:23 2014 (by Create and Import Peripheral Wizard)
+-- Date:              Tue Nov 04 13:14:38 2014 (by Create and Import Peripheral Wizard)
 -- VHDL Standard:     VHDL'93
 ------------------------------------------------------------------------------
 -- Naming Conventions:
@@ -70,8 +70,8 @@ use proc_common_v3_00_a.soft_reset;
 library axi_lite_ipif_v1_01_a;
 use axi_lite_ipif_v1_01_a.axi_lite_ipif;
 
-library pit_timer_0_v1_00_a;
-use pit_timer_0_v1_00_a.user_logic;
+library pit_timer_v1_00_a;
+use pit_timer_v1_00_a.user_logic;
 
 ------------------------------------------------------------------------------
 -- Entity section
@@ -112,7 +112,7 @@ use pit_timer_0_v1_00_a.user_logic;
 --   S_AXI_AWREADY                -- AXI4LITE slave: Wrte address ready
 ------------------------------------------------------------------------------
 
-entity pit_timer_0 is
+entity pit_timer is
   generic
   (
     -- ADD USER GENERICS BELOW THIS LINE ---------------
@@ -139,6 +139,7 @@ entity pit_timer_0 is
   (
     -- ADD USER PORTS BELOW THIS LINE ------------------
     --USER ports added here
+	intr : out  STD_LOGIC;
     -- ADD USER PORTS ABOVE THIS LINE ------------------
 
     -- DO NOT EDIT BELOW THIS LINE ---------------------
@@ -171,13 +172,13 @@ entity pit_timer_0 is
   attribute MAX_FANOUT of S_AXI_ARESETN       : signal is "10000";
   attribute SIGIS of S_AXI_ACLK       : signal is "Clk";
   attribute SIGIS of S_AXI_ARESETN       : signal is "Rst";
-end entity pit_timer_0;
+end entity pit_timer;
 
 ------------------------------------------------------------------------------
 -- Architecture section
 ------------------------------------------------------------------------------
 
-architecture IMP of pit_timer_0 is
+architecture IMP of pit_timer is
 
   constant USER_SLV_DWIDTH                : integer              := C_S_AXI_DATA_WIDTH;
 
@@ -329,7 +330,7 @@ begin
   ------------------------------------------
   -- instantiate User Logic
   ------------------------------------------
-  USER_LOGIC_I : entity pit_timer_0_v1_00_a.user_logic
+  USER_LOGIC_I : entity pit_timer_v1_00_a.user_logic
     generic map
     (
       -- MAP USER GENERICS BELOW THIS LINE ---------------
@@ -343,6 +344,7 @@ begin
     (
       -- MAP USER PORTS BELOW THIS LINE ------------------
       --USER ports mapped here
+	  intr => intr;
       -- MAP USER PORTS ABOVE THIS LINE ------------------
 
       Bus2IP_Clk                     => ipif_Bus2IP_Clk,

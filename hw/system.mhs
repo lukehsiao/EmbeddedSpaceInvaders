@@ -143,6 +143,14 @@ BEGIN microblaze
  PORT INTERRUPT = axi_intc_0_Irq
 END
 
+BEGIN fit_timer
+ PARAMETER INSTANCE = fit_timer_0
+ PARAMETER HW_VER = 1.01.b
+ PARAMETER C_NO_CLOCKS = 1000000
+ PORT Interrupt = fit_timer_0_Interrupt
+ PORT Clk = clk_100_0000MHzPLL0
+END
+
 BEGIN mdm
  PARAMETER INSTANCE = debug_module
  PARAMETER HW_VER = 2.00.b
@@ -198,19 +206,25 @@ BEGIN axi_vdma
  PORT mm2s_fsync_out = axi_vdma_0_mm2s_fsync_out
 END
 
-BEGIN axi_gpio
- PARAMETER INSTANCE = Push_Buttons_5Bits
- PARAMETER HW_VER = 1.01.b
- PARAMETER C_GPIO_WIDTH = 5
- PARAMETER C_ALL_INPUTS = 1
- PARAMETER C_INTERRUPT_PRESENT = 1
- PARAMETER C_IS_DUAL = 0
- PARAMETER C_BASEADDR = 0x40000000
- PARAMETER C_HIGHADDR = 0x4000ffff
+BEGIN axi_timer
+ PARAMETER INSTANCE = axi_timer_0
+ PARAMETER HW_VER = 1.03.a
+ PARAMETER C_BASEADDR = 0x41c00000
+ PARAMETER C_HIGHADDR = 0x41c0ffff
  BUS_INTERFACE S_AXI = axi4lite_0
  PORT S_AXI_ACLK = clk_100_0000MHzPLL0
- PORT GPIO_IO_I = Push_Buttons_5Bits_TRI_I
- PORT IP2INTC_Irpt = Push_Buttons_5Bits_IP2INTC_Irpt
+ PORT Interrupt = axi_timer_0_Interrupt
+END
+
+BEGIN axi_intc
+ PARAMETER INSTANCE = axi_intc_0
+ PARAMETER HW_VER = 1.01.a
+ PARAMETER C_BASEADDR = 0x41200000
+ PARAMETER C_HIGHADDR = 0x4120ffff
+ BUS_INTERFACE S_AXI = axi4lite_0
+ PORT S_AXI_ACLK = clk_100_0000MHzPLL0
+ PORT Intr = axi_ac97_0_Interrupt & axi_timer_0_Interrupt & Push_Buttons_5Bits_IP2INTC_Irpt & fit_timer_0_Interrupt & pit_timer_0_intr
+ PORT Irq = axi_intc_0_Irq
 END
 
 BEGIN axi_hdmi
@@ -292,6 +306,21 @@ BEGIN axi_uartlite
  PORT RX = RS232_Uart_1_sin
 END
 
+BEGIN axi_gpio
+ PARAMETER INSTANCE = Push_Buttons_5Bits
+ PARAMETER HW_VER = 1.01.b
+ PARAMETER C_GPIO_WIDTH = 5
+ PARAMETER C_ALL_INPUTS = 1
+ PARAMETER C_INTERRUPT_PRESENT = 1
+ PARAMETER C_IS_DUAL = 0
+ PARAMETER C_BASEADDR = 0x40000000
+ PARAMETER C_HIGHADDR = 0x4000ffff
+ BUS_INTERFACE S_AXI = axi4lite_0
+ PORT S_AXI_ACLK = clk_100_0000MHzPLL0
+ PORT GPIO_IO_I = Push_Buttons_5Bits_TRI_I
+ PORT IP2INTC_Irpt = Push_Buttons_5Bits_IP2INTC_Irpt
+END
+
 BEGIN axi_s6_ddrx
  PARAMETER INSTANCE = MCB_DDR2
  PARAMETER HW_VER = 1.05.a
@@ -352,41 +381,13 @@ BEGIN d_qspi_axi
  PORT DQ = Digilent_QuadSPI_Cntlr_DQ
 END
 
-BEGIN axi_intc
- PARAMETER INSTANCE = axi_intc_0
- PARAMETER HW_VER = 1.01.a
- PARAMETER C_BASEADDR = 0x41200000
- PARAMETER C_HIGHADDR = 0x4120ffff
- BUS_INTERFACE S_AXI = axi4lite_0
- PORT S_AXI_ACLK = clk_100_0000MHzPLL0
- PORT Intr = axi_ac97_0_Interrupt & axi_timer_0_Interrupt & Push_Buttons_5Bits_IP2INTC_Irpt & fit_timer_0_Interrupt
- PORT Irq = axi_intc_0_Irq
-END
-
-BEGIN axi_timer
- PARAMETER INSTANCE = axi_timer_0
- PARAMETER HW_VER = 1.03.a
- PARAMETER C_BASEADDR = 0x41c00000
- PARAMETER C_HIGHADDR = 0x41c0ffff
- BUS_INTERFACE S_AXI = axi4lite_0
- PORT S_AXI_ACLK = clk_100_0000MHzPLL0
- PORT Interrupt = axi_timer_0_Interrupt
-END
-
-BEGIN fit_timer
- PARAMETER INSTANCE = fit_timer_0
- PARAMETER HW_VER = 1.01.b
- PARAMETER C_NO_CLOCKS = 1000000
- PORT Interrupt = fit_timer_0_Interrupt
- PORT Clk = clk_100_0000MHzPLL0
-END
-
-BEGIN pit_timer_0
- PARAMETER INSTANCE = pit_timer_0_0
+BEGIN pit_timer
+ PARAMETER INSTANCE = pit_timer_0
  PARAMETER HW_VER = 1.00.a
- PARAMETER C_BASEADDR = 0x77e00000
- PARAMETER C_HIGHADDR = 0x77e0ffff
+ PARAMETER C_BASEADDR = 0x70e00000
+ PARAMETER C_HIGHADDR = 0x70e0ffff
  BUS_INTERFACE S_AXI = axi4lite_0
  PORT S_AXI_ACLK = clk_100_0000MHzPLL0
+ PORT intr = pit_timer_0_intr
 END
 

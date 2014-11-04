@@ -8,8 +8,8 @@ TABLE OF CONTENTS
 Peripheral Summary:
 
   XPS project / EDK repository               : C:\RH\Lab\hw
-  logical library name                       : pit_timer_0_v1_00_a
-  top name                                   : pit_timer_0
+  logical library name                       : pit_timer_v1_00_a
+  top name                                   : pit_timer
   version                                    : 1.00.a
   type                                       : AXI4LITE slave
   features                                   : slave attachment
@@ -29,7 +29,7 @@ Address Block for User Logic and IPIF Predefined Services
 ================================================================================
 - HDL source file(s)
 
-  hdl/vhdl/pit_timer_0.vhd
+  hdl/vhdl/pit_timer.vhd
 
     This is the template file for your peripheral's top design entity. It
     configures and instantiates the corresponding design units in the way you
@@ -46,55 +46,31 @@ Address Block for User Logic and IPIF Predefined Services
 
 - XPS interface file(s)
 
-  data/pit_timer_0_v2_1_0.mpd
+  data/pit_timer_v2_1_0.mpd
 
     This Microprocessor Peripheral Description file contains information of the
     interface of your peripheral, so that other EDK tools can recognize your
     peripheral.
 
-  data/pit_timer_0_v2_1_0.pao
+  data/pit_timer_v2_1_0.pao
 
     This Peripheral Analysis Order file defines the analysis order of all the HDL
     source files that are used to compile your peripheral.
 
-- ISE project file(s)
-
-  devl/projnav/pit_timer_0.xise
-
-    This is the ProjNavigator project file. It sets up the needed logical
-    libraries and dependent library files for you to help you develop your
-    peripheral using ProjNavigator.
-
-  devl/projnav/pit_timer_0.tcl
-
-    This is the TCL command line file used to generate the .xise file.
-
-- XST synthesis file(s)
-
-  devl/synthesis/pit_timer_0_xst.scr
-
-    This is the XST synthesis script file to compile your peripheral.
-    Note: you may want to modify the device part option for your target.
-
-  devl/synthesis/pit_timer_0_xst.prj
-
-    This is the XST synthesis project file used by the above script file to
-    compile your peripheral.
-
 - Driver source file(s)
 
-  src/pit_timer_0.h
+  src/pit_timer.h
 
     This is the software driver header template file, which contains address offset of
     software addressable registers in your peripheral, as well as some common masks and
     simple register access macros or function declaration.
 
-  src/pit_timer_0.c
+  src/pit_timer.c
 
     This is the software driver source template file, to define all applicable driver
     functions.
 
-  src/pit_timer_0_selftest.c
+  src/pit_timer_selftest.c
 
     This is the software driver self test example file, which contain self test example
     code to test various hardware features of your peripheral.
@@ -106,11 +82,11 @@ Address Block for User Logic and IPIF Predefined Services
 - Driver interface file(s)
 -user needs to add these to repositories path in SDK (Xilinx Tools-->Repositories)
 
-  data/pit_timer_0_v2_1_0.mdd
+  data/pit_timer_v2_1_0.mdd
 
     This is the Microprocessor Driver Definition file.
 
-  data/pit_timer_0_v2_1_0.tcl
+  data/pit_timer_v2_1_0.tcl
 
     This is the Microprocessor Driver Command file.
 

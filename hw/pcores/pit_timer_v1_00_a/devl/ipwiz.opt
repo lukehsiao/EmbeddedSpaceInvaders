@@ -1,5 +1,5 @@
 -batch 
--create pit_timer_0 
+-create pit_timer 
 -ver 1.00.a 
 -dir "C:\RH\Lab\hw" 
 -lang vhdl 
@@ -7,5 +7,4 @@
 -rst 
 -reg 2 
 -xps 
--ise 
 -driver 

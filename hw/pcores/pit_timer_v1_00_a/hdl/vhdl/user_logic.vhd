@@ -26,7 +26,7 @@
 -- Filename:          user_logic.vhd
 -- Version:           1.00.a
 -- Description:       User logic.
--- Date:              Mon Nov 03 18:01:23 2014 (by Create and Import Peripheral Wizard)
+-- Date:              Tue Nov 04 13:14:38 2014 (by Create and Import Peripheral Wizard)
 -- VHDL Standard:     VHDL'93
 ------------------------------------------------------------------------------
 -- Naming Conventions:
@@ -60,6 +60,7 @@ use proc_common_v3_00_a.proc_common_pkg.all;
 -- DO NOT EDIT ABOVE THIS LINE --------------------
 
 --USER libraries added here
+use IEEE.NUMERIC_STD.ALL;
 
 ------------------------------------------------------------------------------
 -- Entity section
@@ -98,6 +99,7 @@ entity user_logic is
   (
     -- ADD USER PORTS BELOW THIS LINE ------------------
     --USER ports added here
+	intr : out  STD_LOGIC;
     -- ADD USER PORTS ABOVE THIS LINE ------------------
 
     -- DO NOT EDIT BELOW THIS LINE ---------------------
@@ -130,6 +132,12 @@ end entity user_logic;
 architecture IMP of user_logic is
 
   --USER signal declarations added here, as needed for user logic
+	type pit_state_type is (COUNTING, INTERRUPT, RELOAD);
+	signal pit_state_reg, pit_state_next: pit_state_type := COUNTING;
+	signal counter_reg, counter_next: unsigned(31 downto 0) := (others => '1');
+	signal delay_reg: unsigned(31 downto 0);
+	signal counter_en, interrupt_en, reload_en: std_logic;
+	signal clk, rst: std_logic;
 
   ------------------------------------------
   -- Signals for user logic slave model s/w accessible register example
@@ -145,6 +153,68 @@ architecture IMP of user_logic is
 begin
 
   --USER logic implementation added here
+  -- converting to stuff we used
+	clk 	<= Bus2IP_Clk;
+	rst	<= Bus2IP_Resetn;
+	
+	counter_en 		<= slv_reg1(0);
+	interrupt_en 	<= slv_reg1(1);
+	reload_en 		<= slv_reg1(2);
+	
+	delay_reg		<= unsigned(slv_reg0);
+	
+	-- FSM + Counter
+	process(clk, rst)
+	begin
+		if(rst = '1') then
+			pit_state_reg <= COUNTING;
+			counter_reg <= x"000000FF";
+		elsif(clk'event and clk = '1') then
+			pit_state_reg <= pit_state_next;
+			counter_reg <= counter_next;
+		end if;
+	end process;
+	
+	-- Next State Logic
+	process(reload_en, pit_state_reg, counter_next)
+	begin
+		case pit_state_reg is
+			when COUNTING =>
+				if(counter_next = 0) then
+					pit_state_next <= INTERRUPT;
+				else
+					pit_state_next <= COUNTING;
+				end if;
+			when INTERRUPT =>
+				pit_state_next <= RELOAD;
+			when RELOAD  =>
+				if(reload_en = '1') then
+					pit_state_next <= COUNTING;
+				else
+					pit_state_next <= RELOAD;
+				end if;
+		end case;
+	end process;
+	
+	-- Output Logic
+	process(counter_en, reload_en, pit_state_reg, interrupt_en, counter_reg)
+	begin
+		intr <= '0'; -- Default Value
+		case pit_state_reg is
+			when COUNTING =>
+				if (counter_en = '1') then
+					counter_next <= counter_reg - 1;
+				else
+					counter_next <= counter_reg;
+				end if;
+			when INTERRUPT =>
+				intr <= '1' and interrupt_en;
+			when RELOAD  =>
+				if(reload_en = '1') then
+					counter_next <= delay_reg;
+				end if;
+		end case;
+	end process;
 
   ------------------------------------------
   -- Example code to read/write user logic slave model s/w accessible registers
