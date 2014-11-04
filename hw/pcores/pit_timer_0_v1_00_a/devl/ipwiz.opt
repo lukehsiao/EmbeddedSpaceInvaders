@@ -1,0 +1,11 @@
+-batch 
+-create pit_timer_0 
+-ver 1.00.a 
+-dir "C:\RH\Lab\hw" 
+-lang vhdl 
+-bus axi4lite s 
+-rst 
+-reg 2 
+-xps 
+-ise 
+-driver 
