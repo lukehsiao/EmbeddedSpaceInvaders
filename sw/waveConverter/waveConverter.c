@@ -32,7 +32,7 @@ u32 numSamples;
 u32 sampleRate;
 u8 tempData;
 u16 bitsPerSample;
-
+u16 numChannels;
 
 int main(int argc, char *argv[]) {
 
@@ -69,9 +69,12 @@ int main(int argc, char *argv[]) {
                         // Extract the sample rate
                         case FORMAT:
                             //Advance reader past formatsize, format, channels
+                            //fread(&(sampleRate), sizeof(int), 1, input);
                             fread(&(sampleRate), sizeof(int), 1, input);
+                            fread(&(sampleRate), sizeof(u16), 1, input);
+                            fread(&(numChannels), sizeof(u16), 1, input);
                             fread(&(sampleRate), sizeof(int), 1, input);
-                            fread(&(sampleRate), sizeof(int), 1, input);
+                            printf("    Num Channels: %d\n", numChannels);
                             printf("    Sample Rate: %d\n", sampleRate);
                             
                             // Advance to bits per sample
@@ -91,10 +94,10 @@ int main(int argc, char *argv[]) {
 							tempData = 0;
                             int i;
                             for (i = numSamples; i > 1; i--) {
-                                fread(&(tempData), sizeof(short), 1, input);
+                                fread(&(tempData), sizeof(u8), 1, input);
                                 fprintf(output, "%d,", tempData);
                             }
-                            fread(&(tempData), sizeof(short), 1, input);                               
+                            fread(&(tempData), sizeof(u8), 1, input);                               
                             fprintf(output, "%d};\n", tempData);
 
                    

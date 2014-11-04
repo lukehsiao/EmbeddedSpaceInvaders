@@ -36,64 +36,54 @@
 #define DEBUG
 
 XTmrCtr Timer0;
-unsigned char taski;
 
 void print(char *str);
 
 #define MAX_SILLY_TIMER 500000;
-unsigned char taski;
 
 /**
  * This is invoked in response to a timer interrupt.
  * It calls all the state machines.
  */
 void timer_interrupt_handler() {	//	interruptCounter++;
-	//	if(interruptCounter < 4300){
 	u8 i;
+	task* tempTask;
+	tempTask = getTasks();
 	for (i = 0; i < TASKS_NUM; ++i) { // Heart of the scheduler code
-		if (tasks[i].elapsedTime >= tasks[i].period){
-			XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
-			XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+		if (tempTask[i].elapsedTime >= tempTask[i].period){
+			int newState;
 			switch (i) {
 			case 0:
-				tasks[i].state = TankMovementAndBullet_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				newState = TankMovementAndBullet_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 1:
-				tasks[i].state = TankBulletUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				newState =  TankBulletUpdate_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 2:
-				tasks[i].state = AlienMovementAndBullets_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				newState = AlienMovementAndBullets_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 3:
-				tasks[i].state = AlienbulletsUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				newState = AlienbulletsUpdate_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 4:
-				tasks[i].state = SpaceShipUpdate_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				newState = SpaceShipUpdate_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			case 5:
-				tasks[i].state = AlienDeath_SM(tasks[i].state);//tasks[i].TickFct(tasks[i].state);
+				newState = AlienDeath_SM(tempTask[i].state);
+				setState(i, newState);
 				break;
 			default:
 				break;
 			}
-			tasks[i].elapsedTime = 0; // Reset the elapsed time
-			XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-			tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
-			if(tempWcet > tasks[i].wcet)
-			{
-				tasks[i].wcet = tempWcet;
-			}
-			if(tempWcet < tasks[i].bcet)
-			{
-				tasks[i].bcet = tempWcet;
-			}
-
+			setElapsedTime(i, 0); // Reset the elapsed time
 		}
-		tasks[i].elapsedTime += 1;
+		setElapsedTime(i, (tempTask[i].elapsedTime + 1));
 	}
-	//		else{
-	//			xil_printf("\n\r%d", uteCounter);
-	//		}
 }
 
 void AC97_interrupt_handler() {
@@ -220,12 +210,13 @@ int main()
 	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
 
+	//Initialize the AC'97
 	XAC97_HardReset(XPAR_AXI_AC97_0_BASEADDR);
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_ExtendedAudioStat, 1);
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_PCM_DAC_Rate, AC97_PCM_RATE_11025_HZ);
 	XAC97_mSetControl(XPAR_AXI_AC97_0_BASEADDR,AC97_ENABLE_IN_FIFO_INTERRUPT);
 	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
-		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 0);
+		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 127);
 	}
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, AC97_VOL_MID);
 

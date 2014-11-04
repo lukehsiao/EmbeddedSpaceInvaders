@@ -7,30 +7,12 @@
  * @date 23 Sept 2014
  */
 
+
 #include <stdio.h>
-#include <stdlib.h>
-#include "render.h"			// Our rendering file.
-#include "xgpio.h"          // Provides access to PB GPIO driver.
-
-#include "platform.h"
-#include "xparameters.h"
-#include "xaxivdma.h"
-#include "xio.h"
-#include "xtmrctr.h" // axi Timer
-//#include "time.h"	//is this needed?
-#include "unistd.h"
-#include "render.h"			// Our rendering file.
-#include "xuartlite_l.h"
-#include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
-#include "xintc_l.h"        // Provides handy macros for the interrupt controller.
-
-
+#include "bitmaps.h"
 
 #ifndef globals_h
 #define globals_h
-XTmrCtr Timer0;
-u32 maxWcet;
-u32 tempWcet;
 // Starting location in DDR where we will store the images that we display.
 #define FRAME_BUFFER_0_ADDR 0xC1000000  
 
@@ -41,6 +23,24 @@ u32 tempWcet;
 #define u16 unsigned short
 #define u32 unsigned int
 
+#define TRUE		1
+#define FALSE		0
+
+#define LEFT_BIT 31
+
+#define STARTING_LIVES 3
+#define STARTING_SCORE 0
+#define GAME_NOT_OVER 0
+#define GAME_OVER 1
+#define BOARDER 32
+#define TOP 0
+#define BOTTOM 480
+#define LEFT_SIDE 0
+#define RIGHT_SIDE 640
+
+#define ALIVE 1
+#define DEAD 0
+
 // Color Definitions
 #define GREEN 		0x0000FF00
 #define WHITE 		0x00FFFFFF
@@ -49,13 +49,10 @@ u32 tempWcet;
 #define OFFWHITE	0x00FFFFFE
 #define YELLOW		0x00FFFF00
 
-#define TASKS_NUM 6
-
-#include "bitmaps.h"
+#define TASKS_NUM 6	// Number of state machines we have
 
 typedef struct {u32 x; u32 y;} point_t;
 typedef struct {point_t position; u8 type; u8 guise;} alienBullet;
-
 
 /////////////////////////////////////
 // Initialize the program

@@ -1,8 +1,8 @@
-/*
- * stateMachines.h
+/**
+ * This file contains all of the prototypes for state machines.
  *
- *  Created on: Oct 9, 2014
- *      Author: superman
+ * author: Luke Hsiao & Jeff Ravert
+ * 25 October 2014
  */
 
 #ifndef STATEMACHINES_H_
@@ -10,6 +10,7 @@
 
 #include "xgpio.h"          // Provides access to PB GPIO driver
 #include "globals.h"
+
 #define UP 		0x10
 #define DOWN 	0x04
 #define LEFT	0x08
@@ -28,7 +29,6 @@ typedef struct task {
 	int bcet; //WCET of the task
 } task;
 
-task tasks[TASKS_NUM];
 
 /////////////////////////////////////
 // Handy Timing Functions
@@ -55,6 +55,11 @@ int SpaceShipUpdate_SM();
 
 enum SM6_States { SM6_noDeath, SM6_death, SM6_gameOver } SM6_State;
 int AlienDeath_SM();
+
+task* getTasks();
+void setState(u8 taskNum, int newState);
+void setElapsedTime(u8 taskNum, unsigned long newTime);
+
 
 
 #endif /* STATEMACHINES_H_ */

@@ -5,23 +5,44 @@
  *      Author: Jeff Ravert and Luke Hsiao
  */
 #include "stateMachines.h"
-#include <stdio.h>
 #include <stdlib.h>
-#include "render.h"			// Our rendering file.
-#include "xgpio.h"          // Provides access to PB GPIO driver.
-#include "platform.h"
-#include "xparameters.h"
-#include "xaxivdma.h"
-#include "xio.h"
-#include "xtmrctr.h" // axi Timer
-#include "unistd.h"
-#include "render.h"			// Our rendering file.
-#include "xuartlite_l.h"
-#include "mb_interface.h"   // provides the microblaze interrupt enables, etc.
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 #include "spaceInvadersSounds.h"
+#include "render.h"			// Our rendering file.
 
+// Allocate memory for the state machines
+task tasks[TASKS_NUM];
 
+/**
+ * Returns the a task
+ * @param taskNum the number of the task to get
+ * @return the task
+ */
+task* getTasks() {
+	return tasks;
+}
+
+/**
+ * Sets the state of a task
+ * @param taskNum the task to modify
+ * @param newState the value to set the state to
+ */
+void setState(u8 taskNum, int newState) {
+	tasks[taskNum].state = newState;
+	return;
+}
+
+/**
+ * Sets the elapsed time of the task
+ * @param taskNum the task to modify
+ * @param newTime the value to set elapsed time to
+ */
+void setElapsedTime(u8 taskNum, unsigned long newTime) {
+	tasks[taskNum].elapsedTime = newTime;
+	return;
+}
+
+#ifdef TIMING
 /////////////////////////////////////
 // Handy Timing Functions
 /////////////////////////////////////
@@ -39,6 +60,8 @@ void stopTiming() {
 			xil_printf("\n\r TIMER OVERRUN"); // there was timer overrun
 	}
 }
+#endif
+
 
 
 ////////////////////////////////////////
@@ -547,7 +570,7 @@ int SpaceShipUpdate_SM(int state) {
 			break;
 
 		default:
-			state = SM5_alive;
+			state = SM5_gameOver;
 		} // Transitions
 
 		switch(state) { // State actions
@@ -555,7 +578,7 @@ int SpaceShipUpdate_SM(int state) {
 			if(waitShow >= EXTRA_WAIT){
 				u32 showRandom;
 				showRandom = (char)(rand() % SPACESHIP_START_RATE);
-				if(showRandom == 0){
+				if((showRandom == 0) && (!getGameOver())){
 					startSpaceShip();
 				}
 				waitShow = 0;
