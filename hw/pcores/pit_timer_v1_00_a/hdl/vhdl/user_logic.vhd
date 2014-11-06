@@ -199,16 +199,20 @@ begin
     end process;
     
     -- Output Logic    
-    process(counter_en, reload_en, pit_state_reg, interrupt_en, counter_reg)
+    process(counter_en, reload_en, force_load, pit_state_reg, interrupt_en, counter_reg, delay_reg)
     begin
         intr <= '0'; -- Default Value
         case pit_state_reg is
             when COUNTING =>
-                if (counter_en = '1') then
-                    counter_next <= counter_reg - 1;
-                else
-                    counter_next <= counter_reg;
-                end if;
+					 if (force_load = '1') then
+						  counter_next <= delay_reg;
+					 else
+						 if (counter_en = '1') then
+							  counter_next <= counter_reg - 1;
+						 else
+							  counter_next <= counter_reg;
+						 end if;
+					 end if;
             when INTERRUPT =>
                 intr <= '1' and interrupt_en;
                 if(reload_en = '1') then

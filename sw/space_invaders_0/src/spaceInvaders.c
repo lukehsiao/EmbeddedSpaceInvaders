@@ -228,9 +228,10 @@ int main()
 	initSounds();		// setup space invader sounds
 
 	// Initialize the PIT
-	PIT_TIMER_SET_DELAY(DEFAULT_RELOAD);
-	PIT_TIMER_WRITE_CONTROL(0x00000008);	// Force Load the Delay Value
-	PIT_TIMER_WRITE_CONTROL(0x00000007);	// Run the Timer
+	PIT_TIMER_RESET;
+	PIT_TIMER_SET_DELAY(DEFAULT_RELOAD/100);
+	PIT_TIMER_WRITE_CONTROL(FORCE_LOAD);	// Force Load the Delay Value
+	PIT_TIMER_WRITE_CONTROL(INTR_ENABLE | COUNTER_ENABLE | RELOAD_ENABLE);	// Run the Timer
 
 	microblaze_enable_interrupts();
 
