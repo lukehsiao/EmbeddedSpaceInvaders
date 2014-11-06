@@ -133,18 +133,49 @@
  	Xil_Out32((BaseAddress)+(PIT_TIMER_RST_REG_OFFSET), SOFT_RESET)
 
 
+
+/********************** Custom Macros *******************************/
+
 /**
- * Macros that are easier to read, created for us by us.
+ * Writes the specified delay value into the Delay Value Register
+ * @param delayValue the new interval between interrupts
  */
 #define PIT_TIMER_SET_DELAY(delayValue) \
 	PIT_TIMER_mWriteSlaveReg0(XPAR_PIT_TIMER_0_BASEADDR, 0, delayValue)
 
+/**
+ * Writes the specified value into the Control Register
+ * Bit 0 = Counter Enable
+ * Bit 1 = Interrupt Enable
+ * Bit 2 = Reload Enable
+ * Bit 3 = Force Load
+ * All other bits are ignored.
+ * @param val The new value to set in Control Register
+ */ 
 #define PIT_TIMER_WRITE_CONTROL(val) \
 	PIT_TIMER_mWriteSlaveReg1(XPAR_PIT_TIMER_0_BASEADDR, 0, val)
 
+/**
+ * Reads the value that is currently in the Control Register
+ * @return Xuint32 value of the Control Register
+ */
+#define PIT_TIMER_READ_CONTROL \
+    PIT_TIMER_mReadSlaveReg1(XPAR_PIT_TIMER_0_BASEADDR, 0)
 
+/**
+ * Reads the value that is currently in the Delay Value Register
+ * @return Xuint32 value of the Delay Value Register
+ */
+#define PIT_TIMER_READ_DELAY \
+    PIT_TIMER_mReadSlaveReg0(XPAR_PIT_TIMER_0_BASEADDR, 0)
+
+/**
+ * Send a software reset to the PIT
+ */
 #define PIT_TIMER_RESET	\
 	PIT_TIMER_mReset(XPAR_PIT_TIMER_0_BASEADDR)
+    
+/****************** End Custom Macros *******************************/
 
 /************************** Function Prototypes ****************************/
 
