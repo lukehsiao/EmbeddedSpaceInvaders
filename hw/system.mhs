@@ -381,6 +381,35 @@ BEGIN d_qspi_axi
  PORT DQ = Digilent_QuadSPI_Cntlr_DQ
 END
 
+<<<<<<< HEAD
+BEGIN pit_timer
+ PARAMETER INSTANCE = pit_timer_0
+ PARAMETER HW_VER = 1.00.a
+ PARAMETER C_BASEADDR = 0x70e00000
+ PARAMETER C_HIGHADDR = 0x70e0ffff
+=======
+BEGIN axi_intc
+ PARAMETER INSTANCE = axi_intc_0
+ PARAMETER HW_VER = 1.01.a
+ PARAMETER C_BASEADDR = 0x41200000
+ PARAMETER C_HIGHADDR = 0x4120ffff
+ BUS_INTERFACE S_AXI = axi4lite_0
+ PORT S_AXI_ACLK = clk_100_0000MHzPLL0
+ PORT Intr = axi_ac97_0_Interrupt & pit_timer_0_intr & axi_timer_0_Interrupt & Push_Buttons_5Bits_IP2INTC_Irpt & fit_timer_0_Interrupt
+ PORT Irq = axi_intc_0_Irq
+END
+
+BEGIN axi_timer
+ PARAMETER INSTANCE = axi_timer_0
+ PARAMETER HW_VER = 1.03.a
+ PARAMETER C_BASEADDR = 0x41c00000
+ PARAMETER C_HIGHADDR = 0x41c0ffff
+>>>>>>> 335bdc6f321ba0a6fb07869acac6ee93c2a10472
+ BUS_INTERFACE S_AXI = axi4lite_0
+ PORT S_AXI_ACLK = clk_100_0000MHzPLL0
+ PORT intr = pit_timer_0_intr
+END
+
 BEGIN pit_timer
  PARAMETER INSTANCE = pit_timer_0
  PARAMETER HW_VER = 1.00.a

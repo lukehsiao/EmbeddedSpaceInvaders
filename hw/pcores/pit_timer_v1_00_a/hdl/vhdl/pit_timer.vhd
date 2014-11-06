@@ -36,6 +36,7 @@
 -- Version:           1.00.a
 -- Description:       Top level design, instantiates library components and user logic.
 -- Date:              Tue Nov 04 13:14:38 2014 (by Create and Import Peripheral Wizard)
+
 -- VHDL Standard:     VHDL'93
 ------------------------------------------------------------------------------
 -- Naming Conventions:
@@ -139,7 +140,7 @@ entity pit_timer is
   (
     -- ADD USER PORTS BELOW THIS LINE ------------------
     --USER ports added here
-	intr : out  STD_LOGIC;
+    intr                           : out std_logic;
     -- ADD USER PORTS ABOVE THIS LINE ------------------
 
     -- DO NOT EDIT BELOW THIS LINE ---------------------
@@ -344,7 +345,7 @@ begin
     (
       -- MAP USER PORTS BELOW THIS LINE ------------------
       --USER ports mapped here
-	  intr => intr;
+      intr                           => intr,
       -- MAP USER PORTS ABOVE THIS LINE ------------------
 
       Bus2IP_Clk                     => ipif_Bus2IP_Clk,

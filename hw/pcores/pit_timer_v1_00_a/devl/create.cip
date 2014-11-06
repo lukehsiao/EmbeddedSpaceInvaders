@@ -1,10 +1,10 @@
 CipWiz::SetVersion "13.4";
 CipWiz::SetFlow "CREATE";
 CipWiz::SetParameter "ProjectDir" "C:\RH\Lab\hw";
-CipWiz::SetParameter "IpLongDescription" "Programable Interval Timer 11/4/14";
+CipWiz::SetParameter "IpLongDescription" "Programmable Interval Timer";
 CipWiz::SetParameter "IpName" "pit_timer";
 CipWiz::SetParameter "IpVersion" "1.00.a";
-CipWiz::SetParameter "SimulatorName" "isim";
+CipWiz::SetParameter "SimulatorName" "mgm";
 CipWiz::SetParameter "HdlLanguage" "1";
 CipWiz::SetParameter "BusType" "256";
 CipWiz::SetParameter "IncludeIseFile" "FALSE";
