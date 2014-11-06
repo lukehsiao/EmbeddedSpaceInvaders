@@ -14,22 +14,7 @@
 #include "tank.h"
 #include "bunkers.h"
 #include "spaceship.h"
-
 #define STARTING_LIVES 3
-#define DEFAULT_SCORE_POSITION_X 5
-#define DEFAULT_SCORE_POSITION_Y 1
-
-#define STARTING_SCORE_POSITION_X 80
-#define STARTING_SCORE_POSITION_Y 11
-#define SCORE_WIDTH 12
-
-#define STARTING_LIVES_TEXT_POSITION_X 350
-#define STARTING_LIVES_TEXT_POSITION_Y 11
-#define LIVES_TEST_WIDTH 32
-
-#define STARTING_LIVES_POSITION_X 420
-#define STARTING_LIVES_POSITION_Y 5
-#define LIVES_TEST_WIDTH 42
 
 void blankScreen();
 void renderBottomLine();

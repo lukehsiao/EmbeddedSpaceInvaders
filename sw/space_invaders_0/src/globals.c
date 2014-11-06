@@ -61,54 +61,54 @@ u8 gameOver; // 1 is gameOver. 0 game is running
 void initGlobals(){
 	xil_printf("\rInitializing Space Invaders Globals\n\r================\n\r");
 	// Initialize Tank
-	setTankPositionGlobal(TANK_STARTING_POSITION);
-	tankLife = ALIVE;
+	setTankPositionGlobal(70);
+	tankLife = 1;
 
 	// Initialize Bunkers
     initBunkers();
 
     // Initialize Aliens
-    alienGuise = ALIEN_GUISE_1;
+    alienGuise = 1;
 	int i;
-	for(i = 0; i < ALIEN_ROWS; i++) {
+	for(i = 0; i < 5; i++) {
 		alienStatus[i] = 0xFFFF;
 	}
-	leftMostColumn = STARTING_LEFT_MOST_COLUMN;
-	rightMostColumn = STARTING_RIGHT_MOST_COLUMN;
-	leftPad = STARTING_LEFT_PAD;
-	rightPad = STARTING_RIGHT_PAD;
+	leftMostColumn = 0;
+	rightMostColumn = 10;
+	leftPad = 0;
+	rightPad = 640;
 	point_t temp;
-	temp.x = STARTING_ALIEN_BLOCK_X;
-	temp.y = STARTING_ALIEN_BLOCK_Y;
+	temp.x = 160;
+	temp.y = 70;
 	setAlienBlockPosition(temp);
-	direction = ALIEN_DIRECTION_RIGHT;
-	setNumberAliensAlive(MAX_NUMBER_ALIENS_ALIVE);
+	direction = 1;
+	setNumberAliensAlive(55);
 
 	// Initialize Game Variables
-	setLives(STARTING_LIVES);
-	setScore(STARTING_SCORE);
-	gameOver = GAME_NOT_OVER;
+	setLives(3);
+	setScore(0);
+	gameOver = 0;
 
 	// Initialize Bullets
 	alienBullet bullet;
 	u8 j;
-	for(j= 0; j < MAX_BULLET_NUM; j++){
+	for(j= 0; j < 4; j++){
 		bullet = getAlienBullet(j);
-		//temp.x = STARTING_TANK_POSITION_X + 150*j;
-		temp.y = OFF_THE_SCREEN;	//not activated if >480
+		temp.x = 20 + 150*j;
+		temp.y = 8888;	//not activated if >480
 		bullet.position = temp;
 		bullet.type = j%2;
 		setAlienBullet(bullet, j);
 	}
-	temp.y = OFF_THE_SCREEN;	// also not actiavted
-	temp.x = STARTING_TANK_POSITION_X;
+	temp.y = 8888;	// also not actiavted
+	temp.x = 20;
 	setTankBulletPosition(temp);
 
 	//Initialize Spaceship
-	spaceshipActivated = DEAD;
-	spaceshipPosition.x = STARTING_SPACESHIP_POSITION_X;
-	spaceshipPosition.y = STARTING_SPACESHIP_POSITION_Y;
-	currentScore = STARTING_SCORE;
+	spaceshipActivated = 0;
+	spaceshipPosition.x = 5;
+	spaceshipPosition.y = 35;
+	currentScore = 0;
 
 }
 
@@ -152,7 +152,7 @@ void setSpaceshipDied(u8 newVal) {
 /////////////////////////////////////
 void setTankPositionGlobal(unsigned short val) {
 	tankPosition.x = val;
-	tankPosition.y = STARTING_TANK_POSITION_Y;
+	tankPosition.y = 440;
 }
 point_t getTankPositionGlobal() {
 	return tankPosition;
@@ -205,35 +205,35 @@ u8 getAlienDirection() {
  * @param status The alien's status. 0 = dead, 1 = alive.
  */
 void setAlienStatus(u32 alienNumber, u32 status) {
-	if (alienNumber < MAX_ROW_ONE_ALIEN_NUMBER) {
+	if (alienNumber < 11) {
 		// clearing the bit
-		u32 bitTemp = alienStatus[ROW_ONE] & ~(0x1 << (MOST_SIGIFICANT_BIT - alienNumber));
+		u32 bitTemp = alienStatus[0] & ~(0x1 << (15 - alienNumber));
 		// Setting the bit
-		alienStatus[0] = bitTemp | (status << (MOST_SIGIFICANT_BIT - alienNumber));
+		alienStatus[0] = bitTemp | (status << (15 - alienNumber));
 	}
-	else if (alienNumber < MAX_ROW_TWO_ALIEN_NUMBER) {
+	else if (alienNumber < 22) {
 		// clearing the bit
-		u32 bitTemp = alienStatus[ROW_TWO] & ~(0x1 << (MOST_SIGIFICANT_BIT - (alienNumber % MAX_ALIEN_NUMBER_IN_ROW)));
+		u32 bitTemp = alienStatus[1] & ~(0x1 << (15 - (alienNumber % 11)));
 		// Setting the bit
-		alienStatus[1] = bitTemp | (status << (MOST_SIGIFICANT_BIT - (alienNumber % MAX_ALIEN_NUMBER_IN_ROW)));
+		alienStatus[1] = bitTemp | (status << (15 - (alienNumber % 11)));
 	}
-	else if (alienNumber < MAX_ROW_THREE_ALIEN_NUMBER) {
+	else if (alienNumber < 33) {
 		// clearing the bit
-		u32 bitTemp = alienStatus[ROW_THREE] & ~(0x1 << (MOST_SIGIFICANT_BIT - (alienNumber % MAX_ALIEN_NUMBER_IN_ROW)));
+		u32 bitTemp = alienStatus[2] & ~(0x1 << (15 - (alienNumber % 11)));
 		// Setting the bit
-		alienStatus[2] = bitTemp | (status << (MOST_SIGIFICANT_BIT - (alienNumber % MAX_ALIEN_NUMBER_IN_ROW)));
+		alienStatus[2] = bitTemp | (status << (15 - (alienNumber % 11)));
 	}
-	else if (alienNumber < MAX_ROW_FOUR_ALIEN_NUMBER) {
+	else if (alienNumber < 44) {
 		// clearing the bit
-		u32 bitTemp = alienStatus[ROW_FOUR] & ~(0x1 << (MOST_SIGIFICANT_BIT - (alienNumber % MAX_ALIEN_NUMBER_IN_ROW)));
+		u32 bitTemp = alienStatus[3] & ~(0x1 << (15 - (alienNumber % 11)));
 		// Setting the bit
-		alienStatus[3] = bitTemp | (status << (MOST_SIGIFICANT_BIT - (alienNumber % MAX_ALIEN_NUMBER_IN_ROW)));
+		alienStatus[3] = bitTemp | (status << (15 - (alienNumber % 11)));
 	}
 	else {
 		// clearing the bit
-		u32 bitTemp = alienStatus[ROW_FIVE] & ~(0x1 << (MOST_SIGIFICANT_BIT - (alienNumber % MAX_ALIEN_NUMBER_IN_ROW)));
+		u32 bitTemp = alienStatus[4] & ~(0x1 << (15 - (alienNumber % 11)));
 		// Setting the bit
-		alienStatus[4] = bitTemp | (status << (MOST_SIGIFICANT_BIT - (alienNumber % MAX_ALIEN_NUMBER_IN_ROW)));
+		alienStatus[4] = bitTemp | (status << (15 - (alienNumber % 11)));
 	}
 }
 
@@ -244,20 +244,20 @@ void setAlienStatus(u32 alienNumber, u32 status) {
  */
 u16 getAlienStatus(u32 alienNumber) {
 	u16 temp;
-	if (alienNumber < MAX_ROW_ONE_ALIEN_NUMBER) {
-		temp = (alienStatus[ROW_ONE] >> (MOST_SIGIFICANT_BIT-alienNumber)) & 0x1;
+	if (alienNumber < 11) {
+		temp = (alienStatus[0] >> (15-alienNumber)) & 0x1;
 	}
-	else if (alienNumber < MAX_ROW_TWO_ALIEN_NUMBER) {
-		temp = (alienStatus[ROW_TWO] >> (MOST_SIGIFICANT_BIT-(alienNumber % MAX_ALIEN_NUMBER_IN_ROW))) & 0x1;
+	else if (alienNumber < 22) {
+		temp = (alienStatus[1] >> (15-(alienNumber % 11))) & 0x1;
 	}
-	else if (alienNumber < MAX_ROW_THREE_ALIEN_NUMBER) {
-		temp = (alienStatus[ROW_THREE] >> (MOST_SIGIFICANT_BIT-(alienNumber % MAX_ALIEN_NUMBER_IN_ROW))) & 0x1;
+	else if (alienNumber < 33) {
+		temp = (alienStatus[2] >> (15-(alienNumber % 11))) & 0x1;
 	}
-	else if (alienNumber < MAX_ROW_FOUR_ALIEN_NUMBER) {
-		temp = (alienStatus[ROW_FOUR] >> (MOST_SIGIFICANT_BIT-(alienNumber % MAX_ALIEN_NUMBER_IN_ROW))) & 0x1;
+	else if (alienNumber < 44) {
+		temp = (alienStatus[3] >> (15-(alienNumber % 11))) & 0x1;
 	}
 	else {
-		temp = (alienStatus[ROW_FIVE] >> (MOST_SIGIFICANT_BIT-(alienNumber % MAX_ALIEN_NUMBER_IN_ROW))) & 0x1;
+		temp = (alienStatus[4] >> (15-(alienNumber % 11))) & 0x1;
 	}
 	return temp;
 }
@@ -314,13 +314,13 @@ void setAlienBullet(alienBullet val, u8 bulletNum) {
 	bullet = getAlienBullet(bulletNum);
 	switch (bulletNum)
 	{
-	case BULLET_ZERO:
+	case 0:
 		alienBullet_0 = val;
 		break;
-	case BULLET_ONE:
+	case 1:
 		alienBullet_1 = val;
 		break;
-	case BULLET_TWO:
+	case 2:
 		alienBullet_2 = val;
 	break;
 	default:
@@ -380,7 +380,7 @@ void setLeftCol(u8 leftCol) {
 	leftMostColumn = leftCol;
 
 	//Adjust the border
-	leftPad = LEFT_SIDE + (BOARDER*leftMostColumn);
+	leftPad = 0 + (32*leftMostColumn);
 
 }
 
@@ -391,7 +391,7 @@ void setRightCol(u8 rightCol) {
 	rightMostColumn = rightCol;
 
 	//Adjust the border
-	rightPad = RIGHT_SIDE + (BOARDER*(ALIEN_RIGHT_SIDE_BLANK-rightMostColumn));
+	rightPad = 640 + (32*(10-rightMostColumn));
 }
 
 void setAlienExplosionPosition(point_t val) {
@@ -427,20 +427,20 @@ u8 getNumberAliensAlive() {
  */
 void initBunkers() {
 	int i;
-	for (i = 0; i < TOTAL_BUNKER_NUM; i++) {
-		bunkerState[i] = BUNKERS_NOT_ERODED;
+	for (i = 0; i < 4; i++) {
+		bunkerState[i] = 0x00000000;
 	}
-	bunkerPosition_0.x = BUNKER_ZERO_POSITION_X;
-	bunkerPosition_0.y = ALL_BUNKER_POSITION_Y;
+	bunkerPosition_0.x = 104;
+	bunkerPosition_0.y = 380;
 
-	bunkerPosition_1.x = BUNKER_ONE_POSITION_X;
-	bunkerPosition_1.y = ALL_BUNKER_POSITION_Y;
+	bunkerPosition_1.x = 232;
+	bunkerPosition_1.y = 380;
 
-	bunkerPosition_2.x = BUNKER_TWO_POSITION_X;
-	bunkerPosition_2.y = ALL_BUNKER_POSITION_Y;
+	bunkerPosition_2.x = 360;
+	bunkerPosition_2.y = 380;
 
-	bunkerPosition_3.x = BUNKER_THREE_POSITION_X;
-	bunkerPosition_3.y = ALL_BUNKER_POSITION_Y;
+	bunkerPosition_3.x = 488;
+	bunkerPosition_3.y = 380;
 }
 
 /**
@@ -453,35 +453,35 @@ void initBunkers() {
  */
 void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 	u32 tempState = bunkerState[bunkerNumber];
-	tempState = BUNKER_MASK & tempState;
+	tempState = 0x3FFFFFFF & tempState;
 	u32 newErosion;
 	
-	if (blockNumber < NUMBER_TOP_THREE_ROW_BLOCKS) {
+	if (blockNumber < 9) {
 		//clear old state by creating a ..1100011... mask and ANDing
-		u32 mask = BUNKER_BLOCK_MASK; //...1111 1000
-		u32 oneFill = BUNKER_MASK >> (BUNKER_MOST_SIGNIFICANT_BIT - (blockNumber*TOP_THREE_ROW_BLOCKS));
-		mask = (mask << (blockNumber*TOP_THREE_ROW_BLOCKS)) | oneFill;
+		u32 mask = 0xFFFFFFF8; //...1111 1000
+		u32 oneFill = 0x3FFFFFFF >> (30 - (blockNumber*3));
+		mask = (mask << (blockNumber*3)) | oneFill;
 		tempState = tempState & mask;
 
 		//Set the new state
 		newErosion = (u32)erosion; // this will pad the left with 0s
-		newErosion = newErosion << (blockNumber*TOP_THREE_ROW_BLOCKS);
+		newErosion = newErosion << (blockNumber*3);
 		tempState = tempState | newErosion;
 		bunkerState[bunkerNumber] = tempState;
 	}
-	else if (blockNumber < NUMBER_BOTTOM_RIGHT_BLOCK) {
+	else if (blockNumber < 11) {
 		return;
 	}
-	else if (blockNumber == NUMBER_BOTTOM_RIGHT_BLOCK) {
+	else if (blockNumber == 11) {
 		//clear old state by creating a ..1100011... mask and ANDing
-		u32 mask = BUNKER_BLOCK_MASK; //...1111 1000
-		u32 oneFill = BUNKER_MASK >> (BUNKER_MOST_SIGNIFICANT_BIT - (BOTTOM_RIGHT_BLOCK));
-		mask = (mask << (BOTTOM_RIGHT_BLOCK)) | oneFill;
+		u32 mask = 0xFFFFFFF8; //...1111 1000
+		u32 oneFill = 0x3FFFFFFF >> (30 - (27));
+		mask = (mask << (27)) | oneFill;
 		tempState = tempState & mask;
 
 		//Set the new state
 		newErosion = (u32)erosion & 0x7; // this will pad the left with 0s
-		newErosion = newErosion << (BOTTOM_RIGHT_BLOCK);
+		newErosion = newErosion << (27);
 		tempState = tempState | newErosion;
 		bunkerState[bunkerNumber] = tempState;
 	}
@@ -498,16 +498,16 @@ void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 u8 getBlockState(u8 bunkerNumber, u8 blockNumber) {
 	u32 tempState = bunkerState[bunkerNumber];
 	u8 erosionState;
-	if (blockNumber < NUMBER_TOP_THREE_ROW_BLOCKS) {
+	if (blockNumber < 9) {
 		//Shift and mask only the 3 bits representing the state of the block
 		erosionState = (u8)(tempState >> (blockNumber*3));
 		erosionState = 0x07 & erosionState;  // mask out extraneous top bits
 	}
-	else if (blockNumber < NUMBER_BOTTOM_RIGHT_BLOCK) {
-		erosionState = DEAD_BLOCK;	// return a black block
+	else if (blockNumber < 11) {
+		erosionState = 4;	// return a black block
 	}
-	else if (blockNumber == NUMBER_BOTTOM_RIGHT_BLOCK) {
-		erosionState = (u8)(tempState >> (BOTTOM_RIGHT_BLOCK));
+	else if (blockNumber == 11) {
+		erosionState = (u8)(tempState >> (27));
 		erosionState = 0x07 & erosionState;  // mask out extraneous top bits
 	}
 	return erosionState;
@@ -531,13 +531,13 @@ u32 getBunkerState(u8 bunkerNumber) {
 point_t getBunkerPosition(u8 bunkerNumber) {
 	point_t temp;
 	switch(bunkerNumber) {
-		case BUNKER_ZERO:
+		case 0:
 			return bunkerPosition_0;
-		case BUNKER_ONE:
+		case 1:
 			return bunkerPosition_1;
-		case BUNKER_TWO:
+		case 2:
 			return bunkerPosition_2;
-		case BUNKER_THREE:
+		case 3:
 			return bunkerPosition_3;
 		default:
 			temp.x = 0;
