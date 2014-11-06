@@ -32,6 +32,8 @@
 #include "stateMachines.h"
 #include "spaceInvadersSounds.h"
 #include "xac97_l.h"
+#include "pit_timer.h"
+
 
 #define DEBUG
 
@@ -105,8 +107,8 @@ void interrupt_handler_dispatcher(void* ptr) {
 		AC97_interrupt_handler();
 	}
 
-	if (intc_status & XPAR_FIT_TIMER_0_INTERRUPT_MASK){
-		XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_FIT_TIMER_0_INTERRUPT_MASK);
+	if (intc_status & XPAR_PIT_TIMER_0_INTR_MASK){
+		XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_PIT_TIMER_0_INTR_MASK);
 		timer_interrupt_handler();
 	}
 
@@ -201,11 +203,10 @@ int main()
 
 	microblaze_register_handler(interrupt_handler_dispatcher, NULL);
 	XIntc_EnableIntr(XPAR_INTC_0_BASEADDR,
-			(XPAR_FIT_TIMER_0_INTERRUPT_MASK
+			(XPAR_PIT_TIMER_0_INTR_MASK
 					| XPAR_PUSH_BUTTONS_5BITS_IP2INTC_IRPT_MASK
 					| XPAR_AXI_AC97_0_INTERRUPT_MASK));
 	XIntc_MasterEnable(XPAR_INTC_0_BASEADDR);
-
 
 	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
@@ -225,7 +226,15 @@ int main()
 
 	initStateMachines(); //setup space invaders
 	initSounds();		// setup space invader sounds
+
+	// Initialize the PIT
+	PIT_TIMER_SET_DELAY(DEFAULT_RELOAD);
+	PIT_TIMER_WRITE_CONTROL(0x00000008);	// Force Load the Delay Value
+	PIT_TIMER_WRITE_CONTROL(0x00000007);	// Run the Timer
+
 	microblaze_enable_interrupts();
+
+
 	while(!XAC97_isInFIFOFull(XPAR_AXI_AC97_0_BASEADDR)){
 		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 0);
 	}

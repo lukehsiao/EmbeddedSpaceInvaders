@@ -33,6 +33,11 @@
 #define XPAR_DIGILENT_QUADSPI_CNTLR_HIGHADDR 0x7E40FFFF
 
 
+/* Definitions for peripheral PIT_TIMER_0 */
+#define XPAR_PIT_TIMER_0_BASEADDR 0x70E00000
+#define XPAR_PIT_TIMER_0_HIGHADDR 0x70E0FFFF
+
+
 /******************************************************************/
 
 /* Definitions for driver S6_DDRX */
@@ -141,7 +146,7 @@
 
 /******************************************************************/
 
-#define XPAR_INTC_MAX_NUM_INTR_INPUTS 4
+#define XPAR_INTC_MAX_NUM_INTR_INPUTS 5
 #define XPAR_XINTC_HAS_IPR 1
 #define XPAR_XINTC_HAS_SIE 1
 #define XPAR_XINTC_HAS_CIE 1
@@ -168,8 +173,10 @@
 #define XPAR_AXI_INTC_0_PUSH_BUTTONS_5BITS_IP2INTC_IRPT_INTR 1
 #define XPAR_AXI_TIMER_0_INTERRUPT_MASK 0X000004
 #define XPAR_AXI_INTC_0_AXI_TIMER_0_INTERRUPT_INTR 2
-#define XPAR_AXI_AC97_0_INTERRUPT_MASK 0X000008
-#define XPAR_AXI_INTC_0_AXI_AC97_0_INTERRUPT_INTR 3
+#define XPAR_PIT_TIMER_0_INTR_MASK 0X000008
+#define XPAR_AXI_INTC_0_PIT_TIMER_0_INTR_INTR 3
+#define XPAR_AXI_AC97_0_INTERRUPT_MASK 0X000010
+#define XPAR_AXI_INTC_0_AXI_AC97_0_INTERRUPT_INTR 4
 
 /******************************************************************/
 

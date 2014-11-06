@@ -133,9 +133,9 @@ architecture IMP of user_logic is
   --USER signal declarations added here, as needed for user logic
     type pit_state_type is (COUNTING, INTERRUPT, RELOAD);
     signal pit_state_reg, pit_state_next: pit_state_type := COUNTING;
-    signal counter_reg, counter_next: unsigned(31 downto 0) := (others => '1');
+    signal counter_reg, counter_next: unsigned(31 downto 0) := x"0000FFFF";
     signal delay_reg: unsigned(31 downto 0);
-    signal counter_en, interrupt_en, reload_en: std_logic;
+    signal counter_en, interrupt_en, reload_en, force_load: std_logic;
 	 signal clk, rst: std_logic;
   ------------------------------------------
   -- Signals for user logic slave model s/w accessible register example
@@ -156,7 +156,8 @@ begin
     counter_en          <= slv_reg1(0);
     interrupt_en        <= slv_reg1(1);
     reload_en           <= slv_reg1(2);
-    
+    force_load				<= slv_reg1(3);
+	 
     delay_reg        <= unsigned(slv_reg0);
     
     -- FSM + Counter
