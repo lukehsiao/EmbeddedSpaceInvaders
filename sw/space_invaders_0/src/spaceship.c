@@ -257,6 +257,9 @@ void unrenderPoints(point_t position) {
  */
 u8 hitSpaceShip(point_t bulletPosition) {
 	point_t position;
+	if (!getSpaceshipActivated()) {
+		return 0;
+	}
 	position = getSpaceshipPosition();
 	//If it's outside the spaceship
 	if ((bulletPosition.x+32) < (position.x+32) || bulletPosition.y < position.y) {

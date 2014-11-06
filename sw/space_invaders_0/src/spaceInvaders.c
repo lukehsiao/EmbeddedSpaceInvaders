@@ -93,6 +93,7 @@ void AC97_interrupt_handler() {
 	XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_AXI_AC97_0_INTERRUPT_MASK);
 }
 
+
 /**
  * Main interrupt handler, queries the interrupt controller to see what 
  * peripheral fired the interrupt and then dispatches the corresponding 
@@ -229,7 +230,7 @@ int main()
 
 	// Initialize the PIT
 	PIT_TIMER_RESET;
-	PIT_TIMER_SET_DELAY(DEFAULT_RELOAD/100);
+	PIT_TIMER_SET_DELAY(DEFAULT_RELOAD);
 	PIT_TIMER_WRITE_CONTROL(FORCE_LOAD);	// Force Load the Delay Value
 	PIT_TIMER_WRITE_CONTROL(INTR_ENABLE | COUNTER_ENABLE | RELOAD_ENABLE);	// Run the Timer
 
@@ -241,8 +242,21 @@ int main()
 	}
 
 	// Wait forever in while(1)
+	xil_printf("Enter a 10-digit decimal number: \n\r");
+	u8 inputKey;
+	u32 newValue;
+	int i;
 	while (1){
-
+		newValue = 0;
+		for (i = 9; i >= 0; i--) {
+			inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
+			inputKey = inputKey & 0xF;
+			newValue = (newValue*10) + inputKey;
+		}
+		xil_printf("You entered: %d\n\r", newValue);
+		PIT_TIMER_SET_DELAY(newValue);
+		PIT_TIMER_WRITE_CONTROL(FORCE_LOAD);	// Force Load the Delay Value
+		PIT_TIMER_WRITE_CONTROL(INTR_ENABLE | COUNTER_ENABLE | RELOAD_ENABLE);	// Run the Timer
 	}
 
 	cleanup_platform();
