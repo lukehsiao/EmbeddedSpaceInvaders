@@ -43,6 +43,11 @@
 #define XPAR_PIT_TIMER_0_HIGHADDR 0x70E0FFFF
 
 
+/* Definitions for peripheral RANGEFINDER_0 */
+#define XPAR_RANGEFINDER_0_BASEADDR 0x76400000
+#define XPAR_RANGEFINDER_0_HIGHADDR 0x7640FFFF
+
+
 /******************************************************************/
 
 /* Definitions for driver S6_DDRX */

@@ -134,7 +134,7 @@ architecture IMP of user_logic is
 
     constant ZEROS: unsigned(31 downto 0) := (others => '0');
     constant TRIGGER_DELAY: integer := 1010;
-    constant STORE_DELAY: integer := 300000; -- delay of 5ms on a 10ns period clk
+    constant STORE_DELAY: integer := 300000; -- delay of 3ms on a 10ns period clk
 
     -- Used to send a 100us Trigger Signal
     signal triggerCounter, triggerCounter_next: unsigned(31 downto 0) := ZEROS;
@@ -144,6 +144,8 @@ architecture IMP of user_logic is
 
     -- Used to delay between echoIn falling and triggering again
     signal storeCounter, storeCounter_next: unsigned(31 downto 0) := ZEROS;
+	 
+	 signal idleCounter, idleCounter_next: unsigned(31 downto 0):= ZEROS;
 
     -- Output Register
     signal distance_reg_i: std_logic_vector(31 downto 0) := (others => '0');
@@ -283,6 +285,7 @@ begin
         triggerCounter_next <= triggerCounter;
         echoInCounter_next <= echoInCounter;
         distance_reg_i <= distance_reg_i;
+		  idleCounter <= idleCounter;
         case state_cs is
             when TRGR =>
                 triggerCounter_next <= triggerCounter + 1;
@@ -296,6 +299,11 @@ begin
                 if (echoIn = '1') then
                     state_ns <= LISTEN;
                 end if;
+					 if (idleCounter = STORE_DELAY) then
+					     state_ns <= TRGR;
+						  triggerCounter_next <= ZEROS;
+						  echoInCounter_next <= (others => '1');
+					 end if;
             when LISTEN =>
                 echoInCounter_next <= echoInCounter + 1;
                 if (echoIn = '0') then

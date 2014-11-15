@@ -9,6 +9,7 @@
 #include "xintc_l.h"        // Provides handy macros for the interrupt controller.
 #include "spaceInvadersSounds.h"
 #include "render.h"			// Our rendering file.
+#include "rangefinder.h"
 
 // Allocate memory for the state machines
 task tasks[TASKS_NUM];
@@ -175,6 +176,8 @@ int TankMovementAndBullet_SM(int state) {
 	u32 leftButton = ((buttons & LEFT) >> 3) & 0x1;
 	u32 centerButton = (buttons & CENTER) & 0x1;
 	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
+	u32 distance = RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR);
+	xil_printf("Distance: %d\n\r", distance);
 	//	xil_printf("\n\rButtons: %x",buttons);
 	if(state == -1)
 	{

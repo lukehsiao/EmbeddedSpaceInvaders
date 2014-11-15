@@ -247,16 +247,16 @@ int main()
 	u32 newValue;
 	int i;
 	while (1){
-		newValue = 0;
-		for (i = 9; i >= 0; i--) {
-			inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
-			inputKey = inputKey & 0xF;
-			newValue = (newValue*10) + inputKey;
-		}
-		xil_printf("You entered: %d\n\r", newValue);
-		PIT_TIMER_SET_DELAY(newValue);
-		PIT_TIMER_WRITE_CONTROL(FORCE_LOAD);	// Force Load the Delay Value
-		PIT_TIMER_WRITE_CONTROL(INTR_ENABLE | COUNTER_ENABLE | RELOAD_ENABLE);	// Run the Timer
+//		newValue = 0;
+//		for (i = 9; i >= 0; i--) {
+//			inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
+//			inputKey = inputKey & 0xF;
+//			newValue = (newValue*10) + inputKey;
+//		}
+//		xil_printf("You entered: %d\n\r", newValue);
+//		PIT_TIMER_SET_DELAY(newValue);
+//		PIT_TIMER_WRITE_CONTROL(FORCE_LOAD);	// Force Load the Delay Value
+//		PIT_TIMER_WRITE_CONTROL(INTR_ENABLE | COUNTER_ENABLE | RELOAD_ENABLE);	// Run the Timer
 	}
 
 	cleanup_platform();
