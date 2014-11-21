@@ -148,7 +148,7 @@ architecture IMP of user_logic is
 	 signal idleCounter, idleCounter_next: unsigned(31 downto 0):= ZEROS;
 
     -- Output Register
-    signal distance_reg_i: std_logic_vector(31 downto 0) := (others => '0');
+    signal distance_reg_i, distance_reg_i_next: std_logic_vector(31 downto 0) := x"12345678";
 
     -- FSM Signals
     type state is (TRGR, IDLE, LISTEN, STORE);
@@ -201,7 +201,7 @@ begin
 
     if Bus2IP_Clk'event and Bus2IP_Clk = '1' then
       if Bus2IP_Resetn = '0' then
-        --slv_reg0 <= (others => '0');
+        --slv_reg0 <= (others => '0'); --reg0 is READ_ONLY
         slv_reg1 <= (others => '0');
         slv_reg2 <= (others => '0');
         slv_reg3 <= (others => '0');
@@ -274,17 +274,18 @@ begin
             triggerCounter <= triggerCounter_next;
             echoInCounter <= echoInCounter_next;
             storeCounter <= storeCounter_next;
+            distance_reg_i <= distance_reg_i_next;
         end if;
     end process;
 
     -- Next State Logic
-    process(state_cs, triggerCounter, echoIn, echoInCounter, storeCounter)
+    process(state_cs, triggerCounter, echoIn, echoInCounter, storeCounter, distance_reg_i)
     begin
         -- default
         state_ns <= state_cs;
         triggerCounter_next <= triggerCounter;
         echoInCounter_next <= echoInCounter;
-        distance_reg_i <= distance_reg_i;
+        distance_reg_i_next <= distance_reg_i;
 		  idleCounter <= idleCounter;
         case state_cs is
             when TRGR =>
@@ -310,7 +311,7 @@ begin
                     state_ns <= STORE;
                 end if;
             when others =>	-- when STORE
-                distance_reg_i <= std_logic_vector(echoInCounter);
+                distance_reg_i_next <= std_logic_vector(echoInCounter);
                 triggerCounter_next <= ZEROS;
                 storeCounter_next <= storeCounter + 1;
                 if (storeCounter = STORE_DELAY) then

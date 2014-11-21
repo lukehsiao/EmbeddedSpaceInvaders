@@ -33,6 +33,7 @@
 #include "spaceInvadersSounds.h"
 #include "xac97_l.h"
 #include "pit_timer.h"
+#include "rangefinder.h"
 
 
 #define DEBUG
@@ -246,7 +247,21 @@ int main()
 	u8 inputKey;
 	u32 newValue;
 	int i;
+
+	u32 debugReg = RANGEFINDER_readDebug(XPAR_RANGEFINDER_0_BASEADDR);
+	xil_printf("debugReg: %08x\n\r", debugReg);
+
+	RANGEFINDER_writeDebug(XPAR_RANGEFINDER_0_BASEADDR, 0xDEADBEEF);
+
+	debugReg = RANGEFINDER_readDebug(XPAR_RANGEFINDER_0_BASEADDR);
+	xil_printf("debugReg should be Dead Beef: %08x\n\r", debugReg);
+	int delay = 0;
 	while (1){
+		if (++delay == 12949672) {
+			xil_printf("Distance: %08x\n\r", RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
+			delay = 0;
+		}
+
 //		newValue = 0;
 //		for (i = 9; i >= 0; i--) {
 //			inputKey = XUartLite_RecvByte(XPAR_UARTLITE_1_BASEADDR);
