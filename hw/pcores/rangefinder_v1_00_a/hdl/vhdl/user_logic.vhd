@@ -155,7 +155,7 @@ architecture IMP of user_logic is
     -- FSM Signals
     type state is (TRGR, IDLE, LISTEN, STORE);
     signal state_cs, state_ns: state := TRGR;
-	 signal state_decode: std_logic_vector(31 downto 0);
+	 --signal state_decode: std_logic_vector(31 downto 0);
     signal clk : std_logic;
 
   ------------------------------------------
@@ -206,7 +206,7 @@ begin
       if Bus2IP_Resetn = '0' then
         --slv_reg0 <= (others => '0'); --reg0 is READ_ONLY
         slv_reg1 <= (others => '0');
-        --slv_reg2 <= (others => '0');
+        slv_reg2 <= (others => '0');
         slv_reg3 <= (others => '0');
       else
         case slv_reg_write_sel is
@@ -225,7 +225,7 @@ begin
           when "0010" =>
             for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
               if ( Bus2IP_BE(byte_index) = '1' ) then
-                --slv_reg2(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
+                slv_reg2(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
               end if;
             end loop;
           when "0001" =>
@@ -343,20 +343,20 @@ begin
         end case;
     end process;
 	 
-	 -- Have Reg 2 show system state
-	 process(state_cs)
-	 begin
-		 case state_cs is
-				when TRGR =>
-					state_decode <= x"F0000000";
-				when IDLE =>
-					state_decode <= x"0F000000";
-				when LISTEN =>
-					state_decode <= x"00F00000";
-				when others =>
-					state_decode <= x"000F0000";
-		  end case;	 
-	 end process;
-	 slv_reg2 <= state_decode;
+--	 -- Have Reg 2 show system state
+--	 process(state_cs)
+--	 begin
+--		 case state_cs is
+--				when TRGR =>
+--					state_decode <= x"F0000000";
+--				when IDLE =>
+--					state_decode <= x"0F000000";
+--				when LISTEN =>
+--					state_decode <= x"00F00000";
+--				when others =>
+--					state_decode <= x"000F0000";
+--		  end case;	 
+--	 end process;
+--	 slv_reg2 <= state_decode;
 	 
 end IMP;

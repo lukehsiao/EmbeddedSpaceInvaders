@@ -244,9 +244,9 @@ int main()
 
 	// Wait forever in while(1)
 	xil_printf("Enter a 10-digit decimal number: \n\r");
-	u8 inputKey;
-	u32 newValue;
-	int i;
+	//u8 inputKey;
+	//u32 newValue;
+	//int i;
 
 	u32 debugReg = RANGEFINDER_readDebug(XPAR_RANGEFINDER_0_BASEADDR);
 	xil_printf("debugReg: %08x\n\r", debugReg);
@@ -257,9 +257,8 @@ int main()
 	xil_printf("debugReg should be Dead Beef: %08x\n\r", debugReg);
 	int delay = 0;
 	while (1){
-		if (++delay == 12949672) {
-			xil_printf("Distance: %08x\n\r", RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
-			xil_printf("State: %08x\n\r", RANGEFINDER_readState(XPAR_RANGEFINDER_0_BASEADDR));
+		if (++delay == 1000000) {
+			xil_printf("Distance: %d\n\r", RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
 			delay = 0;
 		}
 
