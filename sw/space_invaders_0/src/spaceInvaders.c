@@ -259,6 +259,7 @@ int main()
 	while (1){
 		if (++delay == 12949672) {
 			xil_printf("Distance: %08x\n\r", RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
+			xil_printf("State: %08x\n\r", RANGEFINDER_readState(XPAR_RANGEFINDER_0_BASEADDR));
 			delay = 0;
 		}
 
