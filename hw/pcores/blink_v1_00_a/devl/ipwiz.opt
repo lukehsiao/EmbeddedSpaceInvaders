@@ -1,0 +1,9 @@
+-batch 
+-create blink 
+-ver 1.00.a 
+-dir "C:\RH\Lab\hw" 
+-lang vhdl 
+-bus axi4lite s 
+-reg 1 
+-xps 
+-driver 
