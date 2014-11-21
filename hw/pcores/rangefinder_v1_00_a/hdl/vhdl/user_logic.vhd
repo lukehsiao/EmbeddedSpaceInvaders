@@ -135,17 +135,19 @@ architecture IMP of user_logic is
     constant ZEROS: unsigned(31 downto 0) := (others => '0');
     constant TRIGGER_DELAY: integer := 1010;
     constant STORE_DELAY: integer := 300000; -- delay of 3ms on a 10ns period clk
+	 constant RETRIGGER_DELAY: integer := 6000000; -- delay of 100ms in a 10ns clk
 
     -- Used to send a 100us Trigger Signal
     signal triggerCounter, triggerCounter_next: unsigned(31 downto 0) := ZEROS;
 
     -- Increments while echoIn is high.
     signal echoInCounter, echoInCounter_next: unsigned(31 downto 0) := ZEROS;
+	 
+	 -- Counter to retrigger if no echo comes.
+	 signal idleCounter, idleCounter_next: unsigned(31 downto 0):= ZEROS;
 
     -- Used to delay between echoIn falling and triggering again
     signal storeCounter, storeCounter_next: unsigned(31 downto 0) := ZEROS;
-	 
-	 signal idleCounter, idleCounter_next: unsigned(31 downto 0):= ZEROS;
 
     -- Output Register
     signal distance_reg_i, distance_reg_i_next: std_logic_vector(31 downto 0) := x"12345678";
@@ -153,6 +155,7 @@ architecture IMP of user_logic is
     -- FSM Signals
     type state is (TRGR, IDLE, LISTEN, STORE);
     signal state_cs, state_ns: state := TRGR;
+	 signal state_decode: std_logic_vector(31 downto 0);
     signal clk : std_logic;
 
   ------------------------------------------
@@ -203,7 +206,7 @@ begin
       if Bus2IP_Resetn = '0' then
         --slv_reg0 <= (others => '0'); --reg0 is READ_ONLY
         slv_reg1 <= (others => '0');
-        slv_reg2 <= (others => '0');
+        --slv_reg2 <= (others => '0');
         slv_reg3 <= (others => '0');
       else
         case slv_reg_write_sel is
@@ -222,7 +225,7 @@ begin
           when "0010" =>
             for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
               if ( Bus2IP_BE(byte_index) = '1' ) then
-                slv_reg2(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
+                --slv_reg2(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
               end if;
             end loop;
           when "0001" =>
@@ -274,33 +277,36 @@ begin
             triggerCounter <= triggerCounter_next;
             echoInCounter <= echoInCounter_next;
             storeCounter <= storeCounter_next;
+				idleCounter <= idleCounter_next;
             distance_reg_i <= distance_reg_i_next;
         end if;
     end process;
 
     -- Next State Logic
-    process(state_cs, triggerCounter, echoIn, echoInCounter, storeCounter, distance_reg_i)
+    process(state_cs, triggerCounter, echoIn, echoInCounter, storeCounter, distance_reg_i, idleCounter)
     begin
         -- default
         state_ns <= state_cs;
         triggerCounter_next <= triggerCounter;
         echoInCounter_next <= echoInCounter;
         distance_reg_i_next <= distance_reg_i;
-		  idleCounter <= idleCounter;
+		  idleCounter_next <= idleCounter;
         case state_cs is
             when TRGR =>
                 triggerCounter_next <= triggerCounter + 1;
                 if (triggerCounter = TRIGGER_DELAY) then
                     state_ns <= IDLE;
+						  idleCounter_next <= ZEROS;
                     triggerCounter_next <= ZEROS;
                 else
                 end if;
             when IDLE =>
+					 idleCounter_next <= idleCounter + 1;
                 echoInCounter_next <= ZEROS;
                 if (echoIn = '1') then
                     state_ns <= LISTEN;
                 end if;
-					 if (idleCounter = STORE_DELAY) then
+					 if (idleCounter = RETRIGGER_DELAY) then
 					     state_ns <= TRGR;
 						  triggerCounter_next <= ZEROS;
 						  echoInCounter_next <= (others => '1');
@@ -323,7 +329,7 @@ begin
 
 
     -- Output Forming Logic
-    slv_reg0 <= distance_reg_i;
+	 slv_reg0 <= distance_reg_i;
     process(state_cs, triggerCounter, echoIn)
     begin
         -- default
@@ -336,5 +342,21 @@ begin
             when others =>
         end case;
     end process;
-
+	 
+	 -- Have Reg 2 show system state
+	 process(state_cs)
+	 begin
+		 case state_cs is
+				when TRGR =>
+					state_decode <= x"F0000000";
+				when IDLE =>
+					state_decode <= x"0F000000";
+				when LISTEN =>
+					state_decode <= x"00F00000";
+				when others =>
+					state_decode <= x"000F0000";
+		  end case;	 
+	 end process;
+	 slv_reg2 <= state_decode;
+	 
 end IMP;

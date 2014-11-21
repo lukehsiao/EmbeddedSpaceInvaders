@@ -33,6 +33,7 @@ signal triggerCounter, triggerCounter_next: unsigned(31 downto 0) := ZEROS;
 -- Increments while ECHO is high.
 signal echoCounter, echoCounter_next: unsigned(31 downto 0) := ZEROS;
 
+-- Counter to retrigger if no echo comes.
 signal idleCounter, idleCounter_next: unsigned(31 downto 0):= ZEROS;
 
 -- Used to delay between echo falling and triggering again

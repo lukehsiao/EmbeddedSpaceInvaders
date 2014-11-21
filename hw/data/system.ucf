@@ -41,16 +41,16 @@ NET Push_Buttons_5Bits_TRI_I[4] LOC = "F5"  |  IOSTANDARD = "LVCMOS18";
 # NET "VHDCIIO1<3>"  LOC = "M11"; # Bank = 2,  Pin name = *IO_L15P,        		Sch name = EXP-IO4_P
 # NET "VHDCIIO1<4>"  LOC = "R11"; # Bank = 2,  Pin name = IO_L16P,        		Sch name = EXP-IO5_P
 # NET "VHDCIIO1<5>"  LOC = "T12"; # Bank = 2,  Pin name = *IO_L19P,        		Sch name = EXP-IO6_P
-# NET "VHDCIIO1<6>"  LOC = "N10"; # Bank = 2,  Pin name = *IO_L20P,        		Sch name = EXP-IO7_P
-# NET "VHDCIIO1<7>"  LOC = "M10"; # Bank = 2,  Pin name = *IO_L22P,        		Sch name = EXP-IO8_P
+NET rangefinder_0_echoIn_pin  LOC = "N10"  |  IOSTANDARD = "LVCMOS33"; # Bank = 2,  Pin name = *IO_L20P,        		Sch name = EXP-IO7_P
+NET rangefinder_0_trigger_pin  LOC = "M10"  |  IOSTANDARD = "LVCMOS33"; # Bank = 2,  Pin name = *IO_L22P,        		Sch name = EXP-IO8_P
 # NET "VHDCIIO1<8>"  LOC = "U11"; # Bank = 2,  Pin name = IO_L23P,        		Sch name = EXP-IO9_P
 # NET "VHDCIIO1<9>"  LOC = "R10"; # Bank = 2,  Pin name = IO_L29P_GCLK3,        	Sch name = EXP-IO10_P
 # NET "VHDCIIO1<10>" LOC = "U10"; # Bank = 2,  Pin name = IO_L30P_GCLK1_D13,      Sch name = EXP-IO11_P
 # NET "VHDCIIO1<11>" LOC = "R8";  # Bank = 2,  Pin name = IO_L31P_GCLK31_D14,     Sch name = EXP-IO12_P
 # NET "VHDCIIO1<12>" LOC = "M8";  # Bank = 2,  Pin name = *IO_L40P,        		Sch name = EXP-IO13_P
 # NET "VHDCIIO1<13>" LOC = "U8";  # Bank = 2,  Pin name = IO_L41P,        		Sch name = EXP-IO14_P
- NET rangefinder_0_echoIn_pin  LOC = "U7"  |  IOSTANDARD = "LVCMOS33";  # Bank = 2,  Pin name = IO_L43P,        		Sch name = EXP-IO15_P
- NET rangefinder_0_trigger_pin LOC = "N7"  |  IOSTANDARD = "LVCMOS33";  # Bank = 2,  Pin name = *IO_L44P,        		Sch name = EXP-IO16_P
+# NET "VHDCIIO1<14>"  LOC = "U7"  # Bank = 2,  Pin name = IO_L43P,        		Sch name = EXP-IO15_P
+# NET "VHDCIIO1<15>" LOC = "N7"   # Bank = 2,  Pin name = *IO_L44P,        		Sch name = EXP-IO16_P
 # NET "VHDCIIO1<16>" LOC = "T6";  # Bank = 2,  Pin name = IO_L45P,        		Sch name = EXP-IO17_P
 # NET "VHDCIIO1<17>" LOC = "R7";  # Bank = 2,  Pin name = IO_L46P,        		Sch name = EXP-IO18_P
 # NET "VHDCIIO1<18>" LOC = "N6";  # Bank = 2,  Pin name = *IO_L47P,        		Sch name = EXP-IO19_P
