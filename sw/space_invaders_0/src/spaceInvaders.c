@@ -257,10 +257,10 @@ int main()
 	xil_printf("debugReg should be Dead Beef: %08x\n\r", debugReg);
 	int delay = 0;
 	while (1){
-		if (++delay == 1000000) {
-			xil_printf("Distance: %d\n\r", RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
-			delay = 0;
-		}
+//		if (++delay == 1000000) {
+//			xil_printf("Distance: %d\n\r", RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
+//			delay = 0;
+//		}
 
 //		newValue = 0;
 //		for (i = 9; i >= 0; i--) {

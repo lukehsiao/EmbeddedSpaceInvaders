@@ -10,6 +10,9 @@
 #include "spaceInvadersSounds.h"
 #include "render.h"			// Our rendering file.
 #include "rangefinder.h"
+#include "inputManager.h"
+
+extern u32 tankPixelDesired;
 
 // Allocate memory for the state machines
 task tasks[TASKS_NUM];
@@ -147,6 +150,8 @@ void initStateMachines(){
 	initGlobals();
 	blankScreen(); // erase old data
 	render();      // draw initialized game
+
+	initFifo();	   // zero Fifo
 }
 
 // TankMovementAndBullet_SM takes care of the tank and the tank bullet
@@ -176,9 +181,23 @@ int TankMovementAndBullet_SM(int state) {
 	u32 leftButton = ((buttons & LEFT) >> 3) & 0x1;
 	u32 centerButton = (buttons & CENTER) & 0x1;
 	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
-	//u32 distance = RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR);
-	//xil_printf("Distance: %d\n\r", distance);
-	//	xil_printf("\n\rButtons: %x",buttons);
+	push(RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
+//	xil_printf("Distance: %d\n\r", averageFifo(10));
+//		xil_printf("\n\rButtons: %x",buttons);
+	if(leftButton & downButton){
+		u32 set = averageFifo(20);
+		setLeftBound(set);
+		xil_printf("Left Bound SetTo: %d\n\r", set);
+	}
+	if(rightButton & downButton){
+		u32 set = averageFifo(20);
+		setRightBound(set);
+		xil_printf("Right Bound SetTo: %d\n\r", set);
+	}
+
+	if(areBuffersSet())
+		xil_printf("Tank Position Desired: %d\n\r", tankPixelDesired);
+
 	if(state == -1)
 	{
 		state = SM1_alive;
