@@ -58,7 +58,7 @@ NET Push_Buttons_5Bits_TRI_I[4] LOC = "F5"  |  IOSTANDARD = "LVCMOS18";
 
 NET rangefinder_0_echoIn_pin  LOC = "V16"	|  IOSTANDARD = "LVCMOS33"; # Bank = 2,  Pin name = IO_L2N_CMPMOSI,        	Sch name = EXP-IO1_N
 NET rangefinder_0_trigger_pin LOC = "V15"	|  IOSTANDARD = "LVCMOS33"; # Bank = 2,  Pin name = *IO_L5N,        		Sch name = EXP-IO2_N
-# NET "VHDCIIO2<2>"  LOC = "V13"; # Bank = 2,  Pin name = IO_L14N_D12,        	Sch name = EXP-IO3_N
+NET rangefinder_0_photoIn_pin  LOC = "V13" |  IOSTANDARD = "LVCMOS33"; # Bank = 2,  Pin name = IO_L14N_D12,        	Sch name = EXP-IO3_N
 # NET "VHDCIIO2<3>"  LOC = "N11"; # Bank = 2,  Pin name = *IO_L15N,        		Sch name = EXP-IO4_N
 # NET "VHDCIIO2<4>"  LOC = "T11"; # Bank = 2,  Pin name = IO_L16N_VREF,        	Sch name = EXP-IO5_N
 # NET "VHDCIIO2<5>"  LOC = "V12"; # Bank = 2,  Pin name = *IO_L19N,        		Sch name = EXP-IO6_N

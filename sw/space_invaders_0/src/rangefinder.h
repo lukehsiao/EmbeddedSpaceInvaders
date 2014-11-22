@@ -142,6 +142,7 @@
 
 // MACROS for use with communicating with the RangeFinder IP
 #define RANGEFINDER_readDistance(BaseAddress) RANGEFINDER_mReadSlaveReg0((BaseAddress), 0)
+#define RANGEFINDER_readPhoto(BaseAddress) RANGEFINDER_mReadSlaveReg1((BaseAddress), 0)
 
 #define RANGEFINDER_writeDebug(BaseAddress, Value) RANGEFINDER_mWriteSlaveReg1((BaseAddress), 0, (Value))
 #define RANGEFINDER_readDebug(BaseAddress) RANGEFINDER_mReadSlaveReg1((BaseAddress), 0)

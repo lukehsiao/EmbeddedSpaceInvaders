@@ -97,6 +97,7 @@ entity user_logic is
   (
     -- ADD USER PORTS BELOW THIS LINE ------------------
     --USER ports added here
+	 photoIn : in  STD_LOGIC;
     echoIn : in  STD_LOGIC;
     trigger : out  STD_LOGIC;
     -- ADD USER PORTS ABOVE THIS LINE ------------------
@@ -148,6 +149,10 @@ architecture IMP of user_logic is
 
     -- Used to delay between echoIn falling and triggering again
     signal storeCounter, storeCounter_next: unsigned(31 downto 0) := ZEROS;
+	 
+	 signal photo, photo_next: std_logic;
+	 signal photo1, photo_next1: std_logic;
+	 signal photo2, photo_next2: std_logic;
 
     -- Output Register
     signal distance_reg_i, distance_reg_i_next: std_logic_vector(31 downto 0) := x"12345678";
@@ -205,7 +210,7 @@ begin
     if Bus2IP_Clk'event and Bus2IP_Clk = '1' then
       if Bus2IP_Resetn = '0' then
         --slv_reg0 <= (others => '0'); --reg0 is READ_ONLY
-        slv_reg1 <= (others => '0');
+        --slv_reg1 <= (others => '0');
         slv_reg2 <= (others => '0');
         slv_reg3 <= (others => '0');
       else
@@ -219,7 +224,7 @@ begin
           when "0100" =>
             for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
               if ( Bus2IP_BE(byte_index) = '1' ) then
-                slv_reg1(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
+                --slv_reg1(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
               end if;
             end loop;
           when "0010" =>
@@ -269,6 +274,7 @@ begin
   ---------------------------------------------------------------------------------------------------------
   clk <= Bus2IP_Clk;
   
+  
     -- State Machine + Counters
     process(clk)
     begin
@@ -279,6 +285,9 @@ begin
             storeCounter <= storeCounter_next;
 				idleCounter <= idleCounter_next;
             distance_reg_i <= distance_reg_i_next;
+				photo <= photo_next;
+				photo1 <= photo_next1;
+				photo2 <= photo_next2;
         end if;
     end process;
 
@@ -330,6 +339,10 @@ begin
 
     -- Output Forming Logic
 	 slv_reg0 <= distance_reg_i;
+	 photo_next2 <= photoIn;
+	 photo_next1 <= photo2;
+	 photo_next <= photo1;
+	 slv_reg1 <= (others => photo);
     process(state_cs, triggerCounter, echoIn)
     begin
         -- default
@@ -360,3 +373,4 @@ begin
 --	 slv_reg2 <= state_decode;
 	 
 end IMP;
+

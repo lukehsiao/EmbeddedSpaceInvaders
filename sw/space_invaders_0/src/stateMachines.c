@@ -182,6 +182,8 @@ int TankMovementAndBullet_SM(int state) {
 	u32 centerButton = (buttons & CENTER) & 0x1;
 	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
 	push(RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
+	u32 photoFire = RANGEFINDER_readPhoto(XPAR_RANGEFINDER_0_BASEADDR);
+	xil_printf("photoFire: %d\n\r", photoFire);
 //	xil_printf("Distance: %d\n\r", averageFifo(10));
 //		xil_printf("\n\rButtons: %x",buttons);
 	if(leftButton & downButton){
@@ -211,6 +213,14 @@ int TankMovementAndBullet_SM(int state) {
 			else{
 				if(centerButton) // user is pressing fire!!!
 					fireTankBullet();
+				if(areBuffersSet()){
+					if(photoFire == 0){
+						fireTankBullet();
+					}
+					else{
+
+					}
+				}
 
 				if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
 					state = SM1_dead;

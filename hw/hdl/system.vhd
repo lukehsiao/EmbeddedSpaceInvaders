@@ -61,7 +61,8 @@ entity system is
     Push_Buttons_5Bits_TRI_I : in std_logic_vector(0 to 4);
     blink_0_LEDs_pin : out std_logic_vector(3 downto 0);
     rangefinder_0_trigger_pin : out std_logic;
-    rangefinder_0_echoIn_pin : in std_logic
+    rangefinder_0_echoIn_pin : in std_logic;
+    rangefinder_0_photoIn_pin : in std_logic
   );
 end system;
 
@@ -2229,7 +2230,8 @@ architecture STRUCTURE of system is
       S_AXI_BVALID : out std_logic;
       S_AXI_AWREADY : out std_logic;
       trigger : out std_logic;
-      echoIn : in std_logic
+      echoIn : in std_logic;
+      photoIn : in std_logic
     );
   end component;
 
@@ -2516,6 +2518,7 @@ architecture STRUCTURE of system is
   signal proc_sys_reset_0_MB_Debug_Sys_Rst : std_logic;
   signal proc_sys_reset_0_MB_Reset : std_logic;
   signal rangefinder_0_echoIn : std_logic;
+  signal rangefinder_0_photoIn : std_logic;
   signal rangefinder_0_trigger : std_logic;
 
   attribute BOX_TYPE : STRING;
@@ -2575,6 +2578,7 @@ begin
   blink_0_LEDs_pin <= blink_0_LEDs;
   rangefinder_0_trigger_pin <= rangefinder_0_trigger;
   rangefinder_0_echoIn <= rangefinder_0_echoIn_pin;
+  rangefinder_0_photoIn <= rangefinder_0_photoIn_pin;
   axi4_0_S_AWID(5 downto 4) <= B"00";
   axi4_0_S_AWADDR(95 downto 64) <= B"00000000000000000000000000000000";
   axi4_0_S_AWLEN(23 downto 16) <= B"00000000";
@@ -4769,7 +4773,8 @@ begin
       S_AXI_BVALID => axi4lite_0_M_BVALID(11),
       S_AXI_AWREADY => axi4lite_0_M_AWREADY(11),
       trigger => rangefinder_0_trigger,
-      echoIn => rangefinder_0_echoIn
+      echoIn => rangefinder_0_echoIn,
+      photoIn => rangefinder_0_photoIn
     );
 
   iobuf_0 : IOBUF
