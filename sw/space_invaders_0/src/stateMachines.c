@@ -181,22 +181,26 @@ int TankMovementAndBullet_SM(int state) {
 	u32 leftButton = ((buttons & LEFT) >> 3) & 0x1;
 	u32 centerButton = (buttons & CENTER) & 0x1;
 	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
+
+	// Pushing new Range value into Range Fifo
 	push(RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
-//	xil_printf("Distance: %d\n\r", averageFifo(10));
-//		xil_printf("\n\rButtons: %x",buttons);
+
+	// Pulling the digital value from the PhotoResistor
+	u32 photoFire = RANGEFINDER_readPhoto(XPAR_RANGEFINDER_0_BASEADDR);
+
+	// Setting left bound
 	if(leftButton & downButton){
 		u32 set = averageFifo(FIFO_LENGTH/3);
 		setLeftBound(set);
 		xil_printf("Left Bound SetTo: %d\n\r", set);
 	}
+
+	// Setting right bound
 	if(rightButton & downButton){
 		u32 set = averageFifo(FIFO_LENGTH/3);
 		setRightBound(set);
 		xil_printf("Right Bound SetTo: %d\n\r", set);
 	}
-
-//	if(areBuffersSet())
-//		xil_printf("Tank Position Desired: %d\n\r", tankPixelDesired);
 
 	if(state == -1)
 	{
@@ -211,12 +215,20 @@ int TankMovementAndBullet_SM(int state) {
 			else{
 				if(centerButton) // user is pressing fire!!!
 					fireTankBullet();
+				if(areBuffersSet()){
+					if(photoFire == 0){ // user is covering photoResistor
+						fireTankBullet();
+					}
+					else{
+
+					}
+				}
 
 				if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
 					state = SM1_dead;
 					cycles = TANK_MAP_FLIP_CYCLES;
 				}
-				else if(areBuffersSet()){
+				else if(areBuffersSet()){ // game is in TOUCH FREE mode Buttons will be ignored
 					state = SM1_alive;
 					u32 tankPosition = getTankPositionGlobal().x;
 					u32 tankDesiredPosition = tankPixelDesired;
@@ -225,10 +237,10 @@ int TankMovementAndBullet_SM(int state) {
 					tankPosition += 500;
 					tankDesiredPosition += (500 - SMOOTHING_BUFFER);
 
-					if(tankDesiredPosition < (tankPosition - SMOOTHING_BUFFER)){
+					if(tankDesiredPosition < (tankPosition - SMOOTHING_BUFFER)){ // Desired position is less than Tank Actual Position
 						moveTankLeft();
 					}
-					else if(tankDesiredPosition > (tankPosition + SMOOTHING_BUFFER)){
+					else if(tankDesiredPosition > (tankPosition + SMOOTHING_BUFFER)){ // Desired position is greater than Tank Actual Position
 						moveTankRight();
 					}
 				}

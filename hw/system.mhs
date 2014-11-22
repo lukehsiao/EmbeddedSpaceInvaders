@@ -64,6 +64,7 @@
  PORT blink_0_LEDs_pin = blink_0_LEDs, DIR = O, VEC = [3:0]
  PORT rangefinder_0_trigger_pin = rangefinder_0_trigger, DIR = O
  PORT rangefinder_0_echoIn_pin = rangefinder_0_echoIn, DIR = I
+ PORT rangefinder_0_photoIn_pin = rangefinder_0_photoIn, DIR = I
 
 
 BEGIN proc_sys_reset
@@ -413,5 +414,6 @@ BEGIN rangefinder
  PORT S_AXI_ACLK = clk_100_0000MHzPLL0
  PORT trigger = rangefinder_0_trigger
  PORT echoIn = rangefinder_0_echoIn
+ PORT photoIn = rangefinder_0_photoIn
 END
 

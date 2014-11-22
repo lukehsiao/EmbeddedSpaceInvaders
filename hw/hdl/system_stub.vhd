@@ -61,7 +61,8 @@ entity system_stub is
     Push_Buttons_5Bits_TRI_I : in std_logic_vector(0 to 4);
     blink_0_LEDs_pin : out std_logic_vector(3 downto 0);
     rangefinder_0_trigger_pin : out std_logic;
-    rangefinder_0_echoIn_pin : in std_logic
+    rangefinder_0_echoIn_pin : in std_logic;
+    rangefinder_0_photoIn_pin : in std_logic
   );
 end system_stub;
 
@@ -121,7 +122,8 @@ architecture STRUCTURE of system_stub is
       Push_Buttons_5Bits_TRI_I : in std_logic_vector(0 to 4);
       blink_0_LEDs_pin : out std_logic_vector(3 downto 0);
       rangefinder_0_trigger_pin : out std_logic;
-      rangefinder_0_echoIn_pin : in std_logic
+      rangefinder_0_echoIn_pin : in std_logic;
+      rangefinder_0_photoIn_pin : in std_logic
     );
   end component;
 
@@ -184,7 +186,8 @@ begin
       Push_Buttons_5Bits_TRI_I => Push_Buttons_5Bits_TRI_I,
       blink_0_LEDs_pin => blink_0_LEDs_pin,
       rangefinder_0_trigger_pin => rangefinder_0_trigger_pin,
-      rangefinder_0_echoIn_pin => rangefinder_0_echoIn_pin
+      rangefinder_0_echoIn_pin => rangefinder_0_echoIn_pin,
+      rangefinder_0_photoIn_pin => rangefinder_0_photoIn_pin
     );
 
 end architecture STRUCTURE;

@@ -139,6 +139,7 @@ entity rangefinder is
   (
     -- ADD USER PORTS BELOW THIS LINE ------------------
     --USER ports added here
+	 photoIn : in  STD_LOGIC;
     echoIn : in  STD_LOGIC;
     trigger : out  STD_LOGIC;
     -- ADD USER PORTS ABOVE THIS LINE ------------------
@@ -345,6 +346,7 @@ begin
     (
       -- MAP USER PORTS BELOW THIS LINE ------------------
       --USER ports mapped here
+		photoIn => photoIn,
       echoIn => echoIn,
       trigger => trigger,
       -- MAP USER PORTS ABOVE THIS LINE ------------------

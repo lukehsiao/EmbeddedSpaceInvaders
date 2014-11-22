@@ -1,5 +1,5 @@
 
-<EDKSYSTEM EDKVERSION="13.4" EDWVERSION="1.2" TIMESTAMP="Fri Nov 21 11:39:00 2014">
+<EDKSYSTEM EDKVERSION="13.4" EDWVERSION="1.2" TIMESTAMP="Sat Nov 22 15:43:58 2014">
 
   <SYSTEMINFO ARCH="spartan6" DEVICE="xc6slx45" PACKAGE="csg324" PART="xc6slx45csg324-3" SOURCE="C:/RH/Lab/hw/system.xmp" SPEEDGRADE="-3"/>
 
@@ -266,6 +266,11 @@
     <PORT DIR="I" MHS_INDEX="52" NAME="rangefinder_0_echoIn_pin" SIGNAME="rangefinder_0_echoIn">
       <CONNECTIONS>
         <CONNECTION INSTANCE="rangefinder_0" PORT="echoIn"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="53" NAME="rangefinder_0_photoIn_pin" SIGNAME="rangefinder_0_photoIn">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="photoIn"/>
       </CONNECTIONS>
     </PORT>
   </EXTERNALPORTS>
@@ -10823,6 +10828,11 @@
         <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="2" MPD_INDEX="20" NAME="echoIn" SIGNAME="rangefinder_0_echoIn">
           <CONNECTIONS>
             <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_echoIn_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="3" MPD_INDEX="21" NAME="photoIn" SIGNAME="rangefinder_0_photoIn">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_photoIn_pin"/>
           </CONNECTIONS>
         </PORT>
         <PORT BUS="S_AXI" DEF_SIGNAME="axi4lite_0_M_ARESETN" DIR="I" MPD_INDEX="1" NAME="S_AXI_ARESETN" SIGIS="RST" SIGNAME="axi4lite_0_M_ARESETN">
