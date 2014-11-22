@@ -185,18 +185,18 @@ int TankMovementAndBullet_SM(int state) {
 //	xil_printf("Distance: %d\n\r", averageFifo(10));
 //		xil_printf("\n\rButtons: %x",buttons);
 	if(leftButton & downButton){
-		u32 set = averageFifo(20);
+		u32 set = averageFifo(FIFO_LENGTH/3);
 		setLeftBound(set);
 		xil_printf("Left Bound SetTo: %d\n\r", set);
 	}
 	if(rightButton & downButton){
-		u32 set = averageFifo(20);
+		u32 set = averageFifo(FIFO_LENGTH/3);
 		setRightBound(set);
 		xil_printf("Right Bound SetTo: %d\n\r", set);
 	}
 
-	if(areBuffersSet())
-		xil_printf("Tank Position Desired: %d\n\r", tankPixelDesired);
+//	if(areBuffersSet())
+//		xil_printf("Tank Position Desired: %d\n\r", tankPixelDesired);
 
 	if(state == -1)
 	{
@@ -209,13 +209,28 @@ int TankMovementAndBullet_SM(int state) {
 				state = SM1_gameOver;
 			}
 			else{
-				if(centerButton){ // user is pressing fire!!!
+				if(centerButton) // user is pressing fire!!!
 					fireTankBullet();
-				}
 
 				if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
 					state = SM1_dead;
 					cycles = TANK_MAP_FLIP_CYCLES;
+				}
+				else if(areBuffersSet()){
+					state = SM1_alive;
+					u32 tankPosition = getTankPositionGlobal().x;
+					u32 tankDesiredPosition = tankPixelDesired;
+
+					// Shift everything up for calculations to avoid overflow
+					tankPosition += 500;
+					tankDesiredPosition += (500 - SMOOTHING_BUFFER);
+
+					if(tankDesiredPosition < (tankPosition - SMOOTHING_BUFFER)){
+						moveTankLeft();
+					}
+					else if(tankDesiredPosition > (tankPosition + SMOOTHING_BUFFER)){
+						moveTankRight();
+					}
 				}
 				else if(!rightButton && !leftButton){ // user isnt pressing anything
 					state = SM1_alive;
