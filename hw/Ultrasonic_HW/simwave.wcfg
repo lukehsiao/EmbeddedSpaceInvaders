@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/RH/Lab/hw/Ultrasonic_HW/tb_ultrasonic_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="tb_ultrasonic" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="11" />
+   <wvobject fp_name="/tb_ultrasonic/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/echo" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">echo</obj_property>
+      <obj_property name="ObjectShortName">echo</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/trigger" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">trigger</obj_property>
+      <obj_property name="ObjectShortName">trigger</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/distance_reg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">distance_reg[31:0]</obj_property>
+      <obj_property name="ObjectShortName">distance_reg[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider7" type="divider">
+      <obj_property name="label">INTERNAL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/uut/distance_reg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">distance_reg[31:0]</obj_property>
+      <obj_property name="ObjectShortName">distance_reg[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/uut/state_cs" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">state_cs</obj_property>
+      <obj_property name="ObjectShortName">state_cs</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/uut/triggercounter" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">triggercounter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">triggercounter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/uut/echocounter" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">echocounter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">echocounter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/uut/storecounter" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">storecounter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">storecounter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_ultrasonic/uut/idlecounter" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">idlecounter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">idlecounter[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>

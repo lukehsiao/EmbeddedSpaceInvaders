@@ -1,0 +1,130 @@
+#
+# pin constraints
+#
+NET Digilent_QuadSPI_Cntlr_C_pin LOC = "R15"  |  IOSTANDARD = "LVCMOS33" | PULLUP; 
+NET Digilent_QuadSPI_Cntlr_DQ[0] LOC = "T13"  |  IOSTANDARD = "LVCMOS33";
+NET Digilent_QuadSPI_Cntlr_DQ[1] LOC = "R13"  |  IOSTANDARD = "LVCMOS33";
+NET Digilent_QuadSPI_Cntlr_DQ[2] LOC = "T14"  |  IOSTANDARD = "LVCMOS33";
+NET Digilent_QuadSPI_Cntlr_DQ[3] LOC = "V14"  |  IOSTANDARD = "LVCMOS33";
+NET Digilent_QuadSPI_Cntlr_S_pin LOC = "V3"  |  IOSTANDARD = "LVCMOS33";
+NET GCLK LOC = "L15"  |  IOSTANDARD = "LVCMOS33";
+NET RESET LOC = "T15"  |  IOSTANDARD = "LVCMOS33"  |  TIG;
+NET RS232_Uart_1_sin LOC = "A16"  |  IOSTANDARD = "LVCMOS33";
+NET RS232_Uart_1_sout LOC = "B16"  |  IOSTANDARD = "LVCMOS33";
+NET rzq IOSTANDARD = "LVCMOS18_JEDEC";
+NET zio IOSTANDARD = "LVCMOS18_JEDEC";
+
+#Push Buttons
+#
+#
+NET Push_Buttons_5Bits_TRI_I[0] LOC = "N4"  |  IOSTANDARD = "LVCMOS18";
+NET Push_Buttons_5Bits_TRI_I[1] LOC = "P4"  |  IOSTANDARD = "LVCMOS18";
+NET Push_Buttons_5Bits_TRI_I[2] LOC = "P3"  |  IOSTANDARD = "LVCMOS18";
+NET Push_Buttons_5Bits_TRI_I[3] LOC = "F6"  |  IOSTANDARD = "LVCMOS18";
+NET Push_Buttons_5Bits_TRI_I[4] LOC = "F5"  |  IOSTANDARD = "LVCMOS18";
+
+# onBoard Leds
+ NET blink_0_LEDs_pin[0] LOC = "U18"  |  IOSTANDARD = "LVCMOS33"; # Bank = 1, Pin name = IO_L52N_M1DQ15, 	   Sch name = LD0
+ NET blink_0_LEDs_pin[1] LOC = "M14"  |  IOSTANDARD = "LVCMOS33"; # Bank = 1, Pin name = IO_L53P, 		 	   Sch name = LD1
+ NET blink_0_LEDs_pin[2] LOC = "N14"  |  IOSTANDARD = "LVCMOS33"; # Bank = 1, Pin name = IO_L53N_VREF, 	   Sch name = LD2
+ NET blink_0_LEDs_pin[3] LOC = "L14"  |  IOSTANDARD = "LVCMOS33"; # Bank = 1, Pin name = IO_L61P, 		 	   Sch name = LD3
+# NET "Led<4>" LOC = "M13"; # Bank = 1, Pin name = IO_L61N, 		 	   Sch name = LD4
+# NET "Led<5>" LOC = "D4";  # Bank = 0, Pin name = IO_L1P_HSWAPEN_0,	   Sch name = HSWAP/LD5
+# NET "Led<6>" LOC = "P16"; # Bank = 1, Pin name = IO_L74N_DOUT_BUSY_1, Sch name = LD6
+# NET "Led<7>" LOC = "N12";  # Bank = 2, Pin name = IO_L13P_M1_2,		   Sch name = M1/LD7
+
+# onboard VHDCI
+# Channnel 1 connects to P signals, Channel 2 to N signals
+# NET "VHDCIIO1<0>"  LOC = "U16"; # Bank = 2,  Pin name = IO_L2P_CMPCLK,        	Sch name = EXP-IO1_P
+# NET "VHDCIIO1<1>"  LOC = "U15"; # Bank = 2,  Pin name = *IO_L5P,        		Sch name = EXP-IO2_P
+# NET "VHDCIIO1<2>"  LOC = "U13"; # Bank = 2,  Pin name = IO_L14P_D11,        	Sch name = EXP-IO3_P
+# NET "VHDCIIO1<3>"  LOC = "M11"; # Bank = 2,  Pin name = *IO_L15P,        		Sch name = EXP-IO4_P
+# NET "VHDCIIO1<4>"  LOC = "R11"; # Bank = 2,  Pin name = IO_L16P,        		Sch name = EXP-IO5_P
+# NET "VHDCIIO1<5>"  LOC = "T12"; # Bank = 2,  Pin name = *IO_L19P,        		Sch name = EXP-IO6_P
+# NET "VHDCIIO1<6>"  LOC = "N10"; # Bank = 2,  Pin name = *IO_L20P,        		Sch name = EXP-IO7_P
+# NET "VHDCIIO1<7>"  LOC = "M10"; # Bank = 2,  Pin name = *IO_L22P,        		Sch name = EXP-IO8_P
+# NET "VHDCIIO1<8>"  LOC = "U11"; # Bank = 2,  Pin name = IO_L23P,        		Sch name = EXP-IO9_P
+# NET "VHDCIIO1<9>"  LOC = "R10"; # Bank = 2,  Pin name = IO_L29P_GCLK3,        	Sch name = EXP-IO10_P
+# NET "VHDCIIO1<10>" LOC = "U10"; # Bank = 2,  Pin name = IO_L30P_GCLK1_D13,      Sch name = EXP-IO11_P
+# NET "VHDCIIO1<11>" LOC = "R8";  # Bank = 2,  Pin name = IO_L31P_GCLK31_D14,     Sch name = EXP-IO12_P
+# NET "VHDCIIO1<12>" LOC = "M8";  # Bank = 2,  Pin name = *IO_L40P,        		Sch name = EXP-IO13_P
+# NET "VHDCIIO1<13>" LOC = "U8";  # Bank = 2,  Pin name = IO_L41P,        		Sch name = EXP-IO14_P
+# NET "VHDCIIO1<14>"  LOC = "U7"; # Bank = 2,  Pin name = IO_L43P,        		Sch name = EXP-IO15_P
+# NET "VHDCIIO1<15>" LOC = "N7";  # Bank = 2,  Pin name = *IO_L44P,        		Sch name = EXP-IO16_P
+# NET "VHDCIIO1<16>" LOC = "T6";  # Bank = 2,  Pin name = IO_L45P,        		Sch name = EXP-IO17_P
+# NET "VHDCIIO1<17>" LOC = "R7";  # Bank = 2,  Pin name = IO_L46P,        		Sch name = EXP-IO18_P
+# NET "VHDCIIO1<18>" LOC = "N6";  # Bank = 2,  Pin name = *IO_L47P,        		Sch name = EXP-IO19_P
+# NET "VHDCIIO1<19>" LOC = "U5";  # Bank = 2,  Pin name = IO_49P_D3,        		Sch name = EXP-IO20_P
+
+NET rangefinder_0_echoIn_pin  LOC = "V16"	|  IOSTANDARD = "LVCMOS33"; # Bank = 2,  Pin name = IO_L2N_CMPMOSI,        	Sch name = EXP-IO1_N
+NET rangefinder_0_trigger_pin LOC = "V15"	|  IOSTANDARD = "LVCMOS33"; # Bank = 2,  Pin name = *IO_L5N,        		Sch name = EXP-IO2_N
+# NET "VHDCIIO2<2>"  LOC = "V13"; # Bank = 2,  Pin name = IO_L14N_D12,        	Sch name = EXP-IO3_N
+# NET "VHDCIIO2<3>"  LOC = "N11"; # Bank = 2,  Pin name = *IO_L15N,        		Sch name = EXP-IO4_N
+# NET "VHDCIIO2<4>"  LOC = "T11"; # Bank = 2,  Pin name = IO_L16N_VREF,        	Sch name = EXP-IO5_N
+# NET "VHDCIIO2<5>"  LOC = "V12"; # Bank = 2,  Pin name = *IO_L19N,        		Sch name = EXP-IO6_N
+# NET "VHDCIIO2<6>"  LOC = "P11"; # Bank = 2,  Pin name = *IO_L20N,        		Sch name = EXP-IO7_N
+# NET "VHDCIIO2<7>"  LOC = "N9";  # Bank = 2,  Pin name = *IO_L22N,        		Sch name = EXP-IO8_N
+# NET "VHDCIIO2<8>"  LOC = "V11"; # Bank = 2,  Pin name = IO_L23N,        		Sch name = EXP-IO9_N
+# NET "VHDCIIO2<9>"  LOC = "T10"; # Bank = 2,  Pin name = IO_L29N_GCLK2,          Sch name = EXP-IO10_N
+# NET "VHDCIIO2<10>" LOC = "V10"; # Bank = 2,  Pin name = IO_L30N_GCLK0_USERCCLK, Sch name = EXP-IO11_N
+# NET "VHDCIIO2<11>" LOC = "T8";  # Bank = 2,  Pin name = IO_L31N_GCLK30_D15,     Sch name = EXP-IO12_N
+# NET "VHDCIIO2<12>" LOC = "N8";  # Bank = 2,  Pin name = *IO_L40N,        		Sch name = EXP-IO13_N
+# NET "VHDCIIO2<13>" LOC = "V8";  # Bank = 2,  Pin name = IO_L41N_VREF,        	Sch name = EXP-IO14_N
+# NET "VHDCIIO2<14>" LOC = "V7";  # Bank = 2,  Pin name = IO_L43N,        		Sch name = EXP-IO15_N
+# NET "VHDCIIO2<15>" LOC = "P8";  # Bank = 2,  Pin name = *IO_L44N,        		Sch name = EXP-IO16_N
+# NET "VHDCIIO2<16>" LOC = "V6";  # Bank = 2,  Pin name = IO_L45N,        		Sch name = EXP-IO17_N
+# NET "VHDCIIO2<17>" LOC = "T7";  # Bank = 2,  Pin name = IO_L46N,        		Sch name = EXP-IO18_N
+# NET "VHDCIIO2<18>" LOC = "P7";  # Bank = 2,  Pin name = *IO_L47N,        		Sch name = EXP-IO19_N
+# NET "VHDCIIO2<19>" LOC = "V5";  # Bank = 2,  Pin name = IO_49N_D4,        		Sch name = EXP-IO20_N 
+ 
+#
+# additional constraints
+#
+
+################AXI_AC97 CONSTRAINTS########################
+Net axi_ac97_0_Bit_Clk_pin LOC = L13 | IOSTANDARD = LVCMOS33;
+Net axi_ac97_0_SData_In_pin LOC = T18 | IOSTANDARD = LVCMOS33;
+Net axi_ac97_0_SData_Out_pin LOC = N16 | IOSTANDARD = LVCMOS33;
+Net axi_ac97_0_Sync_pin  LOC = U17 | IOSTANDARD = LVCMOS33;
+Net axi_ac97_0_AC97Reset_n_pin LOC = T17 | IOSTANDARD = LVCMOS33;
+#############################################################
+
+NET "GCLK" TNM_NET = sys_clk_pin;
+TIMESPEC TS_sys_clk_pin = PERIOD sys_clk_pin 100000 kHz;
+
+#### HDMI Core constraints
+# Overwrite existing VCCAUX setting for TMDS interfaces
+CONFIG VCCAUX = 3.3;
+
+############################################################
+
+NET "*TMDS_TX_0_N*"    LOC = "C8"  | IOSTANDARD = "TMDS_33";
+NET "*TMDS_TX_0_P*"    LOC = "D8"  | IOSTANDARD = "TMDS_33";
+NET "*TMDS_TX_1_N*"    LOC = "A7"  | IOSTANDARD = "TMDS_33";
+NET "*TMDS_TX_1_P*"    LOC = "C7"  | IOSTANDARD = "TMDS_33";
+NET "*TMDS_TX_2_N*"    LOC = "A8"  | IOSTANDARD = "TMDS_33";
+NET "*TMDS_TX_2_P*"    LOC = "B8"  | IOSTANDARD = "TMDS_33";
+NET "*TMDS_TX_CLK_N*"  LOC = "A6"  | IOSTANDARD = "TMDS_33";
+NET "*TMDS_TX_CLK_P*"  LOC = "B6"  | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_0_N*"    LOC = "K18" | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_0_P*"    LOC = "K17" | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_1_N*"    LOC = "L18" | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_1_P*"    LOC = "L17" | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_2_N*"    LOC = "J18" | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_2_P*"    LOC = "J16" | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_CLK_N*"  LOC = "H18" | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_CLK_P*"  LOC = "H17" | IOSTANDARD = "TMDS_33";
+NET "*TMDS_RX_SCL*"    LOC = "M16" | IOSTANDARD = "I2C";
+NET "*TMDS_RX_SDA*"    LOC = "M18" | IOSTANDARD = "I2C";
+
+############################################################
+
+NET "*SIG_PLL0?CLKOUT2" TNM_NET = globclk;
+NET "*Inst_DynClkGen?PllOut_x1" TNM_NET = hdmipclk;
+
+############################################################
+# Timing Constraints                                       #
+############################################################
+
+TIMESPEC TS_path1 = FROM globclk TO hdmipclk 14 ns;
+TIMESPEC TS_path2 = FROM hdmipclk TO globclk 10 ns;

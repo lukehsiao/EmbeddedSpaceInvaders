@@ -61,6 +61,9 @@
  PORT axi_ac97_0_SData_Out_pin = axi_ac97_0_SData_Out, DIR = O
  PORT axi_ac97_0_AC97Reset_n_pin = axi_ac97_0_AC97Reset_n, DIR = O
  PORT Push_Buttons_5Bits_TRI_I = Push_Buttons_5Bits_TRI_I, DIR = I, VEC = [0:4]
+ PORT blink_0_LEDs_pin = blink_0_LEDs, DIR = O, VEC = [3:0]
+ PORT rangefinder_0_trigger_pin = rangefinder_0_trigger, DIR = O
+ PORT rangefinder_0_echoIn_pin = rangefinder_0_echoIn, DIR = I
 
 
 BEGIN proc_sys_reset
@@ -214,17 +217,6 @@ BEGIN axi_timer
  BUS_INTERFACE S_AXI = axi4lite_0
  PORT S_AXI_ACLK = clk_100_0000MHzPLL0
  PORT Interrupt = axi_timer_0_Interrupt
-END
-
-BEGIN axi_intc
- PARAMETER INSTANCE = axi_intc_0
- PARAMETER HW_VER = 1.01.a
- PARAMETER C_BASEADDR = 0x41200000
- PARAMETER C_HIGHADDR = 0x4120ffff
- BUS_INTERFACE S_AXI = axi4lite_0
- PORT S_AXI_ACLK = clk_100_0000MHzPLL0
- PORT Intr = axi_ac97_0_Interrupt & axi_timer_0_Interrupt & Push_Buttons_5Bits_IP2INTC_Irpt & fit_timer_0_Interrupt & pit_timer_0_intr
- PORT Irq = axi_intc_0_Irq
 END
 
 BEGIN axi_hdmi
@@ -381,13 +373,6 @@ BEGIN d_qspi_axi
  PORT DQ = Digilent_QuadSPI_Cntlr_DQ
 END
 
-<<<<<<< HEAD
-BEGIN pit_timer
- PARAMETER INSTANCE = pit_timer_0
- PARAMETER HW_VER = 1.00.a
- PARAMETER C_BASEADDR = 0x70e00000
- PARAMETER C_HIGHADDR = 0x70e0ffff
-=======
 BEGIN axi_intc
  PARAMETER INSTANCE = axi_intc_0
  PARAMETER HW_VER = 1.01.a
@@ -399,17 +384,6 @@ BEGIN axi_intc
  PORT Irq = axi_intc_0_Irq
 END
 
-BEGIN axi_timer
- PARAMETER INSTANCE = axi_timer_0
- PARAMETER HW_VER = 1.03.a
- PARAMETER C_BASEADDR = 0x41c00000
- PARAMETER C_HIGHADDR = 0x41c0ffff
->>>>>>> 335bdc6f321ba0a6fb07869acac6ee93c2a10472
- BUS_INTERFACE S_AXI = axi4lite_0
- PORT S_AXI_ACLK = clk_100_0000MHzPLL0
- PORT intr = pit_timer_0_intr
-END
-
 BEGIN pit_timer
  PARAMETER INSTANCE = pit_timer_0
  PARAMETER HW_VER = 1.00.a
@@ -418,5 +392,26 @@ BEGIN pit_timer
  BUS_INTERFACE S_AXI = axi4lite_0
  PORT S_AXI_ACLK = clk_100_0000MHzPLL0
  PORT intr = pit_timer_0_intr
+END
+
+BEGIN blink
+ PARAMETER INSTANCE = blink_0
+ PARAMETER HW_VER = 1.00.a
+ PARAMETER C_BASEADDR = 0x7c600000
+ PARAMETER C_HIGHADDR = 0x7c60ffff
+ BUS_INTERFACE S_AXI = axi4lite_0
+ PORT S_AXI_ACLK = clk_100_0000MHzPLL0
+ PORT LEDs = blink_0_LEDs
+END
+
+BEGIN rangefinder
+ PARAMETER INSTANCE = rangefinder_0
+ PARAMETER HW_VER = 1.00.a
+ PARAMETER C_BASEADDR = 0x76400000
+ PARAMETER C_HIGHADDR = 0x7640ffff
+ BUS_INTERFACE S_AXI = axi4lite_0
+ PORT S_AXI_ACLK = clk_100_0000MHzPLL0
+ PORT trigger = rangefinder_0_trigger
+ PORT echoIn = rangefinder_0_echoIn
 END
 

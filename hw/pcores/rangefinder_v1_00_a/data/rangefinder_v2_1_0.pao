@@ -1,0 +1,10 @@
+##############################################################################
+## Filename:          C:/RH/Lab/hw/pcores/rangefinder_v1_00_a/data/rangefinder_v2_1_0.pao
+## Description:       Peripheral Analysis Order
+## Date:              Sat Nov 15 15:14:11 2014 (by Create and Import Peripheral Wizard)
+##############################################################################
+
+lib proc_common_v3_00_a  all 
+lib axi_lite_ipif_v1_01_a  all 
+lib rangefinder_v1_00_a user_logic vhdl
+lib rangefinder_v1_00_a rangefinder vhdl

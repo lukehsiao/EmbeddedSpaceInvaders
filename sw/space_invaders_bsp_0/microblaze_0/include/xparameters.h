@@ -28,6 +28,11 @@
 #define XPAR_AXI_HDMI_0_HIGHADDR 0x7E22FFFF
 
 
+/* Definitions for peripheral BLINK_0 */
+#define XPAR_BLINK_0_BASEADDR 0x7C600000
+#define XPAR_BLINK_0_HIGHADDR 0x7C60FFFF
+
+
 /* Definitions for peripheral DIGILENT_QUADSPI_CNTLR */
 #define XPAR_DIGILENT_QUADSPI_CNTLR_BASEADDR 0x7E400000
 #define XPAR_DIGILENT_QUADSPI_CNTLR_HIGHADDR 0x7E40FFFF
@@ -36,6 +41,11 @@
 /* Definitions for peripheral PIT_TIMER_0 */
 #define XPAR_PIT_TIMER_0_BASEADDR 0x70E00000
 #define XPAR_PIT_TIMER_0_HIGHADDR 0x70E0FFFF
+
+
+/* Definitions for peripheral RANGEFINDER_0 */
+#define XPAR_RANGEFINDER_0_BASEADDR 0x76400000
+#define XPAR_RANGEFINDER_0_HIGHADDR 0x7640FFFF
 
 
 /******************************************************************/
