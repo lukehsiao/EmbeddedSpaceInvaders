@@ -1,9 +1,11 @@
-/*
- * inputManager.h
+/**
+ * Prototypes for working with the FIFO
  *
- *  Created on: Nov 22, 2014
- *      Author: superman
+ *  @author Luke Hsiao
+ *  @author Jeff Revert
+ *  @date 22 Nov 2014
  */
+
 
 #ifndef INPUTMANAGER_H_
 #define INPUTMANAGER_H_
