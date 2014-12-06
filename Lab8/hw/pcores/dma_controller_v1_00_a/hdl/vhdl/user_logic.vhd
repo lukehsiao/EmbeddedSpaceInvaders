@@ -166,14 +166,26 @@ end entity user_logic;
 architecture IMP of user_logic is
 
   --USER signal declarations added here, as needed for user logic
-
+  signal src_addr, dest_addr				 : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
+  signal src_addr_next, dest_addr_next  : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
+  signal clk, rst								 : std_logic := '0';
+  signal transfer_length					 : unsigned (C_SLV_DWIDTH-1 downto 0);
+  signal transfer_length_next				 : unsigned (C_SLV_DWIDTH-1 downto 0);
+  
+  --control read/write signals
+  signal user_rd_req, user_wr_req		 : std_logic := '0';
+  signal user_rd_next, user_wr_next		 : std_logic := '0';
+  
+  type ctrl_state_type is (USER_INIT, USER_READ, USER_WRITE);
+  signal user_state_reg, user_state_next: ctrl_state_type := USER_INIT;
+  
   ------------------------------------------
   -- Signals for user logic slave model s/w accessible register example
   ------------------------------------------
-  signal slv_reg0                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
-  signal slv_reg1                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
-  signal slv_reg2                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
-  signal slv_reg3                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
+  signal slv_reg0                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0); -- Interrupt Pulse
+  signal slv_reg1                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0); -- Dest Addr
+  signal slv_reg2                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0); -- Source Addr
+  signal slv_reg3                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0); -- transfer length
   signal slv_reg4                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
   signal slv_reg5                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
   signal slv_reg6                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
@@ -233,9 +245,75 @@ architecture IMP of user_logic is
   signal Bus2IP_Reset                   : std_logic;
 attribute SIGIS of Bus2IP_Reset   : signal is "RST";
 begin
-
+  clk <= Bus2IP_Clk;
+  rst <= Bus2IP_Resetn;
+	
   --USER logic implementation added here
-
+ 
+  update_regs: process(clk, rst)
+  begin
+    if (clk'event and clk='1') then
+	   src_addr <= src_addr_next;
+		dest_addr <= dest_addr_next;	
+		transfer_length <= transfer_length_next;
+		user_rd_req <= user_rd_next;
+		user_wr_req <= user_wr_next;
+	 end if;  
+  end process;
+  
+  -- This process is simply sending signals alongside the other process
+  ctrl_proc: process(src_addr, dest_addr, transfer_length, user_state_reg, user_rd_req, user_wr_req, mst_cmd_sm_state) 
+  begin
+		  -- Defaults
+		  src_addr_next <= src_addr;
+		  dest_addr_next <= dest_addr;
+		  transfer_length_next <= transfer_length;
+		  user_state_next <= user_state_reg;
+		  user_rd_next <= user_rd_req;
+		  user_wr_next <= user_wr_req;
+		  mst_ip2bus_addr <= (others => '0');
+		  -- state transition
+        case mst_cmd_sm_state is
+          when CMD_IDLE =>
+			   -- User Logic setup the starting addresses for source and destination
+				src_addr_next <= slv_reg2;
+				dest_addr_next <= slv_reg1;
+				-- Set the transfer length for this cycle
+				transfer_length_next <= unsigned(slv_reg3);
+				
+				user_rd_next <= '1';
+				user_wr_next <= '0';
+				
+          -- Actually sends the command (rd/wr) to the AXI Bus, then waits
+          when CMD_RUN =>
+				if (user_rd_req = '1' and user_wr_req = '0') then
+					mst_ip2bus_addr <= src_addr;
+				else
+					mst_ip2bus_addr <= dest_addr;
+				end if;				
+          when CMD_WAIT_FOR_DATA =>
+            
+          when CMD_DONE =>
+			   
+			   -- Toggle from Read to Write and vice versa until length is met
+            user_rd_next <= not(user_rd_req);
+				user_wr_next <= not(user_wr_req);
+				mst_ip2bus_addr <= dest_addr;
+				
+				-- Read and a write has happened
+				if (user_rd_req = '0' and user_wr_req = '1') then
+				  transfer_length_next <= transfer_length - 1;
+				  src_addr_next <= src_addr + 4; --TODO(lukehsiao) is this 4?
+				  dest_addr_next <= dest_addr + 4;
+				  -- All the transfers are done
+				  if (transfer_length = 0) then
+						-- the state transition is handled by the generated state machine
+				  end if;
+				end if;
+          when others =>
+        end case;  
+  end process;
+  
   ------------------------------------------
   -- Example code to read/write user logic slave model s/w accessible registers
   -- 
@@ -265,10 +343,10 @@ begin
 
     if Bus2IP_Clk'event and Bus2IP_Clk = '1' then
       if Bus2IP_Resetn = '0' then
-        slv_reg0 <= (others => '0');
-        slv_reg1 <= (others => '0');
-        slv_reg2 <= (others => '0');
-        slv_reg3 <= (others => '0');
+        --slv_reg0 <= (others => '0');
+        --slv_reg1 <= (others => '0');
+        --slv_reg2 <= (others => '0');
+        --slv_reg3 <= (others => '0');
         slv_reg4 <= (others => '0');
         slv_reg5 <= (others => '0');
         slv_reg6 <= (others => '0');
@@ -282,30 +360,30 @@ begin
         slv_reg14 <= (others => '0');
       else
         case slv_reg_write_sel is
-          when "100000000000000" =>
-            for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
-              if ( Bus2IP_BE(byte_index) = '1' ) then
-                slv_reg0(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
-              end if;
-            end loop;
-          when "010000000000000" =>
-            for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
-              if ( Bus2IP_BE(byte_index) = '1' ) then
-                slv_reg1(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
-              end if;
-            end loop;
-          when "001000000000000" =>
-            for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
-              if ( Bus2IP_BE(byte_index) = '1' ) then
-                slv_reg2(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
-              end if;
-            end loop;
-          when "000100000000000" =>
-            for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
-              if ( Bus2IP_BE(byte_index) = '1' ) then
-                slv_reg3(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
-              end if;
-            end loop;
+--          when "100000000000000" =>
+--            for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
+--              if ( Bus2IP_BE(byte_index) = '1' ) then
+--                slv_reg0(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
+--              end if;
+--            end loop;
+--          when "010000000000000" =>
+--            for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
+--              if ( Bus2IP_BE(byte_index) = '1' ) then
+--                slv_reg1(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
+--              end if;
+--            end loop;
+--          when "001000000000000" =>
+--            for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
+--              if ( Bus2IP_BE(byte_index) = '1' ) then
+--                slv_reg2(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
+--              end if;
+--            end loop;
+--          when "000100000000000" =>
+--            for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
+--              if ( Bus2IP_BE(byte_index) = '1' ) then
+--                slv_reg3(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
+--              end if;
+--            end loop;
           when "000010000000000" =>
             for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
               if ( Bus2IP_BE(byte_index) = '1' ) then
@@ -472,9 +550,9 @@ begin
   mst_cntl_wr_req   <= mst_reg(0)(1);
   mst_cntl_bus_lock <= mst_reg(0)(2);
   mst_cntl_burst    <= mst_reg(0)(3);
-  mst_ip2bus_addr   <= mst_reg(7) & mst_reg(6) & mst_reg(5) & mst_reg(4);
+  --mst_ip2bus_addr   <= mst_reg(7) & mst_reg(6) & mst_reg(5) & mst_reg(4);
   mst_ip2bus_be     <= mst_reg(9) & mst_reg(8);
-  mst_xfer_length   <= mst_reg(13)(3 downto 0) & mst_reg(12);
+  mst_xfer_length   <= mst_reg(13)(3 downto 0) & mst_reg(12); -- ignored, we want our own, larger signal
 
   -- implement byte write enable for each byte slice of the master model registers
   MASTER_REG_BYTE_WR_EN : process( Bus2IP_BE, mst_reg_write_req, mst_reg_write_sel ) is
@@ -600,8 +678,7 @@ begin
 
     if ( Bus2IP_Clk'event and Bus2IP_Clk = '1' ) then
       if ( Bus2IP_Resetn = '0' ) then
-
-        -- reset condition
+		  -- reset condition
         mst_cmd_sm_state          <= CMD_IDLE;
         mst_cmd_sm_clr_go         <= '0';
         mst_cmd_sm_rd_req         <= '0';
@@ -632,7 +709,6 @@ begin
                 
         -- state transition
         case mst_cmd_sm_state is
-
           when CMD_IDLE =>
             if ( mst_go = '1' ) then
               mst_cmd_sm_state  <= CMD_RUN;
@@ -641,7 +717,8 @@ begin
               mst_cmd_sm_state  <= CMD_IDLE;
               mst_cmd_sm_busy   <= '0';
             end if;
-
+				
+          -- Actually sends the command (rd/wr) to the AXI Bus, then waits
           when CMD_RUN =>
             if ( Bus2IP_Mst_CmdAck = '1' and Bus2IP_Mst_Cmplt = '0' ) then
               mst_cmd_sm_state <= CMD_WAIT_FOR_DATA;
@@ -657,8 +734,9 @@ begin
               end if;
             else
               mst_cmd_sm_state       <= CMD_RUN;
-              mst_cmd_sm_rd_req      <= mst_cntl_rd_req;
-              mst_cmd_sm_wr_req      <= mst_cntl_wr_req;
+              mst_cmd_sm_rd_req      <= user_rd_req;
+              mst_cmd_sm_wr_req      <= user_wr_req;
+				  
               mst_cmd_sm_ip2bus_addr <= mst_ip2bus_addr;
               mst_cmd_sm_ip2bus_be   <= mst_ip2bus_be(15 downto 16-C_MST_DWIDTH/8 );
               mst_cmd_sm_bus_lock    <= mst_cntl_bus_lock;
@@ -680,7 +758,13 @@ begin
             end if;
 
           when CMD_DONE =>
-            mst_cmd_sm_state    <= CMD_IDLE;
+			   -- User Logic
+				if (transfer_length = 0) then
+					mst_cmd_sm_state    <= CMD_IDLE;
+				else
+					mst_cmd_sm_state    <= CMD_RUN;
+				end if;
+				
             mst_cmd_sm_set_done <= '1';
             mst_cmd_sm_busy     <= '0';
 
