@@ -288,5 +288,10 @@ void decreaseVol(){
 void midVol(){
 	volumeAttenuation = AC97_RIGHT_VOL_ATTN_31_0_DB;
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, volumeAttenuation);
+
+	volumeAttenuation -= VOL_ADJUST;
+	if(volumeAttenuation < AC97_RIGHT_VOL_ATTN_19_0_DB) // Right is the right 8 bits, Left is the next 8 Bits
+		volumeAttenuation = AC97_RIGHT_VOL_ATTN_19_0_DB; // Setting Bounds on the volume
+	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, (volumeAttenuation) | (volumeAttenuation << 8));
 }
 

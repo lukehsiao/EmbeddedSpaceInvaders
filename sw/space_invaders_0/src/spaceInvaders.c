@@ -222,6 +222,15 @@ int main()
 		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 127);
 	}
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, AC97_VOL_MID);
+	increaseVol();
+	increaseVol();
+	increaseVol();
+	increaseVol();
+	increaseVol();
+	increaseVol();
+	increaseVol();
+	increaseVol();
+
 
 	// Print a sanity message if you get this far.
 	xil_printf("Woohoo! I made it through initialization.\n\r");
