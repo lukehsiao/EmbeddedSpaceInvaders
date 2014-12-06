@@ -16,14 +16,14 @@ int main()
     init_platform();
     cleanup_platform();
 
-    print("Hello World\n\r");
+    xil_printf("Hello World\n\r");
     xil_printf("Printing value before DMA transfer.\n\r");
     xil_printf("%x\r\n", destination_word);
 
     //DMA_CONTROLLER_MasterRecvWord(XPAR_DMA_CONTROLLER_0_BASEADDR, (Xuint32) &source_word);
     //DMA_CONTROLLER_MasterSendWord(XPAR_DMA_CONTROLLER_0_BASEADDR, (Xuint32) &destination_word);
 
-    DMA_CONTROLLER_CopyData(XPAR_DMA_CONTROLLER_0_BASEADDR, (Xuint32) &src_array, (Xuint32) &dest_array, (Xuint32)5);
+    DMA_CONTROLLER_CopyData(XPAR_DMA_CONTROLLER_0_BASEADDR, (Xuint32) &src_array, (Xuint32) &dest_array, 5);
 
     xil_printf("Printing value after DMA transfer.\n\r");
     xil_printf("%x\r\n", destination_word);

@@ -732,9 +732,9 @@ begin
           when CMD_DONE =>
 			   -- User Logic
 				if (transfer_length = 0) then
-					mst_cmd_sm_state    <= CMD_RUN;
-				else
 					mst_cmd_sm_state    <= CMD_IDLE;
+				else
+					mst_cmd_sm_state    <= CMD_RUN;
 				end if;
 				-- Toggle from Read to Write and vice versa until length is met
             user_rd_next <= not(user_rd_req);
