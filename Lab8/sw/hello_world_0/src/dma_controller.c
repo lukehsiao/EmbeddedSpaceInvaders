@@ -27,51 +27,51 @@
  * @note    None.
  *
  */
-void DMA_CONTROLLER_MasterSendWord(Xuint32 BaseAddress, Xuint32 DstAddress)
-{
-  /*
-   * Set user logic master control register for write transfer.
-   */
-  Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_CNTL_REG_OFFSET, MST_SGWR);
-
-  /*
-   * Set user logic master address register to drive IP2Bus_Mst_Addr signal.
-   */
-  Xil_Out32(BaseAddress+DMA_CONTROLLER_MST_ADDR_REG_OFFSET, DstAddress);
-
-  /*
-   * Set user logic master byte enable register to drive IP2Bus_Mst_BE signal.
-   */
-  Xil_Out16(BaseAddress+DMA_CONTROLLER_MST_BE_REG_OFFSET, 0xFFFF);
-
-  /*
-   * Start user logic master write transfer by writting special pattern to its go port.
-   */
-  Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_GO_PORT_OFFSET, MST_START);
-}
-
-void DMA_CONTROLLER_MasterRecvWord(Xuint32 BaseAddress, Xuint32 SrcAddress)
-{
-  /*
-   * Set user logic master control register for read transfer.
-   */
-  Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_CNTL_REG_OFFSET, MST_SGRD);
-
-  /*
-   * Set user logic master address register to drive IP2Bus_Mst_Addr signal.
-   */
-  Xil_Out32(BaseAddress+DMA_CONTROLLER_MST_ADDR_REG_OFFSET, SrcAddress);
-
-  /*
-   * Set user logic master byte enable register to drive IP2Bus_Mst_BE signal.
-   */
-  Xil_Out16(BaseAddress+DMA_CONTROLLER_MST_BE_REG_OFFSET, 0xFFFF);
-
-  /*
-   * Start user logic master read transfer by writting special pattern to its go port.
-   */
-  Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_GO_PORT_OFFSET, MST_START);
-}
+//void DMA_CONTROLLER_MasterSendWord(Xuint32 BaseAddress, Xuint32 DstAddress)
+//{
+//  /*
+//   * Set user logic master control register for write transfer.
+//   */
+//  Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_CNTL_REG_OFFSET, MST_SGWR);
+//
+//  /*
+//   * Set user logic master address register to drive IP2Bus_Mst_Addr signal.
+//   */
+//  Xil_Out32(BaseAddress+DMA_CONTROLLER_MST_ADDR_REG_OFFSET, DstAddress);
+//
+//  /*
+//   * Set user logic master byte enable register to drive IP2Bus_Mst_BE signal.
+//   */
+//  Xil_Out16(BaseAddress+DMA_CONTROLLER_MST_BE_REG_OFFSET, 0xFFFF);
+//
+//  /*
+//   * Start user logic master write transfer by writting special pattern to its go port.
+//   */
+//  Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_GO_PORT_OFFSET, MST_START);
+//}
+//
+//void DMA_CONTROLLER_MasterRecvWord(Xuint32 BaseAddress, Xuint32 SrcAddress)
+//{
+//  /*
+//   * Set user logic master control register for read transfer.
+//   */
+//  Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_CNTL_REG_OFFSET, MST_SGRD);
+//
+//  /*
+//   * Set user logic master address register to drive IP2Bus_Mst_Addr signal.
+//   */
+//  Xil_Out32(BaseAddress+DMA_CONTROLLER_MST_ADDR_REG_OFFSET, SrcAddress);
+//
+//  /*
+//   * Set user logic master byte enable register to drive IP2Bus_Mst_BE signal.
+//   */
+//  Xil_Out16(BaseAddress+DMA_CONTROLLER_MST_BE_REG_OFFSET, 0xFFFF);
+//
+//  /*
+//   * Start user logic master read transfer by writting special pattern to its go port.
+//   */
+//  Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_GO_PORT_OFFSET, MST_START);
+//}
 
 void DMA_CONTROLLER_CopyData(Xuint32 BaseAddress, Xuint32 SrcBaseAddr, Xuint32 DestBaseAddr, Xuint32 Length)
 {
