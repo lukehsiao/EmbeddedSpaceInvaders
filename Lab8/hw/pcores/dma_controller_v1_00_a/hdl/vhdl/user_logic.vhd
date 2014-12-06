@@ -261,58 +261,6 @@ begin
 	 end if;  
   end process;
   
-  -- This process is simply sending signals alongside the other process
-  ctrl_proc: process(src_addr, dest_addr, transfer_length, user_state_reg, user_rd_req, user_wr_req, mst_cmd_sm_state) 
-  begin
-		  -- Defaults
-		  src_addr_next <= src_addr;
-		  dest_addr_next <= dest_addr;
-		  transfer_length_next <= transfer_length;
-		  user_state_next <= user_state_reg;
-		  user_rd_next <= user_rd_req;
-		  user_wr_next <= user_wr_req;
-		  mst_ip2bus_addr <= (others => '0');
-		  -- state transition
-        case mst_cmd_sm_state is
-          when CMD_IDLE =>
-			   -- User Logic setup the starting addresses for source and destination
-				src_addr_next <= slv_reg2;
-				dest_addr_next <= slv_reg1;
-				-- Set the transfer length for this cycle
-				transfer_length_next <= unsigned(slv_reg3);
-				
-				user_rd_next <= '1';
-				user_wr_next <= '0';
-				
-          -- Actually sends the command (rd/wr) to the AXI Bus, then waits
-          when CMD_RUN =>
-				if (user_rd_req = '1' and user_wr_req = '0') then
-					mst_ip2bus_addr <= src_addr;
-				else
-					mst_ip2bus_addr <= dest_addr;
-				end if;				
-          when CMD_WAIT_FOR_DATA =>
-            
-          when CMD_DONE =>
-			   
-			   -- Toggle from Read to Write and vice versa until length is met
-            user_rd_next <= not(user_rd_req);
-				user_wr_next <= not(user_wr_req);
-				mst_ip2bus_addr <= dest_addr;
-				
-				-- Read and a write has happened
-				if (user_rd_req = '0' and user_wr_req = '1') then
-				  transfer_length_next <= transfer_length - 1;
-				  src_addr_next <= src_addr + 4; --TODO(lukehsiao) is this 4?
-				  dest_addr_next <= dest_addr + 4;
-				  -- All the transfers are done
-				  if (transfer_length = 0) then
-						-- the state transition is handled by the generated state machine
-				  end if;
-				end if;
-          when others =>
-        end case;  
-  end process;
   
   ------------------------------------------
   -- Example code to read/write user logic slave model s/w accessible registers
@@ -693,6 +641,14 @@ begin
         mst_cmd_sm_busy           <= '0';
                 
       else
+		  -- User Logic Defaults
+		  src_addr_next <= src_addr;
+		  dest_addr_next <= dest_addr;
+		  transfer_length_next <= transfer_length;
+		  user_state_next <= user_state_reg;
+		  user_rd_next <= user_rd_req;
+		  user_wr_next <= user_wr_req;
+		  mst_ip2bus_addr <= (others => '0');
 
         -- default condition
         mst_cmd_sm_clr_go         <= '0';
@@ -710,9 +666,19 @@ begin
         -- state transition
         case mst_cmd_sm_state is
           when CMD_IDLE =>
+			   -- User Logic setup the starting addresses for source and destination
+				src_addr_next <= slv_reg2;
+				dest_addr_next <= slv_reg1;
+				-- Set the transfer length for this cycle
+				transfer_length_next <= unsigned(slv_reg3);
+			 
             if ( mst_go = '1' ) then
               mst_cmd_sm_state  <= CMD_RUN;
               mst_cmd_sm_clr_go <= '1';
+				  
+				  -- Set to Read
+				  user_rd_next <= '1';
+				  user_wr_next <= '0';
             else
               mst_cmd_sm_state  <= CMD_IDLE;
               mst_cmd_sm_busy   <= '0';
@@ -720,6 +686,12 @@ begin
 				
           -- Actually sends the command (rd/wr) to the AXI Bus, then waits
           when CMD_RUN =>
+				if (user_rd_req = '1' and user_wr_req = '0') then
+					mst_ip2bus_addr <= src_addr;
+				else
+					mst_ip2bus_addr <= dest_addr;
+				end if;		
+				
             if ( Bus2IP_Mst_CmdAck = '1' and Bus2IP_Mst_Cmplt = '0' ) then
               mst_cmd_sm_state <= CMD_WAIT_FOR_DATA;
             elsif ( Bus2IP_Mst_Cmplt = '1' ) then
@@ -764,6 +736,20 @@ begin
 				else
 					mst_cmd_sm_state    <= CMD_IDLE;
 				end if;
+				-- Toggle from Read to Write and vice versa until length is met
+            user_rd_next <= not(user_rd_req);
+				user_wr_next <= not(user_wr_req);
+				
+				-- Read and a write has happened
+				if (user_rd_req = '0' and user_wr_req = '1') then
+				  transfer_length_next <= transfer_length - 1;
+				  src_addr_next <= src_addr + 4; --TODO(lukehsiao) is this 4?
+				  dest_addr_next <= dest_addr + 4;
+				  -- All the transfers are done
+				  if (transfer_length = 0) then
+						-- the state transition is handled by the generated state machine
+				  end if;
+				end if;				
 				
             mst_cmd_sm_set_done <= '1';
             mst_cmd_sm_busy     <= '0';
