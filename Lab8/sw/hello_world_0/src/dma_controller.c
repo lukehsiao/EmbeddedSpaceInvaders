@@ -76,22 +76,14 @@
 void DMA_CONTROLLER_CopyData(Xuint32 BaseAddress, Xuint32 SrcBaseAddr, Xuint32 DestBaseAddr, Xuint32 Length)
 {
 	// Write Source
-	DMA_CONTROLLER_mWriteSlaveReg2(BaseAddress, 0, SrcBaseAddr);
+	DMA_CONTROLLER_mWriteSlaveReg0(BaseAddress, 0, SrcBaseAddr);
 
 	// Write Dest
 	DMA_CONTROLLER_mWriteSlaveReg1(BaseAddress, 0, DestBaseAddr);
 
 	// Write Length
-	DMA_CONTROLLER_mWriteSlaveReg3(BaseAddress, 0, Length);
+	DMA_CONTROLLER_mWriteSlaveReg2(BaseAddress, 0, Length);
 
-	/*
-	* Set user logic master byte enable register to drive IP2Bus_Mst_BE signal.
-	*/
-	Xil_Out16(BaseAddress+DMA_CONTROLLER_MST_BE_REG_OFFSET, 0xFFFF);
-
-	/*
-	* Start user logic master read transfer by writing special pattern to its go port.
-	*/
+	// Start the transfer
 	Xil_Out8(BaseAddress+DMA_CONTROLLER_MST_GO_PORT_OFFSET, MST_START);
-
 }
