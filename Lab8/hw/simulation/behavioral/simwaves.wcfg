@@ -28,7 +28,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="30" />
    <wvobject fp_name="divider2" type="divider">
       <obj_property name="label">USER_LOGIC</obj_property>
       <obj_property name="DisplayName">label</obj_property>
@@ -66,9 +66,14 @@
       <obj_property name="ObjectShortName">transfer_length[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/USER_LOGIC_I/mst_ip2bus_data" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">mst_ip2bus_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mst_ip2bus_data[31:0]</obj_property>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/USER_LOGIC_I/mst_ip2bus_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mst_ip2bus_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mst_ip2bus_addr[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/USER_LOGIC_I/mst_cmd_sm_ip2bus_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mst_cmd_sm_ip2bus_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mst_cmd_sm_ip2bus_addr[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/system/dma_controller_0/dma_controller_0/USER_LOGIC_I/mst_cmd_sm_state" type="other" db_ref_id="1">
@@ -108,5 +113,56 @@
       <obj_property name="ElementShortName">slv_reg3[31:0]</obj_property>
       <obj_property name="ObjectShortName">slv_reg3[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider21" type="divider">
+      <obj_property name="label">AXI</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/ip2bus_mstrd_req" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ip2bus_mstrd_req</obj_property>
+      <obj_property name="ObjectShortName">ip2bus_mstrd_req</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/ip2bus_mstwr_req" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ip2bus_mstwr_req</obj_property>
+      <obj_property name="ObjectShortName">ip2bus_mstwr_req</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/ip2bus_mst_addr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ip2bus_mst_addr[0:31]</obj_property>
+      <obj_property name="ObjectShortName">ip2bus_mst_addr[0:31]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/bus2ip_mstrd_d" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">bus2ip_mstrd_d[0:31]</obj_property>
+      <obj_property name="ObjectShortName">bus2ip_mstrd_d[0:31]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/ip2bus_mstwr_d" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ip2bus_mstwr_d[0:31]</obj_property>
+      <obj_property name="ObjectShortName">ip2bus_mstwr_d[0:31]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/m_axi_lite_arready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_axi_lite_arready</obj_property>
+      <obj_property name="ObjectShortName">m_axi_lite_arready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/m_axi_lite_arvalid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_axi_lite_arvalid</obj_property>
+      <obj_property name="ObjectShortName">m_axi_lite_arvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/m_axi_lite_rvalid" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_axi_lite_rvalid</obj_property>
+      <obj_property name="ObjectShortName">m_axi_lite_rvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/m_axi_lite_rready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">m_axi_lite_rready</obj_property>
+      <obj_property name="ObjectShortName">m_axi_lite_rready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/bus2ip_mst_cmdack" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">bus2ip_mst_cmdack</obj_property>
+      <obj_property name="ObjectShortName">bus2ip_mst_cmdack</obj_property>
+   </wvobject>
+   <wvobject fp_name="/system/dma_controller_0/dma_controller_0/AXI_MASTER_LITE_I/bus2ip_mst_cmplt" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">bus2ip_mst_cmplt</obj_property>
+      <obj_property name="ObjectShortName">bus2ip_mst_cmplt</obj_property>
    </wvobject>
 </wave_config>

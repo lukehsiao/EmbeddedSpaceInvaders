@@ -11,8 +11,8 @@ int main()
 	int source_word = 0xDEADBEEF;
 	int destination_word = 0x0;
 
-	int src_array[20] = {33, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
-	int dest_array[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	int src_array[20] = {33, 1, 2, 3, 4, 5, 6, 7, 123, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+	int dest_array[20] = {8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8};
     init_platform();
     cleanup_platform();
 

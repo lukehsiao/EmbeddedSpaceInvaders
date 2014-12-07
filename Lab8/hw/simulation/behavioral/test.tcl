@@ -18,5 +18,12 @@ run 200ns
 
 put /system/dma_controller_0/dma_controller_0/ipif_bus2ip_mst_cmplt 1
 run 40ns
-put /system/dma_controller_0/dma_controller_0/ipif_bus2ip_mst_cmplt 1
-run 500ns
+# Andrew just left this high the whole time
+put /system/dma_controller_0/dma_controller_0/ipif_bus2ip_mst_cmplt 1 
+run 300ns
+
+put /system/dma_controller_0/dma_controller_0/USER_LOGIC_I/slv_reg3 00000000000000000000000000001100
+put /system/dma_controller_0/dma_controller_0/USER_LOGIC_I/mst_go 1
+run 40ns
+put /system/dma_controller_0/dma_controller_0/USER_LOGIC_I/mst_go 0
+run 200ns
