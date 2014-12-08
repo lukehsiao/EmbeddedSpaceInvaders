@@ -1,5 +1,5 @@
 
-<EDKSYSTEM EDKVERSION="13.4" EDWVERSION="1.2" TIMESTAMP="Sat Nov 22 15:43:58 2014">
+<EDKSYSTEM EDKVERSION="13.4" EDWVERSION="1.2" TIMESTAMP="Mon Dec 08 11:11:53 2014">
 
   <SYSTEMINFO ARCH="spartan6" DEVICE="xc6slx45" PACKAGE="csg324" PART="xc6slx45csg324-3" SOURCE="C:/RH/Lab/hw/system.xmp" SPEEDGRADE="-3"/>
 
@@ -271,6 +271,46 @@
     <PORT DIR="I" MHS_INDEX="53" NAME="rangefinder_0_photoIn_pin" SIGNAME="rangefinder_0_photoIn">
       <CONNECTIONS>
         <CONNECTION INSTANCE="rangefinder_0" PORT="photoIn"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="54" NAME="rangefinder_0_SW1_pin" SIGNAME="net_rangefinder_0_SW1_pin">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="SW1"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="55" NAME="rangefinder_0_SW0_pin" SIGNAME="net_rangefinder_0_SW0_pin">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="SW0"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="56" NAME="rangefinder_0_SW2_pin" SIGNAME="net_rangefinder_0_SW2_pin">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="SW2"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="57" NAME="rangefinder_0_SW3_pin" SIGNAME="net_rangefinder_0_SW3_pin">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="SW3"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="58" NAME="rangefinder_0_SW4_pin" SIGNAME="net_rangefinder_0_SW4_pin">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="SW4"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="59" NAME="rangefinder_0_SW5_pin" SIGNAME="net_rangefinder_0_SW5_pin">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="SW5"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="60" NAME="rangefinder_0_SW6_pin" SIGNAME="net_rangefinder_0_SW6_pin">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="SW6"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" MHS_INDEX="61" NAME="rangefinder_0_SW7_pin" SIGNAME="net_rangefinder_0_SW7_pin">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="rangefinder_0" PORT="SW7"/>
       </CONNECTIONS>
     </PORT>
   </EXTERNALPORTS>
@@ -10833,6 +10873,46 @@
         <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="3" MPD_INDEX="21" NAME="photoIn" SIGNAME="rangefinder_0_photoIn">
           <CONNECTIONS>
             <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_photoIn_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="4" MPD_INDEX="23" NAME="SW1" SIGNAME="net_rangefinder_0_SW1_pin">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_SW1_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="5" MPD_INDEX="22" NAME="SW0" SIGNAME="net_rangefinder_0_SW0_pin">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_SW0_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="6" MPD_INDEX="24" NAME="SW2" SIGNAME="net_rangefinder_0_SW2_pin">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_SW2_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="7" MPD_INDEX="25" NAME="SW3" SIGNAME="net_rangefinder_0_SW3_pin">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_SW3_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="8" MPD_INDEX="26" NAME="SW4" SIGNAME="net_rangefinder_0_SW4_pin">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_SW4_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="9" MPD_INDEX="27" NAME="SW5" SIGNAME="net_rangefinder_0_SW5_pin">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_SW5_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="10" MPD_INDEX="28" NAME="SW6" SIGNAME="net_rangefinder_0_SW6_pin">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_SW6_pin"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" IS_INSTANTIATED="TRUE" MHS_INDEX="11" MPD_INDEX="29" NAME="SW7" SIGNAME="net_rangefinder_0_SW7_pin">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External Ports" PORT="rangefinder_0_SW7_pin"/>
           </CONNECTIONS>
         </PORT>
         <PORT BUS="S_AXI" DEF_SIGNAME="axi4lite_0_M_ARESETN" DIR="I" MPD_INDEX="1" NAME="S_AXI_ARESETN" SIGIS="RST" SIGNAME="axi4lite_0_M_ARESETN">

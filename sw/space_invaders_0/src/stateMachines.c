@@ -181,6 +181,9 @@ int TankMovementAndBullet_SM(int state) {
 	u32 leftButton = ((buttons & LEFT) >> 3) & 0x1;
 	u32 centerButton = (buttons & CENTER) & 0x1;
 	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
+	u32 switches = RANGEFINDER_readSW(XPAR_RANGEFINDER_0_BASEADDR);
+
+	xil_printf("SW: %x\n\r", switches);
 
 	// Pushing new Range value into Range Fifo
 	push(RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
