@@ -118,6 +118,7 @@ entity user_logic is
   (
     -- ADD USER PORTS BELOW THIS LINE ------------------
     --USER ports added here
+    transfer_finished               : out std_logic; --fires this as interrupt on completion
     -- ADD USER PORTS ABOVE THIS LINE ------------------
 
     -- DO NOT EDIT BELOW THIS LINE ---------------------
@@ -169,7 +170,6 @@ architecture IMP of user_logic is
 
   signal src_addr                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0) := (others => '0');
   signal dest_addr                      : std_logic_vector(C_SLV_DWIDTH-1 downto 0) := (others => '0');
-  signal clk, rst                       : std_logic := '0';
   signal transfer_length                : unsigned (C_SLV_DWIDTH-1 downto 0) := (others => '0');
   
   --User state machine to toggle between read/write
@@ -573,6 +573,7 @@ begin
         src_addr                  <= src_addr;
         dest_addr                 <= dest_addr;
         transfer_length           <= transfer_length;
+        transfer_finished         <= '0';
                 
         -- state transition
         case mst_cmd_sm_state is
@@ -657,6 +658,7 @@ begin
 
                 when USER_WRITE =>
                   if (transfer_length <= 1) then -- if we're all done
+                    transfer_finished   <= '1';  -- assert the intterupt
                     mst_cmd_sm_state    <= CMD_IDLE;
                     mst_cmd_sm_set_done <= '1';
                     mst_cmd_sm_busy     <= '0';

@@ -82,4 +82,7 @@ PORT m_axi_lite_bready = BREADY, DIR = O, BUS = M_AXI
 PORT m_axi_lite_bvalid = BVALID, DIR = I, BUS = M_AXI
 PORT m_axi_lite_bresp = BRESP, DIR = I, VEC = [1:0], BUS = M_AXI
 
+## Interrupt to signal DMA completion
+PORT transfer_finished = "", DIR = O, EDGE = RISING, SIGIS = INTERRUPT
+
 END
