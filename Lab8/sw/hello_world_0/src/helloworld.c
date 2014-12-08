@@ -23,7 +23,7 @@ int main()
     xil_printf("%d]\n\r", dest_array[19]);
 
     // Perform the DMA
-    DMA_CONTROLLER_CopyData(XPAR_DMA_CONTROLLER_0_BASEADDR, (Xuint32) &src_array, (Xuint32) &dest_array, 1);
+    DMA_CONTROLLER_CopyData(XPAR_DMA_CONTROLLER_0_BASEADDR, (Xuint32) &src_array, (Xuint32) &dest_array, 19);
 
     xil_printf("Printing value after DMA transfer.\n\r");
     xil_printf("Destination Array:\n\r[");
