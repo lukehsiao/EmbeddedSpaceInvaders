@@ -585,7 +585,12 @@ begin
             -- end user signals
             
             if ( mst_go = '1' ) then
-              mst_cmd_sm_state  <= CMD_RUN;
+				  -- Only do something if length is > 0
+				  if (unsigned(slv_reg2) = 0) then
+				    mst_cmd_sm_state <= CMD_IDLE;
+				  else
+				    mst_cmd_sm_state  <= CMD_RUN;
+				  end if;
               mst_cmd_sm_clr_go <= '1';
             else
               mst_cmd_sm_state  <= CMD_IDLE;
@@ -651,7 +656,7 @@ begin
                   user_state          <= USER_WRITE;
 
                 when USER_WRITE =>
-                  if (transfer_length = 0) then -- if we're all done
+                  if (transfer_length <= 1) then -- if we're all done
                     mst_cmd_sm_state    <= CMD_IDLE;
                     mst_cmd_sm_set_done <= '1';
                     mst_cmd_sm_busy     <= '0';
