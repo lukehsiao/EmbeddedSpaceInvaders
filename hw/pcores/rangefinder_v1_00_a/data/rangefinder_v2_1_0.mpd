@@ -58,4 +58,12 @@ PORT S_AXI_AWREADY = AWREADY, DIR = O, BUS = S_AXI
 PORT trigger = "", DIR = O
 PORT echoIn = "", DIR = I
 PORT photoIn = "", DIR = I
+PORT SW0 = "", DIR = I
+PORT SW1 = "", DIR = I
+PORT SW2 = "", DIR = I
+PORT SW3 = "", DIR = I
+PORT SW4 = "", DIR = I
+PORT SW5 = "", DIR = I
+PORT SW6 = "", DIR = I
+PORT SW7 = "", DIR = I
 END

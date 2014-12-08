@@ -62,7 +62,15 @@ entity system_stub is
     blink_0_LEDs_pin : out std_logic_vector(3 downto 0);
     rangefinder_0_trigger_pin : out std_logic;
     rangefinder_0_echoIn_pin : in std_logic;
-    rangefinder_0_photoIn_pin : in std_logic
+    rangefinder_0_photoIn_pin : in std_logic;
+    rangefinder_0_SW1_pin : in std_logic;
+    rangefinder_0_SW0_pin : in std_logic;
+    rangefinder_0_SW2_pin : in std_logic;
+    rangefinder_0_SW3_pin : in std_logic;
+    rangefinder_0_SW4_pin : in std_logic;
+    rangefinder_0_SW5_pin : in std_logic;
+    rangefinder_0_SW6_pin : in std_logic;
+    rangefinder_0_SW7_pin : in std_logic
   );
 end system_stub;
 
@@ -123,7 +131,15 @@ architecture STRUCTURE of system_stub is
       blink_0_LEDs_pin : out std_logic_vector(3 downto 0);
       rangefinder_0_trigger_pin : out std_logic;
       rangefinder_0_echoIn_pin : in std_logic;
-      rangefinder_0_photoIn_pin : in std_logic
+      rangefinder_0_photoIn_pin : in std_logic;
+      rangefinder_0_SW1_pin : in std_logic;
+      rangefinder_0_SW0_pin : in std_logic;
+      rangefinder_0_SW2_pin : in std_logic;
+      rangefinder_0_SW3_pin : in std_logic;
+      rangefinder_0_SW4_pin : in std_logic;
+      rangefinder_0_SW5_pin : in std_logic;
+      rangefinder_0_SW6_pin : in std_logic;
+      rangefinder_0_SW7_pin : in std_logic
     );
   end component;
 
@@ -187,7 +203,15 @@ begin
       blink_0_LEDs_pin => blink_0_LEDs_pin,
       rangefinder_0_trigger_pin => rangefinder_0_trigger_pin,
       rangefinder_0_echoIn_pin => rangefinder_0_echoIn_pin,
-      rangefinder_0_photoIn_pin => rangefinder_0_photoIn_pin
+      rangefinder_0_photoIn_pin => rangefinder_0_photoIn_pin,
+      rangefinder_0_SW1_pin => rangefinder_0_SW1_pin,
+      rangefinder_0_SW0_pin => rangefinder_0_SW0_pin,
+      rangefinder_0_SW2_pin => rangefinder_0_SW2_pin,
+      rangefinder_0_SW3_pin => rangefinder_0_SW3_pin,
+      rangefinder_0_SW4_pin => rangefinder_0_SW4_pin,
+      rangefinder_0_SW5_pin => rangefinder_0_SW5_pin,
+      rangefinder_0_SW6_pin => rangefinder_0_SW6_pin,
+      rangefinder_0_SW7_pin => rangefinder_0_SW7_pin
     );
 
 end architecture STRUCTURE;

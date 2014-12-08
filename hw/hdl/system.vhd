@@ -62,7 +62,15 @@ entity system is
     blink_0_LEDs_pin : out std_logic_vector(3 downto 0);
     rangefinder_0_trigger_pin : out std_logic;
     rangefinder_0_echoIn_pin : in std_logic;
-    rangefinder_0_photoIn_pin : in std_logic
+    rangefinder_0_photoIn_pin : in std_logic;
+    rangefinder_0_SW1_pin : in std_logic;
+    rangefinder_0_SW0_pin : in std_logic;
+    rangefinder_0_SW2_pin : in std_logic;
+    rangefinder_0_SW3_pin : in std_logic;
+    rangefinder_0_SW4_pin : in std_logic;
+    rangefinder_0_SW5_pin : in std_logic;
+    rangefinder_0_SW6_pin : in std_logic;
+    rangefinder_0_SW7_pin : in std_logic
   );
 end system;
 
@@ -2231,7 +2239,15 @@ architecture STRUCTURE of system is
       S_AXI_AWREADY : out std_logic;
       trigger : out std_logic;
       echoIn : in std_logic;
-      photoIn : in std_logic
+      photoIn : in std_logic;
+      SW0 : in std_logic;
+      SW1 : in std_logic;
+      SW2 : in std_logic;
+      SW3 : in std_logic;
+      SW4 : in std_logic;
+      SW5 : in std_logic;
+      SW6 : in std_logic;
+      SW7 : in std_logic
     );
   end component;
 
@@ -2506,6 +2522,14 @@ architecture STRUCTURE of system is
   signal net_gnd16 : std_logic_vector(0 to 15);
   signal net_gnd32 : std_logic_vector(0 to 31);
   signal net_gnd4096 : std_logic_vector(0 to 4095);
+  signal net_rangefinder_0_SW0_pin : std_logic;
+  signal net_rangefinder_0_SW1_pin : std_logic;
+  signal net_rangefinder_0_SW2_pin : std_logic;
+  signal net_rangefinder_0_SW3_pin : std_logic;
+  signal net_rangefinder_0_SW4_pin : std_logic;
+  signal net_rangefinder_0_SW5_pin : std_logic;
+  signal net_rangefinder_0_SW6_pin : std_logic;
+  signal net_rangefinder_0_SW7_pin : std_logic;
   signal net_vcc0 : std_logic;
   signal net_vcc4 : std_logic_vector(3 downto 0);
   signal pgassign1 : std_logic_vector(11 downto 0);
@@ -2579,6 +2603,14 @@ begin
   rangefinder_0_trigger_pin <= rangefinder_0_trigger;
   rangefinder_0_echoIn <= rangefinder_0_echoIn_pin;
   rangefinder_0_photoIn <= rangefinder_0_photoIn_pin;
+  net_rangefinder_0_SW1_pin <= rangefinder_0_SW1_pin;
+  net_rangefinder_0_SW0_pin <= rangefinder_0_SW0_pin;
+  net_rangefinder_0_SW2_pin <= rangefinder_0_SW2_pin;
+  net_rangefinder_0_SW3_pin <= rangefinder_0_SW3_pin;
+  net_rangefinder_0_SW4_pin <= rangefinder_0_SW4_pin;
+  net_rangefinder_0_SW5_pin <= rangefinder_0_SW5_pin;
+  net_rangefinder_0_SW6_pin <= rangefinder_0_SW6_pin;
+  net_rangefinder_0_SW7_pin <= rangefinder_0_SW7_pin;
   axi4_0_S_AWID(5 downto 4) <= B"00";
   axi4_0_S_AWADDR(95 downto 64) <= B"00000000000000000000000000000000";
   axi4_0_S_AWLEN(23 downto 16) <= B"00000000";
@@ -4774,7 +4806,15 @@ begin
       S_AXI_AWREADY => axi4lite_0_M_AWREADY(11),
       trigger => rangefinder_0_trigger,
       echoIn => rangefinder_0_echoIn,
-      photoIn => rangefinder_0_photoIn
+      photoIn => rangefinder_0_photoIn,
+      SW0 => net_rangefinder_0_SW0_pin,
+      SW1 => net_rangefinder_0_SW1_pin,
+      SW2 => net_rangefinder_0_SW2_pin,
+      SW3 => net_rangefinder_0_SW3_pin,
+      SW4 => net_rangefinder_0_SW4_pin,
+      SW5 => net_rangefinder_0_SW5_pin,
+      SW6 => net_rangefinder_0_SW6_pin,
+      SW7 => net_rangefinder_0_SW7_pin
     );
 
   iobuf_0 : IOBUF

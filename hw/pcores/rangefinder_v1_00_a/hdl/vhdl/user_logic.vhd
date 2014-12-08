@@ -100,6 +100,16 @@ entity user_logic is
 	 photoIn : in  STD_LOGIC;
     echoIn : in  STD_LOGIC;
     trigger : out  STD_LOGIC;
+    
+    SW0 : in  STD_LOGIC;
+    SW1 : in  STD_LOGIC;
+    SW2 : in  STD_LOGIC;
+    SW3 : in  STD_LOGIC;
+    SW4 : in  STD_LOGIC;
+    SW5 : in  STD_LOGIC;
+    SW6 : in  STD_LOGIC;
+    SW7 : in  STD_LOGIC;
+    
     -- ADD USER PORTS ABOVE THIS LINE ------------------
 
     -- DO NOT EDIT BELOW THIS LINE ---------------------
@@ -169,14 +179,17 @@ architecture IMP of user_logic is
   signal slv_reg0                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
   signal slv_reg1                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
   signal slv_reg2                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
-  signal slv_reg3                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
+  signal slv_reg3                       : std_logic_vector(C_SLV_DWIDTH-1 downto 0); -- used for switches
   signal slv_reg_write_sel              : std_logic_vector(3 downto 0);
   signal slv_reg_read_sel               : std_logic_vector(3 downto 0);
   signal slv_ip2bus_data                : std_logic_vector(C_SLV_DWIDTH-1 downto 0);
   signal slv_read_ack                   : std_logic;
   signal slv_write_ack                  : std_logic;
+  signal dummy                          : std_logic_vector(23 downto 0);
+  signal sw_buffer                      : std_logic_vector(7 downto 0);
 
 begin
+dummy <= (others => '0');
 
   --USER logic implementation added here
 
@@ -212,7 +225,7 @@ begin
         --slv_reg0 <= (others => '0'); --reg0 is READ_ONLY
         --slv_reg1 <= (others => '0');
         slv_reg2 <= (others => '0');
-        slv_reg3 <= (others => '0');
+        --slv_reg3 <= (others => '0');
       else
         case slv_reg_write_sel is
           when "1000" =>
@@ -236,7 +249,7 @@ begin
           when "0001" =>
             for byte_index in 0 to (C_SLV_DWIDTH/8)-1 loop
               if ( Bus2IP_BE(byte_index) = '1' ) then
-                slv_reg3(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
+                --slv_reg3(byte_index*8+7 downto byte_index*8) <= Bus2IP_Data(byte_index*8+7 downto byte_index*8);
               end if;
             end loop;
           when others => null;
@@ -371,6 +384,7 @@ begin
 --		  end case;	 
 --	 end process;
 --	 slv_reg2 <= state_decode;
-	 
+    sw_buffer <= SW7 & SW6 & SW5 & SW4 & SW3 & SW2 & SW1 & SW0;
+	slv_reg3 <= dummy & sw_buffer;  -- send switches out
 end IMP;
 

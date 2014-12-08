@@ -53,6 +53,7 @@ u8 spaceshipDied; 		// flag that is set when ship is first hit then lowered when
 u32 score;
 u8 lives;	//starts w/ 3 and decrements each death
 u8 gameOver; // 1 is gameOver. 0 game is running
+u8 pause;
 //******************* End Variables of Space Invaders**********************
 
 /////////////////////////////////////
@@ -88,6 +89,7 @@ void initGlobals(){
 	setLives(3);
 	setScore(0);
 	gameOver = 0;
+	pause = 0;
 
 	// Initialize Bullets
 	alienBullet bullet;

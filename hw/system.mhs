@@ -65,6 +65,14 @@
  PORT rangefinder_0_trigger_pin = rangefinder_0_trigger, DIR = O
  PORT rangefinder_0_echoIn_pin = rangefinder_0_echoIn, DIR = I
  PORT rangefinder_0_photoIn_pin = rangefinder_0_photoIn, DIR = I
+ PORT rangefinder_0_SW1_pin = net_rangefinder_0_SW1_pin, DIR = I
+ PORT rangefinder_0_SW0_pin = net_rangefinder_0_SW0_pin, DIR = I
+ PORT rangefinder_0_SW2_pin = net_rangefinder_0_SW2_pin, DIR = I
+ PORT rangefinder_0_SW3_pin = net_rangefinder_0_SW3_pin, DIR = I
+ PORT rangefinder_0_SW4_pin = net_rangefinder_0_SW4_pin, DIR = I
+ PORT rangefinder_0_SW5_pin = net_rangefinder_0_SW5_pin, DIR = I
+ PORT rangefinder_0_SW6_pin = net_rangefinder_0_SW6_pin, DIR = I
+ PORT rangefinder_0_SW7_pin = net_rangefinder_0_SW7_pin, DIR = I
 
 
 BEGIN proc_sys_reset
@@ -415,5 +423,13 @@ BEGIN rangefinder
  PORT trigger = rangefinder_0_trigger
  PORT echoIn = rangefinder_0_echoIn
  PORT photoIn = rangefinder_0_photoIn
+ PORT SW1 = net_rangefinder_0_SW1_pin
+ PORT SW0 = net_rangefinder_0_SW0_pin
+ PORT SW2 = net_rangefinder_0_SW2_pin
+ PORT SW3 = net_rangefinder_0_SW3_pin
+ PORT SW4 = net_rangefinder_0_SW4_pin
+ PORT SW5 = net_rangefinder_0_SW5_pin
+ PORT SW6 = net_rangefinder_0_SW6_pin
+ PORT SW7 = net_rangefinder_0_SW7_pin
 END
 

@@ -142,6 +142,15 @@ entity rangefinder is
 	 photoIn : in  STD_LOGIC;
     echoIn : in  STD_LOGIC;
     trigger : out  STD_LOGIC;
+    
+    SW0 : in STD_LOGIC;
+    SW1 : in STD_LOGIC;
+    SW2 : in STD_LOGIC;
+    SW3 : in STD_LOGIC;
+    SW4 : in STD_LOGIC;
+    SW5 : in STD_LOGIC;
+    SW6 : in STD_LOGIC;
+    SW7 : in STD_LOGIC;
     -- ADD USER PORTS ABOVE THIS LINE ------------------
 
     -- DO NOT EDIT BELOW THIS LINE ---------------------
@@ -349,6 +358,15 @@ begin
 		photoIn => photoIn,
       echoIn => echoIn,
       trigger => trigger,
+      
+      SW0 => SW0,
+      SW1 => SW1,
+      SW2 => SW2,
+      SW3 => SW3,
+      SW4 => SW4,
+      SW5 => SW5,
+      SW6 => SW6,
+      SW7 => SW7,
       -- MAP USER PORTS ABOVE THIS LINE ------------------
 
       Bus2IP_Clk                     => ipif_Bus2IP_Clk,

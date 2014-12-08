@@ -33,7 +33,15 @@ entity rangefinder_0_wrapper is
     S_AXI_AWREADY : out std_logic;
     trigger : out std_logic;
     echoIn : in std_logic;
-    photoIn : in std_logic
+    photoIn : in std_logic;
+    SW0 : in std_logic;
+    SW1 : in std_logic;
+    SW2 : in std_logic;
+    SW3 : in std_logic;
+    SW4 : in std_logic;
+    SW5 : in std_logic;
+    SW6 : in std_logic;
+    SW7 : in std_logic
   );
 end rangefinder_0_wrapper;
 
@@ -76,7 +84,15 @@ architecture STRUCTURE of rangefinder_0_wrapper is
       S_AXI_AWREADY : out std_logic;
       trigger : out std_logic;
       echoIn : in std_logic;
-      photoIn : in std_logic
+      photoIn : in std_logic;
+      SW0 : in std_logic;
+      SW1 : in std_logic;
+      SW2 : in std_logic;
+      SW3 : in std_logic;
+      SW4 : in std_logic;
+      SW5 : in std_logic;
+      SW6 : in std_logic;
+      SW7 : in std_logic
     );
   end component;
 
@@ -119,7 +135,15 @@ begin
       S_AXI_AWREADY => S_AXI_AWREADY,
       trigger => trigger,
       echoIn => echoIn,
-      photoIn => photoIn
+      photoIn => photoIn,
+      SW0 => SW0,
+      SW1 => SW1,
+      SW2 => SW2,
+      SW3 => SW3,
+      SW4 => SW4,
+      SW5 => SW5,
+      SW6 => SW6,
+      SW7 => SW7
     );
 
 end architecture STRUCTURE;

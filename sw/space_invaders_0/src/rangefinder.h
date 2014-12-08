@@ -149,6 +149,8 @@
 
 #define RANGEFINDER_readState(BaseAddress) RANGEFINDER_mReadSlaveReg2((BaseAddress), 0)
 
+#define RANGEFINDER_readSW(BaseAddress) RANGEFINDER_mReadSlaveReg3((BaseAddress), 0)
+
 /************************** Function Prototypes ****************************/
 
 
