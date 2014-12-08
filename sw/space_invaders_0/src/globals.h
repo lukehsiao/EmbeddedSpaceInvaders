@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 #include "bitmaps.h"
+#include "dma_controller.h"
+#include "xparameters.h"
 
 #ifndef globals_h
 #define globals_h
@@ -130,5 +132,13 @@ u8 getLives();
 void setGameOver(u8 newVal);
 u8 getGameOver();
 
+void pauseGameDMA();
+void resumeGameDMA();
+u8 getDMAPause();
+
+void softwareCapture();
+void hardwareCapture();
+
+void showCapture();
 
 #endif

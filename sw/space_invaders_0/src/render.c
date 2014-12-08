@@ -300,7 +300,7 @@ void renderLives() {
  * Renders all of the objects on the screen
  */
 void render() {
-	//blankScreen();
+	blankScreen();
 	renderSpaceShip();
 	renderScoreText();
 	renderScore();
