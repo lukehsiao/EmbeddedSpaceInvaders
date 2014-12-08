@@ -580,7 +580,7 @@ begin
             -- User signals
             src_addr <= slv_reg0; -- Read SRC
             dest_addr <= slv_reg1; -- Read DEST
-            transfer_length <= slv_reg2; -- read length
+            transfer_length <= unsigned(slv_reg2); -- read length
             user_state <= USER_READ;
             -- end user signals
             
