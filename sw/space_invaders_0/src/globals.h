@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 #include "bitmaps.h"
+#include "dma_controller.h"
+#include "xparameters.h"
 
 #ifndef globals_h
 #define globals_h

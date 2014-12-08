@@ -174,6 +174,7 @@ void initStateMachines(){
 //		for the latter half of the count shows the second bitmap to show the tank dead or a short time
 //		after enough cycles this state returns back to alive
 int TankMovementAndBullet_SM(int state) {
+//	xil_printf("TankMovementAndBullet_SM\n\r");
 	static int i;
 	static int cycles;
 	static u8 oldld7;
@@ -192,18 +193,20 @@ int TankMovementAndBullet_SM(int state) {
 	switchShift = 5;
 	u8 ld5 = (switches & (0x1 << switchShift)) >> switchShift;
 
-	//	xil_printf("7:%d\t6:%d\t5:%d\t\n\r", ld7, ld6, ld5);
-
 	if((oldld7 == 0) && (ld7 == 1)){ // rising edge of SW7
 		pauseGameDMA();
 		// Capture
-		if(ld6){// software capture
+		if(ld6){ // software capture
+//			xil_printf("Software Capture");
 			softwareCapture();
+//			xil_printf(" Complete\n\r");
+			resumeGameDMA();
 		}
-		else{// hardware capture
+		else{ // hardware capture
+//			xil_printf("Hardware Capture");
 			hardwareCapture();
+//			xil_printf(" Started\n\r");
 		}
-		resumeGameDMA();
 	}
 
 	if(ld5){ // show saved capture
@@ -211,10 +214,11 @@ int TankMovementAndBullet_SM(int state) {
 		showCapture();
 	}
 	else{
-		resumeGameDMA();
+
 	}
 	if((oldld5 == 1) && (ld5 == 0)){ // falling edge of SW5
 		render();
+		resumeGameDMA();
 	}
 
 	oldld7 = ld7;
@@ -460,6 +464,7 @@ int TankMovementAndBullet_SM(int state) {
 }
 
 int TankBulletUpdate_SM(int state) {
+//	xil_printf("\tTankBulletUpdate_SM\n\r");
 	if(!getDMAPause()){
 		if(state == -1)
 		{
@@ -497,6 +502,7 @@ int TankBulletUpdate_SM(int state) {
 }
 
 int AlienMovementAndBullets_SM(int state) {
+//	xil_printf("\t\tAlienMovementAndBullets_SM\n\r");
 	if(!getDMAPause()){
 		if(state == -1)
 		{
@@ -554,6 +560,7 @@ int AlienMovementAndBullets_SM(int state) {
 }
 
 int AlienbulletsUpdate_SM(int state) {
+//	xil_printf("\t\t\tAlienbulletsUpdate_SM\n\r");
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 upButton = ((buttons & UP) >> 4) & 0x1;
 	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
@@ -608,6 +615,7 @@ int AlienbulletsUpdate_SM(int state) {
 }
 
 int SpaceShipUpdate_SM(int state) {
+//	xil_printf("\t\t\t\tAlienbulletsUpdate_SM\n\r");
 	static int i;
 	static int cycles;
 	static int waitShow;
@@ -702,6 +710,7 @@ int SpaceShipUpdate_SM(int state) {
 }
 
 int AlienDeath_SM(int state) {
+//	xil_printf("\t\t\t\t\tAlienDeath_SM\n\r");
 	static point_t position;
 	static int i;
 	if(!getDMAPause()){

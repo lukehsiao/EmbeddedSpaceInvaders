@@ -35,6 +35,8 @@
 #include "pit_timer.h"
 #include "rangefinder.h"
 
+XTmrCtr Timer0;
+
 
 #define DEBUG
 
@@ -94,6 +96,11 @@ void AC97_interrupt_handler() {
 	XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_AXI_AC97_0_INTERRUPT_MASK);
 }
 
+void DMA_interrupt_handler(){
+//	xil_printf("Resume!!!\n\r");
+	resumeGameDMA();
+	XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_DMA_CONTROLLER_0_TRANSFER_FINISHED_MASK);
+}
 
 /**
  * Main interrupt handler, queries the interrupt controller to see what 
@@ -104,6 +111,10 @@ void AC97_interrupt_handler() {
  */
 void interrupt_handler_dispatcher(void* ptr) {
 	int intc_status = XIntc_GetIntrStatus(XPAR_INTC_0_BASEADDR);
+
+	if (intc_status & XPAR_DMA_CONTROLLER_0_TRANSFER_FINISHED_MASK){
+		DMA_interrupt_handler();
+	}
 	// Check the FIT interrupt first.
 	if (intc_status & XPAR_AXI_AC97_0_INTERRUPT_MASK){
 		AC97_interrupt_handler();
@@ -113,6 +124,7 @@ void interrupt_handler_dispatcher(void* ptr) {
 		XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_PIT_TIMER_0_INTR_MASK);
 		timer_interrupt_handler();
 	}
+
 
 }
 
@@ -207,7 +219,8 @@ int main()
 	XIntc_EnableIntr(XPAR_INTC_0_BASEADDR,
 			(XPAR_PIT_TIMER_0_INTR_MASK
 					| XPAR_PUSH_BUTTONS_5BITS_IP2INTC_IRPT_MASK
-					| XPAR_AXI_AC97_0_INTERRUPT_MASK));
+					| XPAR_AXI_AC97_0_INTERRUPT_MASK
+					| XPAR_DMA_CONTROLLER_0_TRANSFER_FINISHED_MASK));
 	XIntc_MasterEnable(XPAR_INTC_0_BASEADDR);
 
 	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
@@ -265,6 +278,8 @@ int main()
 	debugReg = RANGEFINDER_readDebug(XPAR_RANGEFINDER_0_BASEADDR);
 	xil_printf("debugReg should be Dead Beef: %08x\n\r", debugReg);
 //	int delay = 0;
+	Status = XTmrCtr_Initialize(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
+	XTmrCtr_SetResetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID, 0);
 	while (1){
 //		if (++delay == 1000000) {
 //			xil_printf("Distance: %d\n\r", RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));

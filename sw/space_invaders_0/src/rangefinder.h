@@ -176,7 +176,7 @@
 XStatus RANGEFINDER_SelfTest(void * baseaddr_p);
 /**
 *  Defines the number of registers available for read and write*/
-#define TEST_AXI_LITE_USER_NUM_REG 4
+//#define TEST_AXI_LITE_USER_NUM_REG 4
 
 
 #endif /** RANGEFINDER_H */

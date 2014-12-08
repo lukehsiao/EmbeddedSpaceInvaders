@@ -595,8 +595,13 @@ void softwareCapture(){
 	}
 }
 
-void hardwareCapture(){
-
+void hardwareCapture() {
+	int screen_size = 640*480;
+	// Perform the DMA
+	DMA_CONTROLLER_CopyData(XPAR_DMA_CONTROLLER_0_BASEADDR, // IP BaseAddr
+							(Xuint32) framePointer0, // Source Address
+							(Xuint32) captureFramePointer, // Destination Addr
+							(Xuint32) screen_size);	// Number of Words to transfer
 }
 
 void showCapture(){
