@@ -130,5 +130,13 @@ u8 getLives();
 void setGameOver(u8 newVal);
 u8 getGameOver();
 
+void pauseGameDMA();
+void resumeGameDMA();
+u8 getDMAPause();
+
+void softwareCapture();
+void hardwareCapture();
+
+void showCapture();
 
 #endif

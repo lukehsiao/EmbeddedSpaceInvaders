@@ -10,6 +10,7 @@
 
 u32* framePointer0 = (unsigned int *) FRAME_BUFFER_0_ADDR;
 u32* framePointer1 = ((unsigned int *) FRAME_BUFFER_0_ADDR) + 640*480;
+u32* captureFramePointer = ((unsigned int *) FRAME_BUFFER_0_ADDR) + 640*480 + 640*480;
 
 //******************* Variables of Space Invaders*************************
 // Alien Variables
@@ -36,7 +37,7 @@ point_t bunkerPosition_1;
 point_t bunkerPosition_2;
 point_t bunkerPosition_3;
 u32 bunkerState[4];			// We track the 5 states of each of the 10 blocks
-							// using 3 bits of the u32.
+// using 3 bits of the u32.
 
 // Tank Variables
 point_t tankPosition;
@@ -53,7 +54,8 @@ u8 spaceshipDied; 		// flag that is set when ship is first hit then lowered when
 u32 score;
 u8 lives;	//starts w/ 3 and decrements each death
 u8 gameOver; // 1 is gameOver. 0 game is running
-u8 pause;
+u8 DMAPause;
+
 //******************* End Variables of Space Invaders**********************
 
 /////////////////////////////////////
@@ -66,10 +68,10 @@ void initGlobals(){
 	tankLife = 1;
 
 	// Initialize Bunkers
-    initBunkers();
+	initBunkers();
 
-    // Initialize Aliens
-    alienGuise = 1;
+	// Initialize Aliens
+	alienGuise = 1;
 	int i;
 	for(i = 0; i < 5; i++) {
 		alienStatus[i] = 0xFFFF;
@@ -89,7 +91,7 @@ void initGlobals(){
 	setLives(3);
 	setScore(0);
 	gameOver = 0;
-	pause = 0;
+	DMAPause = 0;
 
 	// Initialize Bullets
 	alienBullet bullet;
@@ -324,10 +326,10 @@ void setAlienBullet(alienBullet val, u8 bulletNum) {
 		break;
 	case 2:
 		alienBullet_2 = val;
-	break;
+		break;
 	default:
 		alienBullet_3 = val;
-	break;
+		break;
 	}
 }
 
@@ -457,7 +459,7 @@ void setBlockState(u8 bunkerNumber, u8 blockNumber, u8 erosion) {
 	u32 tempState = bunkerState[bunkerNumber];
 	tempState = 0x3FFFFFFF & tempState;
 	u32 newErosion;
-	
+
 	if (blockNumber < 9) {
 		//clear old state by creating a ..1100011... mask and ANDing
 		u32 mask = 0xFFFFFFF8; //...1111 1000
@@ -533,18 +535,18 @@ u32 getBunkerState(u8 bunkerNumber) {
 point_t getBunkerPosition(u8 bunkerNumber) {
 	point_t temp;
 	switch(bunkerNumber) {
-		case 0:
-			return bunkerPosition_0;
-		case 1:
-			return bunkerPosition_1;
-		case 2:
-			return bunkerPosition_2;
-		case 3:
-			return bunkerPosition_3;
-		default:
-			temp.x = 0;
-			temp.y = 0;
-			return temp;
+	case 0:
+		return bunkerPosition_0;
+	case 1:
+		return bunkerPosition_1;
+	case 2:
+		return bunkerPosition_2;
+	case 3:
+		return bunkerPosition_3;
+	default:
+		temp.x = 0;
+		temp.y = 0;
+		return temp;
 	}
 }
 
@@ -574,4 +576,32 @@ void setGameOver(u8 newVal) {
 }
 
 
+void pauseGameDMA() {
+	DMAPause = 1;
+}
 
+void resumeGameDMA(){
+	DMAPause = 0;
+}
+
+u8 getDMAPause(){
+	return DMAPause;
+}
+
+void softwareCapture(){
+	int caputerLoop;
+	for(caputerLoop = 0; caputerLoop < 640*480; caputerLoop++){
+		captureFramePointer[caputerLoop] = framePointer0[caputerLoop];
+	}
+}
+
+void hardwareCapture(){
+
+}
+
+void showCapture(){
+	int caputerLoop;
+	for(caputerLoop = 0; caputerLoop < 640*480; caputerLoop++){
+		framePointer0[caputerLoop] = captureFramePointer[caputerLoop];
+	}
+}

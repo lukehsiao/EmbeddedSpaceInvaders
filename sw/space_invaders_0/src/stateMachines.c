@@ -145,7 +145,7 @@ void initStateMachines(){
 	tasks[taski].wcet = 0;
 	tasks[taski].bcet = 100000000;
 	++taski;
-	
+
 	// setting up game
 	initGlobals();
 	blankScreen(); // erase old data
@@ -176,14 +176,51 @@ void initStateMachines(){
 int TankMovementAndBullet_SM(int state) {
 	static int i;
 	static int cycles;
+	static u8 oldld7;
+	static u8 oldld5;
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 rightButton = ((buttons & RIGHT) >> 1) & 0x1;
 	u32 leftButton = ((buttons & LEFT) >> 3) & 0x1;
 	u32 centerButton = (buttons & CENTER) & 0x1;
 	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
 	u32 switches = RANGEFINDER_readSW(XPAR_RANGEFINDER_0_BASEADDR);
+	u8 switchShift = 7;
 
-	xil_printf("SW: %x\n\r", switches);
+	u8 ld7 = (switches & (0x1 << switchShift)) >> switchShift;
+	switchShift = 6;
+	u8 ld6 = (switches & (0x1 << switchShift)) >> switchShift;
+	switchShift = 5;
+	u8 ld5 = (switches & (0x1 << switchShift)) >> switchShift;
+
+	//	xil_printf("7:%d\t6:%d\t5:%d\t\n\r", ld7, ld6, ld5);
+
+	if((oldld7 == 0) && (ld7 == 1)){ // rising edge of SW7
+		pauseGameDMA();
+		// Capture
+		if(ld6){// software capture
+			softwareCapture();
+		}
+		else{// hardware capture
+			hardwareCapture();
+		}
+		resumeGameDMA();
+	}
+
+	if(ld5){ // show saved capture
+		pauseGameDMA();
+		showCapture();
+	}
+	else{
+		resumeGameDMA();
+	}
+	if((oldld5 == 1) && (ld5 == 0)){ // falling edge of SW5
+		render();
+	}
+
+	oldld7 = ld7;
+	oldld5 = ld5;
+
+
 
 	// Pushing new Range value into Range Fifo
 	push(RANGEFINDER_readDistance(XPAR_RANGEFINDER_0_BASEADDR));
@@ -212,55 +249,56 @@ int TankMovementAndBullet_SM(int state) {
 	else{
 		switch(state) { // Transitions
 		case SM1_alive:
-			if(getGameOver()){ // game is over!!!  you loose!
-				state = SM1_gameOver;
-			}
-			else{
-				if(centerButton) // user is pressing fire!!!
-					fireTankBullet();
-				if(areBuffersSet()){
-					if(photoFire == 0){ // user is covering photoResistor
+			if(!getDMAPause()){
+				if(getGameOver()){ // game is over!!!  you loose!
+					state = SM1_gameOver;
+				}
+				else{
+					if(centerButton) // user is pressing fire!!!
 						fireTankBullet();
+					if(areBuffersSet()){
+						if(photoFire == 0){ // user is covering photoResistor
+							fireTankBullet();
+						}
+						else{
+
+						}
 					}
-					else{
 
+					if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
+						state = SM1_dead;
+						cycles = TANK_MAP_FLIP_CYCLES;
 					}
-				}
+					else if(areBuffersSet()){ // game is in TOUCH FREE mode Buttons will be ignored
+						state = SM1_alive;
+						u32 tankPosition = getTankPositionGlobal().x;
+						u32 tankDesiredPosition = tankPixelDesired;
 
-				if (getTankLife() == 0) { // it the tank is dead TANK DEATH FLAG
-					state = SM1_dead;
-					cycles = TANK_MAP_FLIP_CYCLES;
-				}
-				else if(areBuffersSet()){ // game is in TOUCH FREE mode Buttons will be ignored
-					state = SM1_alive;
-					u32 tankPosition = getTankPositionGlobal().x;
-					u32 tankDesiredPosition = tankPixelDesired;
+						// Shift everything up for calculations to avoid overflow
+						tankPosition += 500;
+						tankDesiredPosition += (500 - SMOOTHING_BUFFER);
 
-					// Shift everything up for calculations to avoid overflow
-					tankPosition += 500;
-					tankDesiredPosition += (500 - SMOOTHING_BUFFER);
-
-					if(tankDesiredPosition < (tankPosition - SMOOTHING_BUFFER)){ // Desired position is less than Tank Actual Position
-						moveTankLeft();
+						if(tankDesiredPosition < (tankPosition - SMOOTHING_BUFFER)){ // Desired position is less than Tank Actual Position
+							moveTankLeft();
+						}
+						else if(tankDesiredPosition > (tankPosition + SMOOTHING_BUFFER)){ // Desired position is greater than Tank Actual Position
+							moveTankRight();
+						}
 					}
-					else if(tankDesiredPosition > (tankPosition + SMOOTHING_BUFFER)){ // Desired position is greater than Tank Actual Position
+					else if(!rightButton && !leftButton){ // user isnt pressing anything
+						state = SM1_alive;
+					}
+					else if(rightButton) { // user is pressing right
+						state = SM1_alive;
 						moveTankRight();
 					}
-				}
-				else if(!rightButton && !leftButton){ // user isnt pressing anything
-					state = SM1_alive;
-				}
-				else if(rightButton) { // user is pressing right
-					state = SM1_alive;
-					moveTankRight();
-				}
-				else if(leftButton) { // user is pressing left
-					state = SM1_alive;
-					moveTankLeft();
+					else if(leftButton) { // user is pressing left
+						state = SM1_alive;
+						moveTankLeft();
 
+					}
 				}
-			}
-			break;
+				break;
 		case SM1_dead:
 			if(getGameOver()){ // game is over!!!  you loose!
 				state = SM1_gameOver;
@@ -318,191 +356,199 @@ int TankMovementAndBullet_SM(int state) {
 			break;
 		default:
 			SM1_State = SM1_alive;
-		} // Transitions
+			} // Transitions
 
-		switch(state) { // State actions
-		case SM1_gameOver:{
-			if(downButton) {
-				i = 0;
-				xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
-				xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
-				xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d clock cycles", tasks[i++].wcet);
-				xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
-				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
-				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d clock cycles\n\r", tasks[i++].wcet);
-				i = 0;
-				xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
-				xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
-				xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d ns", tasks[i++].wcet*10);
-				xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
-				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
-				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d ns\n\r", tasks[i++].wcet*10);
-				i = 0;
-				xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d us", tasks[i++].wcet/100);
-				xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
-				xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d us", tasks[i++].wcet/100);
-				xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
-				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
-				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d us\n\r", tasks[i++].wcet/100);
-				i = 0;
-				xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
-				xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
-				xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d ms", tasks[i++].wcet/100000);
-				xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
-				xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
-				xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d ms\n\r", tasks[i++].wcet/100000);
-				i = 0;
-				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
-					xil_printf("\n\n\r\t\t\tOverrun in TankMovementAndBullet_SM");
-				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
-					xil_printf("\n\n\r\t\t\tOverrun in TankBulletUpdate_SM");
-				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
-					xil_printf("\n\n\r\t\t\tOverrun in AlienMovementAndBullets_SM");
-				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
-					xil_printf("\n\n\r\t\t\tOverrun in AlienbulletsUpdate_SM");
-				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
-					xil_printf("\n\n\r\t\t\tOverrun in SpaceShipUpdate_SM");
-				if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
-					xil_printf("\n\n\r\t\t\tOverrun in AlienDeath_SM");
-				i = 0;
-				int j;
-				u32 tempTotalWcet = 0;
-				for(j = 0; j < 6; j++){
-					tempTotalWcet += tasks[j++].wcet;
+			switch(state) { // State actions
+			case SM1_gameOver:{
+				if(downButton) {
+					i = 0;
+					xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
+					xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
+					xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d clock cycles", tasks[i++].wcet);
+					xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
+					xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d clock cycles", tasks[i++].wcet);
+					xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d clock cycles\n\r", tasks[i++].wcet);
+					i = 0;
+					xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
+					xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
+					xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d ns", tasks[i++].wcet*10);
+					xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
+					xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d ns", tasks[i++].wcet*10);
+					xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d ns\n\r", tasks[i++].wcet*10);
+					i = 0;
+					xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d us", tasks[i++].wcet/100);
+					xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d us\n\r", tasks[i++].wcet/100);
+					i = 0;
+					xil_printf("\n\n\rTankMovementAndBullet_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
+					xil_printf("\n\rTankBulletUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
+					xil_printf("\n\rAlienMovementAndBullets_SM wcet: \t%d ms", tasks[i++].wcet/100000);
+					xil_printf("\n\rAlienbulletsUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
+					xil_printf("\n\rSpaceShipUpdate_SM wcet: \t\t%d ms", tasks[i++].wcet/100000);
+					xil_printf("\n\rAlienDeath_SM wcet: \t\t\t%d ms\n\r", tasks[i++].wcet/100000);
+					i = 0;
+					if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+						xil_printf("\n\n\r\t\t\tOverrun in TankMovementAndBullet_SM");
+					if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+						xil_printf("\n\n\r\t\t\tOverrun in TankBulletUpdate_SM");
+					if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+						xil_printf("\n\n\r\t\t\tOverrun in AlienMovementAndBullets_SM");
+					if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+						xil_printf("\n\n\r\t\t\tOverrun in AlienbulletsUpdate_SM");
+					if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+						xil_printf("\n\n\r\t\t\tOverrun in SpaceShipUpdate_SM");
+					if(tasks[i++].wcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+						xil_printf("\n\n\r\t\t\tOverrun in AlienDeath_SM");
+					i = 0;
+					int j;
+					u32 tempTotalWcet = 0;
+					for(j = 0; j < 6; j++){
+						tempTotalWcet += tasks[j++].wcet;
+					}
+					xil_printf("\n\n\rTotal Wcet: %d clock cycles", tempTotalWcet);
+					if(tempTotalWcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
+						xil_printf("\n\n\r\t\t\tOverrun in Total Wcet");
+
+					i = 0;
+					xil_printf("\n\n\n\n\rTankMovementAndBullet_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
+					xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
+					xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d clock cycles", tasks[i++].bcet);
+					xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
+					xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
+					xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d clock cycles\n\r", tasks[i++].bcet);
+					i = 0;
+					xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
+					xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
+					xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d ns", tasks[i++].bcet*10);
+					xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
+					xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
+					xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d ns\n\r", tasks[i++].bcet*10);
+					i = 0;
+					xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d us", tasks[i++].bcet/100);
+					xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
+					xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d us", tasks[i++].bcet/100);
+					xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
+					xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
+					xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d us\n\r", tasks[i++].bcet/100);
+					i = 0;
+					xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
+					xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
+					xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d ms", tasks[i++].bcet/100000);
+					xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
+					xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
+					xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d ms\n\r", tasks[i++].bcet/100000);
+					i = 0;
+
+					u32 tempTotalBcet = 0;
+					for(j = 0; j < 6; j++){
+						tempTotalBcet += tasks[j++].bcet;
+					}
+					xil_printf("\n\n\rTotal Bcet: %d clock cycles", tempTotalBcet);
 				}
-				xil_printf("\n\n\rTotal Wcet: %d clock cycles", tempTotalWcet);
-				if(tempTotalWcet > XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ/100)
-					xil_printf("\n\n\r\t\t\tOverrun in Total Wcet");
-
-				i = 0;
-				xil_printf("\n\n\n\n\rTankMovementAndBullet_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
-				xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
-				xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d clock cycles", tasks[i++].bcet);
-				xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
-				xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d clock cycles", tasks[i++].bcet);
-				xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d clock cycles\n\r", tasks[i++].bcet);
-				i = 0;
-				xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
-				xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
-				xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d ns", tasks[i++].bcet*10);
-				xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
-				xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d ns", tasks[i++].bcet*10);
-				xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d ns\n\r", tasks[i++].bcet*10);
-				i = 0;
-				xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d us", tasks[i++].bcet/100);
-				xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
-				xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d us", tasks[i++].bcet/100);
-				xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
-				xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d us", tasks[i++].bcet/100);
-				xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d us\n\r", tasks[i++].bcet/100);
-				i = 0;
-				xil_printf("\n\n\rTankMovementAndBullet_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
-				xil_printf("\n\rTankBulletUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
-				xil_printf("\n\rAlienMovementAndBullets_SM bcet: \t%d ms", tasks[i++].bcet/100000);
-				xil_printf("\n\rAlienbulletsUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
-				xil_printf("\n\rSpaceShipUpdate_SM bcet: \t\t%d ms", tasks[i++].bcet/100000);
-				xil_printf("\n\rAlienDeath_SM bcet: \t\t\t%d ms\n\r", tasks[i++].bcet/100000);
-				i = 0;
-
-				u32 tempTotalBcet = 0;
-				for(j = 0; j < 6; j++){
-					tempTotalBcet += tasks[j++].bcet;
-				}
-				xil_printf("\n\n\rTotal Bcet: %d clock cycles", tempTotalBcet);
 			}
-		}
-		break;
-		default: // ADD default behaviour below
 			break;
-		} // State actions
+			default: // ADD default behaviour below
+				break;
+			} // State actions
+		}
+		return state;
 	}
 	return state;
 }
 
 int TankBulletUpdate_SM(int state) {
-	if(state == -1)
-	{
-		state = SM2_bullet;
-	}
-	else{
-		switch(state) { // Transitions
-		case SM2_bullet:
-			if(getGameOver()){
-				state = SM2_gameOver;
-			}
-			else if (0) { // if there are no bullets
-				state = SM2_bullet;
-			}
-			else if(1){
-				if(!getGameOver())
-					renderTankBullet(1);
-			}
-			break;
-		default:
+	if(!getDMAPause()){
+		if(state == -1)
+		{
 			state = SM2_bullet;
-		} // Transitions
-
-		switch(state) { // State actions
-		case SM2_bullet:{
 		}
-		break;
-		default: // ADD default behaviour below
+		else{
+			switch(state) { // Transitions
+			case SM2_bullet:
+				if(getGameOver()){
+					state = SM2_gameOver;
+				}
+				else if (0) { // if there are no bullets
+					state = SM2_bullet;
+				}
+				else if(1){
+					if(!getGameOver())
+						renderTankBullet(1);
+				}
+				break;
+			default:
+				state = SM2_bullet;
+			} // Transitions
+
+			switch(state) { // State actions
+			case SM2_bullet:{
+			}
 			break;
-		} // State actions
+			default: // ADD default behaviour below
+				break;
+			} // State actions
+		}
+		return state;
 	}
 	return state;
 }
 
 int AlienMovementAndBullets_SM(int state) {
-	if(state == -1)
-	{
-		state = SM3_alien;
-	}
-	else{
-		switch(state) { // Transitions
-		case SM3_alien:{
-
-			u8 random;
-			random = (char)(rand() % ALIEN_BULLET_FIRE_RATE);
-			if(random < 10){
-				//				startTiming();
-				random = (char)(rand() % 11);
-				fireAlienBullet(random);
-				//				stopTiming();
-			}
-
-			if(getGameOver()){
-				state = SM3_gameOver;
-			}
-			else if(1){
-				if(!getGameOver()){
-					renderAliens(1);
-				}
-				state = SM3_alien;
-			}
-		}
-		break;
-		case SM3_gameOver:
-			break;
-		default:
+	if(!getDMAPause()){
+		if(state == -1)
+		{
 			state = SM3_alien;
-		} // Transitions
-
-		switch(state) { // State actions
-		case SM3_alien:{
-			signed long newPeriod = ALIEN_STATE_MACHINE_RATE_MAX
-					-((getAlienBlockPosition().y-ALIEN_STARTING_Y_POSITION)/ALIEN_HEIGHT)*2;
-			u8 aliensAlive = getNumberAliensAlive();
-			newPeriod = newPeriod - (((55-aliensAlive)*4)/10);
-			if(newPeriod <= 1)
-				newPeriod = 1;
-			tasks[2].period = newPeriod;
-			newPeriod = newPeriod;
 		}
-		break;
-		default: // ADD default behaviour below
+		else{
+			switch(state) { // Transitions
+			case SM3_alien:{
+
+				u8 random;
+				random = (char)(rand() % ALIEN_BULLET_FIRE_RATE);
+				if(random < 10){
+					//				startTiming();
+					random = (char)(rand() % 11);
+					fireAlienBullet(random);
+					//				stopTiming();
+				}
+
+				if(getGameOver()){
+					state = SM3_gameOver;
+				}
+				else if(1){
+					if(!getGameOver()){
+						renderAliens(1);
+					}
+					state = SM3_alien;
+				}
+			}
 			break;
-		} // State actions
+			case SM3_gameOver:
+				break;
+			default:
+				state = SM3_alien;
+			} // Transitions
+
+			switch(state) { // State actions
+			case SM3_alien:{
+				signed long newPeriod = ALIEN_STATE_MACHINE_RATE_MAX
+						-((getAlienBlockPosition().y-ALIEN_STARTING_Y_POSITION)/ALIEN_HEIGHT)*2;
+				u8 aliensAlive = getNumberAliensAlive();
+				newPeriod = newPeriod - (((55-aliensAlive)*4)/10);
+				if(newPeriod <= 1)
+					newPeriod = 1;
+				tasks[2].period = newPeriod;
+				newPeriod = newPeriod;
+			}
+			break;
+			default: // ADD default behaviour below
+				break;
+			} // State actions
+		}
+		return state;
 	}
 	return state;
 }
@@ -522,38 +568,41 @@ int AlienbulletsUpdate_SM(int state) {
 		increaseVol();
 	}
 
-	if(state == -1)
-	{
-		state = SM4_bullets;
-	}
-	else{
-		switch(state) { // Transitions
-		case SM4_bullets:
-			if(getGameOver()){
-				state = SM4_gameOver;
-			}
-			else if (0) { // if there are no bullets
-				state = SM4_bullets;
-			}
-			else if(1){
-				if(!getGameOver()){
-					renderAlienBullet(1);
-					renderAliens(0);
-				}
-				state = SM4_bullets;
-			}
-			break;
-		default:
+	if(!getDMAPause()){
+		if(state == -1)
+		{
 			state = SM4_bullets;
-		} // Transitions
-
-		switch(state) { // State actions
-		case SM4_bullets:{
 		}
-		break;
-		default: // ADD default behavior below
+		else{
+			switch(state) { // Transitions
+			case SM4_bullets:
+				if(getGameOver()){
+					state = SM4_gameOver;
+				}
+				else if (0) { // if there are no bullets
+					state = SM4_bullets;
+				}
+				else if(1){
+					if(!getGameOver()){
+						renderAlienBullet(1);
+						renderAliens(0);
+					}
+					state = SM4_bullets;
+				}
+				break;
+			default:
+				state = SM4_bullets;
+			} // Transitions
+
+			switch(state) { // State actions
+			case SM4_bullets:{
+			}
 			break;
-		} // State actions
+			default: // ADD default behavior below
+				break;
+			} // State actions
+		}
+		return state;
 	}
 	return state;
 }
@@ -563,88 +612,91 @@ int SpaceShipUpdate_SM(int state) {
 	static int cycles;
 	static int waitShow;
 	static point_t savedPosition;
-	if(state == -1)
-	{
-		state = SM5_alive;
-	}
-	else{
-		switch(state) { // Transitions
-		case SM5_alive:
-			if(getGameOver()){
-				state = SM5_gameOver;
-			}
-			else if(getSpaceshipDied()) { // Space Ship is dead (up can be pressed for spaceship Death testing
-				state = SM5_dead;
-				cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
-				i = 0;
-				savedPosition = getSpaceshipPosition();
-				setSpaceshipDied(0);
-			}
-			else {
-				state = SM5_alive;
-				if(!getGameOver()){
-					renderSpaceShip();
-				}
-			}
-			break;
-		case SM5_dead:
-			if(getGameOver()){
-				state = SM5_gameOver;
-			}
-			else if (cycles <= 0) { // Score has Flashed and the Spaceship can come back
-				state = SM5_alive;
-				unrenderPoints(savedPosition);
-				cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
-				i = 0;
-			}
-			else if (cycles <= SPACESHIP_STEADY_SCORE_CYCLES) { // Score has flashed but needs to stay visible for a sec
-				state = SM5_dead;
-				renderPoints(getSpaceshipScore(), savedPosition);
-				cycles--;
-			}
-			else if(i < SPACESHIP_SCORE_COUNT/2) { // dont show the point
-				state = SM5_dead;
-				unrenderPoints(savedPosition);
-				renderPoints(getSpaceshipScore(), savedPosition);
-				i++;
-			}
-			else if(i < SPACESHIP_SCORE_COUNT) { // show the point
-				state = SM5_dead;
-				unrenderPoints(savedPosition);
-				i++;
-			}
-			else if(i >= SPACESHIP_SCORE_COUNT) { // one cycle has happened
-				state = SM5_dead;
-				unrenderPoints(savedPosition);
-				cycles--;
-				i = 0;
-			}
-			break;
-
-		default:
-			state = SM5_gameOver;
-		} // Transitions
-
-		switch(state) { // State actions
-		case SM5_alive:{
-			if(waitShow >= EXTRA_WAIT){
-				u32 showRandom;
-				showRandom = (char)(rand() % SPACESHIP_START_RATE);
-				if((showRandom == 0) && (!getGameOver())){
-					startSpaceShip();
-				}
-				waitShow = 0;
-			}
-			waitShow++;
+	if(!getDMAPause()){
+		if(state == -1)
+		{
+			state = SM5_alive;
 		}
-		break;
-		case SM5_dead: {
-			setActive(SPACESHIP_MOVE_NUM, INACTIVE);
-		}
-		break;
-		default: // ADD default behaviour below
+		else{
+			switch(state) { // Transitions
+			case SM5_alive:
+				if(getGameOver()){
+					state = SM5_gameOver;
+				}
+				else if(getSpaceshipDied()) { // Space Ship is dead (up can be pressed for spaceship Death testing
+					state = SM5_dead;
+					cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
+					i = 0;
+					savedPosition = getSpaceshipPosition();
+					setSpaceshipDied(0);
+				}
+				else {
+					state = SM5_alive;
+					if(!getGameOver()){
+						renderSpaceShip();
+					}
+				}
+				break;
+			case SM5_dead:
+				if(getGameOver()){
+					state = SM5_gameOver;
+				}
+				else if (cycles <= 0) { // Score has Flashed and the Spaceship can come back
+					state = SM5_alive;
+					unrenderPoints(savedPosition);
+					cycles = SPACESHIP_FLASH_SCORE_CYCLES + SPACESHIP_STEADY_SCORE_CYCLES;
+					i = 0;
+				}
+				else if (cycles <= SPACESHIP_STEADY_SCORE_CYCLES) { // Score has flashed but needs to stay visible for a sec
+					state = SM5_dead;
+					renderPoints(getSpaceshipScore(), savedPosition);
+					cycles--;
+				}
+				else if(i < SPACESHIP_SCORE_COUNT/2) { // dont show the point
+					state = SM5_dead;
+					unrenderPoints(savedPosition);
+					renderPoints(getSpaceshipScore(), savedPosition);
+					i++;
+				}
+				else if(i < SPACESHIP_SCORE_COUNT) { // show the point
+					state = SM5_dead;
+					unrenderPoints(savedPosition);
+					i++;
+				}
+				else if(i >= SPACESHIP_SCORE_COUNT) { // one cycle has happened
+					state = SM5_dead;
+					unrenderPoints(savedPosition);
+					cycles--;
+					i = 0;
+				}
+				break;
+
+			default:
+				state = SM5_gameOver;
+			} // Transitions
+
+			switch(state) { // State actions
+			case SM5_alive:{
+				if(waitShow >= EXTRA_WAIT){
+					u32 showRandom;
+					showRandom = (char)(rand() % SPACESHIP_START_RATE);
+					if((showRandom == 0) && (!getGameOver())){
+						startSpaceShip();
+					}
+					waitShow = 0;
+				}
+				waitShow++;
+			}
 			break;
-		} // State actions
+			case SM5_dead: {
+				setActive(SPACESHIP_MOVE_NUM, INACTIVE);
+			}
+			break;
+			default: // ADD default behaviour below
+				break;
+			} // State actions
+		}
+		return state;
 	}
 	return state;
 }
@@ -652,58 +704,61 @@ int SpaceShipUpdate_SM(int state) {
 int AlienDeath_SM(int state) {
 	static point_t position;
 	static int i;
-	if(state == -1)
-	{
-		state = SM6_noDeath;
-	}
-	else{
-		switch(state) { // Transitions
-		case SM6_noDeath:
-			if(getGameOver()){
-				state = SM6_gameOver;
-				setAlienDeath(0);
-			}
-			else if(getAlienDeath()) {
-				state = SM6_death;
-				setAlienDeath(0);
+	if(!getDMAPause()){
+		if(state == -1)
+		{
+			state = SM6_noDeath;
+		}
+		else{
+			switch(state) { // Transitions
+			case SM6_noDeath:
+				if(getGameOver()){
+					state = SM6_gameOver;
+					setAlienDeath(0);
+				}
+				else if(getAlienDeath()) {
+					state = SM6_death;
+					setAlienDeath(0);
+					position = getAlienExplosionPosition();
+				}
+				else {
+					state = SM6_noDeath;
+				}
+				break;
+			case SM6_death:
+				if(getGameOver()){
+					state = SM6_gameOver;
+					unrenderDeadAlien(position);
+					i = 0;
+				}
+				else if (i >= ALIEN_EXPLOSION_SHOW_TIME) {
+					state = SM6_noDeath;
+					unrenderDeadAlien(position);
+					i = 0;
+				}
+				else {
+					state = SM6_death;
+					i++;
+				}
+				break;
+
+			default:
+				state = SM6_noDeath;
+			} // Transitions
+
+			switch(state) { // State actions
+			case SM6_noDeath:{
 				position = getAlienExplosionPosition();
 			}
-			else {
-				state = SM6_noDeath;
+			break;
+			case SM6_death: {
 			}
 			break;
-		case SM6_death:
-			if(getGameOver()){
-				state = SM6_gameOver;
-				unrenderDeadAlien(position);
-				i = 0;
-			}
-			else if (i >= ALIEN_EXPLOSION_SHOW_TIME) {
-				state = SM6_noDeath;
-				unrenderDeadAlien(position);
-				i = 0;
-			}
-			else {
-				state = SM6_death;
-				i++;
-			}
-			break;
-
-		default:
-			state = SM6_noDeath;
-		} // Transitions
-
-		switch(state) { // State actions
-		case SM6_noDeath:{
-			position = getAlienExplosionPosition();
+			default:
+				break;
+			} // State actions
 		}
-		break;
-		case SM6_death: {
-		}
-		break;
-		default:
-			break;
-		} // State actions
+		return state;
 	}
 	return state;
 }
