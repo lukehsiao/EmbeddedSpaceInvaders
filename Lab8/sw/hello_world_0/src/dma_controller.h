@@ -263,8 +263,9 @@
  * @note    None.
  *
  */
-void DMA_CONTROLLER_MasterSendWord(Xuint32 BaseAddress, Xuint32 DstAddress);
-void DMA_CONTROLLER_MasterRecvWord(Xuint32 BaseAddress, Xuint32 SrcAddress);
+//void DMA_CONTROLLER_MasterSendWord(Xuint32 BaseAddress, Xuint32 DstAddress);
+//void DMA_CONTROLLER_MasterRecvWord(Xuint32 BaseAddress, Xuint32 SrcAddress);
+void DMA_CONTROLLER_CopyData(Xuint32 BaseAddress, Xuint32 SrcBaseAddr, Xuint32 DestBaseAddr, Xuint32 Length);
 
 /**
  *
