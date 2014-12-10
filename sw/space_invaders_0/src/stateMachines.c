@@ -11,6 +11,9 @@
 #include "render.h"			// Our rendering file.
 #include "rangefinder.h"
 #include "inputManager.h"
+#include "xtmrctr.h"
+
+XTmrCtr Timer0;
 
 extern u32 tankPixelDesired;
 
@@ -46,25 +49,26 @@ void setElapsedTime(u8 taskNum, unsigned long newTime) {
 	return;
 }
 
-#ifdef TIMING
+//#ifdef TIMING
 /////////////////////////////////////
 // Handy Timing Functions
 /////////////////////////////////////
 void startTiming() {
 	XTmrCtr_Start(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 }
-
+int maxWcet;
+int tempWcet;
 void stopTiming() {
 	XTmrCtr_Stop(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	tempWcet = XTmrCtr_GetValue(&Timer0, XPAR_AXI_TIMER_0_DEVICE_ID);
 	if(tempWcet > maxWcet){ // it the current timer is longer than our worst case prior
 		maxWcet = tempWcet; // save that as our worst case timer
 		xil_printf("\n\r maxWcet is %d cycles", maxWcet);
-		if(maxWcet > 1000000) // if the timer is over our clock tick period
-			xil_printf("\n\r TIMER OVERRUN"); // there was timer overrun
+//		if(maxWcet > 1000000) // if the timer is over our clock tick period
+//			xil_printf("\n\r TIMER OVERRUN"); // there was timer overrun
 	}
 }
-#endif
+//#endif
 
 
 
@@ -174,7 +178,7 @@ void initStateMachines(){
 //		for the latter half of the count shows the second bitmap to show the tank dead or a short time
 //		after enough cycles this state returns back to alive
 int TankMovementAndBullet_SM(int state) {
-//	xil_printf("TankMovementAndBullet_SM\n\r");
+	//	xil_printf("TankMovementAndBullet_SM\n\r");
 	static int i;
 	static int cycles;
 	static u8 oldld7;
@@ -194,18 +198,11 @@ int TankMovementAndBullet_SM(int state) {
 	u8 ld5 = (switches & (0x1 << switchShift)) >> switchShift;
 
 	if((oldld7 == 0) && (ld7 == 1)){ // rising edge of SW7
-		pauseGameDMA();
-		// Capture
 		if(ld6){ // software capture
-//			xil_printf("Software Capture");
 			softwareCapture();
-//			xil_printf(" Complete\n\r");
-			resumeGameDMA();
 		}
 		else{ // hardware capture
-//			xil_printf("Hardware Capture");
 			hardwareCapture();
-//			xil_printf(" Started\n\r");
 		}
 	}
 
@@ -213,9 +210,7 @@ int TankMovementAndBullet_SM(int state) {
 		pauseGameDMA();
 		showCapture();
 	}
-	else{
 
-	}
 	if((oldld5 == 1) && (ld5 == 0)){ // falling edge of SW5
 		render();
 		resumeGameDMA();
@@ -464,7 +459,7 @@ int TankMovementAndBullet_SM(int state) {
 }
 
 int TankBulletUpdate_SM(int state) {
-//	xil_printf("\tTankBulletUpdate_SM\n\r");
+	//	xil_printf("\tTankBulletUpdate_SM\n\r");
 	if(!getDMAPause()){
 		if(state == -1)
 		{
@@ -502,7 +497,7 @@ int TankBulletUpdate_SM(int state) {
 }
 
 int AlienMovementAndBullets_SM(int state) {
-//	xil_printf("\t\tAlienMovementAndBullets_SM\n\r");
+	//	xil_printf("\t\tAlienMovementAndBullets_SM\n\r");
 	if(!getDMAPause()){
 		if(state == -1)
 		{
@@ -560,7 +555,7 @@ int AlienMovementAndBullets_SM(int state) {
 }
 
 int AlienbulletsUpdate_SM(int state) {
-//	xil_printf("\t\t\tAlienbulletsUpdate_SM\n\r");
+	//	xil_printf("\t\t\tAlienbulletsUpdate_SM\n\r");
 	u32 buttons = XGpio_DiscreteRead(&gpPB, 1);
 	u32 upButton = ((buttons & UP) >> 4) & 0x1;
 	u32 downButton = ((buttons & DOWN) >> 2) & 0x1;
@@ -615,7 +610,7 @@ int AlienbulletsUpdate_SM(int state) {
 }
 
 int SpaceShipUpdate_SM(int state) {
-//	xil_printf("\t\t\t\tAlienbulletsUpdate_SM\n\r");
+	//	xil_printf("\t\t\t\tAlienbulletsUpdate_SM\n\r");
 	static int i;
 	static int cycles;
 	static int waitShow;
@@ -710,7 +705,7 @@ int SpaceShipUpdate_SM(int state) {
 }
 
 int AlienDeath_SM(int state) {
-//	xil_printf("\t\t\t\t\tAlienDeath_SM\n\r");
+	//	xil_printf("\t\t\t\t\tAlienDeath_SM\n\r");
 	static point_t position;
 	static int i;
 	if(!getDMAPause()){

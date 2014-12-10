@@ -37,10 +37,7 @@
 
 XTmrCtr Timer0;
 
-
 #define DEBUG
-
-XTmrCtr Timer0;
 
 void print(char *str);
 
@@ -124,8 +121,6 @@ void interrupt_handler_dispatcher(void* ptr) {
 		XIntc_AckIntr(XPAR_INTC_0_BASEADDR, XPAR_PIT_TIMER_0_INTR_MASK);
 		timer_interrupt_handler();
 	}
-
-
 }
 
 
@@ -235,14 +230,6 @@ int main()
 		XAC97_mSetInFifoData(XPAR_AXI_AC97_0_BASEADDR, 127);
 	}
 	XAC97_WriteReg(XPAR_AXI_AC97_0_BASEADDR, AC97_AuxOutVol, AC97_VOL_MID);
-	increaseVol();
-	increaseVol();
-	increaseVol();
-	increaseVol();
-	increaseVol();
-	increaseVol();
-	increaseVol();
-	increaseVol();
 
 
 	// Print a sanity message if you get this far.

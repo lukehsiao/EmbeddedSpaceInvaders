@@ -33,8 +33,8 @@ typedef struct task {
 /////////////////////////////////////
 // Handy Timing Functions
 /////////////////////////////////////
-void startTiming();
 void stopTiming();
+void startTiming();
 
 void initStateMachines();
 

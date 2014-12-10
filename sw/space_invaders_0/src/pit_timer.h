@@ -16,7 +16,7 @@
 
 /************************** Constant Definitions ***************************/
 
-#define DEFAULT_RELOAD 	0x000F4240	// Use this value to get 1 interrupt/10ms
+#define DEFAULT_RELOAD 	0x0007A120	// Use this value to get 1 interrupt/10ms
 #define INTR_ENABLE		0x00000002
 #define	COUNTER_ENABLE	0x00000001
 #define RELOAD_ENABLE	0x00000004

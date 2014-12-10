@@ -68,7 +68,9 @@ void initGlobals(){
 	tankLife = 1;
 
 	// Initialize Bunkers
-	initBunkers();
+	if(getScore() == 0){
+		initBunkers();
+	}
 
 	// Initialize Aliens
 	alienGuise = 1;
