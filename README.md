@@ -5,9 +5,9 @@ This implementation of Space Invaders is made for the Digilent [ATLYS Developmen
 
 ### What is this repository for? ###
 
-Good version control.  We've organized it into two folders, hardware and software.  These are for source files only.
-You will need the board support package for this board that is provided on the Digilent Website.
+This repository is for source files only.
+You will need the board support package for this board that is provided on the Digilent Website to compile.
 
-### Authors: ###
+### Who to I talk to? ###
 Luke Hsiao | lukehsiao@byu.edu  
 Jeff Ravert | jravert88@gmail.com 
