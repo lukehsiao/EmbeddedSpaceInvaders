@@ -1,9 +1,0 @@
--batch 
--create dma_controller 
--ver 1.00.a 
--dir "C:\RH\Lab\Lab8\hw" 
--lang vhdl 
--bus axi4lite ms 
--reg 15 
--xps 
--driver 
