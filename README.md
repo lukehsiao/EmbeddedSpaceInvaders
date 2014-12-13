@@ -1,19 +1,13 @@
-# ECEn 427 | Space Invaders #
+# Embedded Space Invaders #
 
-[Class Homepage](http://ee427plblabs.groups.et.byu.net/wiki/doku.php?id=start)
+This implementation of Space Invaders is made for the Digilent [ATLYS Development Board](http://www.digilentinc.com/Products/Detail.cfm?NavPath=2,400,836&Prod=ATLYS&CFID=6868855&CFTOKEN=8a46aff22a6e7e36-78556F94-5056-0201-024A395AE56BA1E9). The hardware and software is organized into their own respective folders.
 
 
 ### What is this repository for? ###
 
-Good version control.  We've organized it into two folders, hardware and software.  These are for source files only.
+This repository is for source files only.
+You will need the board support package for this board that is provided on the Digilent Website to compile.
 
-Use path *C:\RH\Lab* for all projects!!!
-
-### Versioning Guidelines ###
-We will use a vX.X.X versioning guideline.  We will call v1.0.0 the final version for lab 3, v2.0.0 the final for lab 4, etc.  Each final, stable lab version will increment the major version number. 
-
-We will try to follow the "Fork and Pull" model of revision control.
-
-### Authors: ###
+### Who to I talk to? ###
 Luke Hsiao | lukehsiao@byu.edu  
 Jeff Ravert | jravert88@gmail.com 
