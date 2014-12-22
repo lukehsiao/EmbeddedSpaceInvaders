@@ -2,6 +2,9 @@
 
 This implementation of Space Invaders is made for the Digilent [ATLYS Development Board](http://www.digilentinc.com/Products/Detail.cfm?NavPath=2,400,836&Prod=ATLYS&CFID=6868855&CFTOKEN=8a46aff22a6e7e36-78556F94-5056-0201-024A395AE56BA1E9). The hardware and software is organized into their own respective folders.
 
+### Where can I find more details? ###
+Implementation and game details can be found here: [Embedded Space Invaders Guide](http://www.et.byu.edu/~lhsiao/EmbeddedSpaceInvadersGuide.pdf).
+
 
 ### What is this repository for? ###
 
@@ -10,4 +13,4 @@ You will need the board support package for this board that is provided on the D
 
 ### Who to I talk to? ###
 Luke Hsiao | lukehsiao@byu.edu  
-Jeff Ravert | jravert88@gmail.com 
+Jeff Ravert | [jravert88](https://github.com/jravert88)
