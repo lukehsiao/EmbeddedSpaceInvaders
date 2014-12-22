@@ -1,0 +1,11 @@
+##############################################################################
+## Filename:          C:/RH/Lab/Lab8/hw/pcores/dma_controller_v1_00_a/data/dma_controller_v2_1_0.pao
+## Description:       Peripheral Analysis Order
+## Date:              Fri Dec 05 16:51:45 2014 (by Create and Import Peripheral Wizard)
+##############################################################################
+
+lib proc_common_v3_00_a  all 
+lib axi_lite_ipif_v1_01_a  all 
+lib axi_master_lite_v1_00_a  all 
+lib dma_controller_v1_00_a user_logic vhdl
+lib dma_controller_v1_00_a dma_controller vhdl
